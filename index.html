@@ -182,6 +182,25 @@
         .footer-content a:hover {
             text-decoration: underline;
         }
+        /* Стил за социалните икони */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Разстояние между иконите */
+    margin-top: 10px;
+}
+
+.social-icons img {
+    width: 30px; /* Намаляване на размера */
+    height: 30px;
+    filter: brightness(0) invert(1); /* Прави ги бели */
+    transition: transform 0.3s ease-in-out;
+}
+
+.social-icons img:hover {
+    transform: scale(1.2); /* Ефект при ховър */
+}
+
     </style>
 </head>
 <body>
@@ -233,6 +252,11 @@
     
     <!-- Долен футър -->
     <footer>
+        <div class="social-icons">
+    <a href="#"><img src="images/facebook-icon.png" alt="Facebook"></a>
+    <a href="#"><img src="images/instagram-icon.png" alt="Instagram"></a>
+    <a href="#"><img src="images/whatsapp-icon.png" alt="WhatsApp"></a>
+</div>
         <div class="footer-content">
             <span>София, България</span>
             <a href="tel:+359898747472">📞 +359898747472</a>
