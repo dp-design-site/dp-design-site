@@ -4,8 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DP Design</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .category {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .category img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+        }
+        .category:hover img {
+            transform: scale(1.1);
+            filter: brightness(50%);
+        }
+        .category .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .category:hover .overlay {
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Сайтът е в процес на разработка 🚀</h1>
+    <h1>Добре дошли в DP Design</h1>
+    <div class="container">
+        <div class="category" onclick="location.href='personalized.html';">
+            <img src="images/Персонализирани продукти.jpg" alt="Персонализирани продукти">
+            <div class="overlay">Персонализирани продукти</div>
+        </div>
+        <div class="category" onclick="location.href='home_decor.html';">
+            <img src="images/Дом и Декорация.jpg" alt="Дом и декорация">
+            <div class="overlay">Дом и декорация</div>
+        </div>
+        <div class="category" onclick="location.href='prototyping.html';">
+            <img src="images/3D прототипиране.jpg" alt="3D Прототипиране">
+            <div class="overlay">3D Прототипиране</div>
+        </div>
+        <div class="category" onclick="location.href='contacts.html';">
+            <img src="images/Контакти.jpg" alt="Контакти">
+            <div class="overlay">Контакти</div>
+        </div>
+    </div>
 </body>
 </html>
