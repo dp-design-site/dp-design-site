@@ -5,17 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DP Design</title>
     <style>
+        /* Основни стилове на страницата */
         body {
             background-color: #121212;
-            color: #fce5cd;
+            color: #fce5cd; /* Основен цвят на текстовете */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             text-align: center;
         }
+        
+        /* Хедър с фоново изображение и 3D ефект при скролване */
         header {
             background: url('images/header-background.jpg') no-repeat center center/cover;
-            height: 400px;
+            height: 260px; /* 2/3 от предишната височина */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -23,27 +26,41 @@
             color: white;
             text-align: center;
             position: relative;
+            box-shadow: inset 0 -50px 50px rgba(0, 0, 0, 0.5); /* Плавен 3D ефект при скрол */
         }
+        
+        /* Навигационно меню */
         .nav-bar {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px; /* По-ниска навигация */
             display: flex;
-            gap: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 10px 20px;
-            border-radius: 10px;
+            justify-content: flex-end;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0 20px;
         }
         .nav-bar a {
             color: #fce5cd;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 14px; /* Намален размер на текста */
             font-weight: bold;
+            margin-left: 15px;
         }
         .nav-bar a:hover {
             text-decoration: underline;
         }
+        
+        /* Лого в ляво на навигацията */
+        .nav-logo {
+            margin-right: auto;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        /* Контейнер за категориите */
         .categories-wrapper {
             display: flex;
             flex-wrap: wrap;
@@ -53,87 +70,53 @@
             overflow: hidden;
             min-height: 100vh;
             align-items: center;
+            padding-top: 60px; /* За да не се застъпва с навигацията */
         }
-        .category-container {
-            position: relative;
-            overflow: hidden;
-            width: 23%;
-            max-width: 300px;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .categories-wrapper .contacts {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        .category-container img {
-            width: 100%;
-            height: auto;
-            transition: 0.5s ease-in-out;
-            border-radius: 10px;
-        }
-        .category-container a {
-            display: block;
-            text-decoration: none;
-            color: #fce5cd;
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 10px;
-            padding: 10px;
-        }
-        .category-container:hover img {
-            transform: scale(1.1);
-        }
+        
+        /* Описания на секциите (остават бели) */
         .overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            height: auto;
-            background: rgba(0, 0, 0, 0.6);
             color: white;
+        }
+        
+        /* Долен футър */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: #fce5cd;
+            padding: 20px;
+            margin-top: 50px;
+        }
+        .footer-content {
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            opacity: 0;
-            transition: 0.5s ease-in-out;
-            padding: 15px;
-            text-align: center;
-            border-radius: 10px;
+            align-items: center;
+            gap: 20px;
         }
-        .category-container:hover .overlay {
-            opacity: 1;
+        .footer-content a {
+            color: #fce5cd;
+            text-decoration: none;
+            font-size: 16px;
         }
-        @media (max-width: 768px) {
-            .categories-wrapper {
-                flex-direction: column;
-                align-items: center;
-                height: auto;
-            }
-            .category-container {
-                width: 100%;
-                max-width: 400px;
-            }
+        .footer-content a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
+    <!-- Навигационно меню -->
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-logo">dp | design</a>
+        <a href="personalized.html">Персонализирани продукти</a>
+        <a href="home_decor.html">Дом и декорация</a>
+        <a href="prototyping.html">3D прототипиране</a>
+        <a href="contacts.html">Контакти</a>
+    </nav>
+    
+    <!-- Хедър с фоново изображение -->
     <header>
-        <nav class="nav-bar">
-            <a href="index.html">Начало</a>
-            <a href="personalized.html">Персонализирани продукти</a>
-            <a href="home_decor.html">Дом и декорация</a>
-            <a href="prototyping.html">3D прототипиране</a>
-            <a href="contacts.html">Контакти</a>
-        </nav>
         <h1>DP Design</h1>
     </header>
+    
+    <!-- Основни категории -->
     <div class="categories-wrapper">
         <div class="category-container">
             <a href="personalized.html">
@@ -164,5 +147,17 @@
             <a href="contacts.html" class="category-title">Контакти</a>
         </div>
     </div>
+    
+    <!-- Долен футър -->
+    <footer>
+        <div class="footer-content">
+            <span>София, България</span>
+            <a href="tel:+359898747472">📞 +359898747472</a>
+            <a href="danypavlov@gmail.com">✉ danypavlov@gmail.com</a>
+            <a href="#"><img src="images/facebook-icon.png" alt="Facebook"></a>
+            <a href="#"><img src="images/instagram-icon.png" alt="Instagram"></a>
+            <a href="#"><img src="images/whatsapp-icon.png" alt="WhatsApp"></a>
+        </div>
+    </footer>
 </body>
 </html>
