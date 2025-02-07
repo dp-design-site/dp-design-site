@@ -14,7 +14,7 @@
             padding: 0;
             text-align: center;
         }
-        
+
         /* Хедър с фоново изображение и 3D ефект при скролване */
         header {
             background: url('images/header-background.jpg') no-repeat center center/cover;
@@ -26,9 +26,10 @@
             color: white;
             text-align: center;
             position: relative;
-            box-shadow: inset 0 -50px 50px rgba(0, 0, 0, 0.5); /* Плавен 3D ефект при скрол */
+            /* Плавен преход към долния фон */
+            box-shadow: inset 0 -50px 50px rgba(18, 18, 18, 1);
         }
-        
+
         /* Навигационно меню */
         .nav-bar {
             position: fixed;
@@ -41,6 +42,7 @@
             align-items: center;
             background: rgba(0, 0, 0, 0.8);
             padding: 0 20px;
+            z-index: 1000; /* За да е над другото съдържание */
         }
         .nav-bar a {
             color: #fce5cd;
@@ -52,14 +54,14 @@
         .nav-bar a:hover {
             text-decoration: underline;
         }
-        
+
         /* Лого в ляво на навигацията */
         .nav-logo {
             margin-right: auto;
             font-size: 18px;
             font-weight: bold;
         }
-        
+
         /* Контейнер за категориите */
         .categories-wrapper {
             display: flex;
@@ -72,11 +74,92 @@
             align-items: center;
             padding-top: 60px; /* За да не се застъпва с навигацията */
         }
-        
-        /* Описания на секциите (остават бели) */
-        .overlay {
-            color: white;
+
+        /* Стилове за всяка категория */
+        .category-container {
+            position: relative;
+            overflow: hidden;
+            width: 23%;
+            max-width: 300px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
+
+        /* Подреждане едно под друго на мобилни устройства */
+        @media (max-width: 768px) {
+            .categories-wrapper {
+                flex-direction: column;
+                align-items: center;
+                height: auto; /* Автоматична височина на секцията */
+            }
+            .category-container {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        /* Стил на изображенията */
+        .category-container img {
+            width: 100%;
+            height: auto;
+            transition: 0.5s ease-in-out;
+            border-radius: 10px;
+        }
+
+        /* Ефект при ховър на десктоп */
+        .category-container:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Описание при ховър - центрирано 100% */
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: auto;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0;
+            transition: 0.5s ease-in-out;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .category-container:hover .overlay {
+            opacity: 1;
+        }
+
+        /* Леко изсветляване при докосване на мобилни устройства */
+        @media (max-width: 768px) {
+            .category-container:active img {
+                filter: brightness(1.2);
+            }
+            .category-container:active .overlay {
+                opacity: 1;
+            }
+        }
+
+        /* Заглавия като бутони */
+        .category-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 10px;
+            background: transparent;
+            color: #fce5cd; /* Основен цвят на текстовете */
+            border-radius: 5px;
+            transition: background 0.3s ease
+::contentReference[oaicite:0]{index=0}
         
         /* Долен футър */
         footer {
