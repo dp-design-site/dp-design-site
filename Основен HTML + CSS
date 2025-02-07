@@ -58,19 +58,19 @@
     <h1>Добре дошли в DP Design</h1>
     <div class="container">
         <div class="category" onclick="location.href='personalized.html';">
-            <img src="images/Персонализирани продукти.png" alt="Персонализирани продукти">
+            <img src="images/Персонализирани продукти.jpg" alt="Персонализирани продукти">
             <div class="overlay">Персонализирани продукти</div>
         </div>
         <div class="category" onclick="location.href='home_decor.html';">
-            <img src="images/Дом и декорация.png" alt="Дом и декорация">
+            <img src="images/Дом и декорация.jpg" alt="Дом и декорация">
             <div class="overlay">Дом и декорация</div>
         </div>
         <div class="category" onclick="location.href='prototyping.html';">
-            <img src="images/3д прототипиране.png" alt="3D Прототипиране">
+            <img src="images/3D прототипиране.jpg" alt="3D Прототипиране">
             <div class="overlay">3D Прототипиране</div>
         </div>
         <div class="category" onclick="location.href='contacts.html';">
-            <img src="images/Контакти.png" alt="Контакти">
+            <img src="images/Контакти.jpg" alt="Контакти">
             <div class="overlay">Контакти</div>
         </div>
     </div>
