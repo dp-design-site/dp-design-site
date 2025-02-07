@@ -13,65 +13,115 @@
             padding: 0;
             text-align: center;
         }
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        .categories-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            text-align: center;
             gap: 20px;
-            padding: 20px;
+            overflow: hidden;
+            min-height: 100vh;
+            align-items: center;
         }
-        .category {
+        .category-container {
             position: relative;
             overflow: hidden;
+            width: 23%;
+            max-width: 300px;
+            text-align: center;
             border-radius: 10px;
-            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .category img {
+        .categories-wrapper .contacts {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .category-container img {
             width: 100%;
             height: auto;
-            transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+            transition: 0.5s ease-in-out;
+            border-radius: 10px;
         }
-        .category:hover img {
+        .category-container a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 10px;
+        }
+        .category-container:hover img {
             transform: scale(1.1);
-            filter: brightness(50%);
         }
-        .category .overlay {
+        .overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            font-size: 1.5em;
+            width: 90%;
+            height: auto;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
             font-weight: bold;
+            opacity: 0;
+            transition: 0.5s ease-in-out;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
         }
-        .category:hover .overlay {
+        .category-container:hover .overlay {
             opacity: 1;
         }
         @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
+            .categories-wrapper {
+                flex-direction: column;
+                align-items: center;
+                height: auto;
+            }
+            .category-container {
+                width: 100%;
+                max-width: 400px;
             }
         }
     </style>
 </head>
 <body>
     <h1>Добре дошли в DP Design</h1>
-    <div class="container">
-        <div class="category" onclick="location.href='personalized.html';">
-            <img src="images/Персонализирани подаръци.jpg" alt="Персонализирани продукти">
-            <div class="overlay">Персонализирани продукти</div>
+    <div class="categories-wrapper">
+        <div class="category-container">
+            <a href="personalized.html">
+                <img src="images/Персонализирани продукти.jpg" alt="Персонализирани продукти">
+                <div class="overlay">3D принтирани снимки върху плексиглас с възможност за ръчно написан текст.</div>
+            </a>
+            <a href="personalized.html" class="category-title">Персонализирани продукти</a>
         </div>
-        <div class="category" onclick="location.href='home_decor.html';">
-            <img src="images/Дом и Декорация.jpg" alt="Дом и декорация">
-            <div class="overlay">Дом и декорация</div>
+        <div class="category-container">
+            <a href="home_decor.html">
+                <img src="images/Дом и Декорация.jpg" alt="Дом и декорация">
+                <div class="overlay">Практични и стилни 3D принтирани аксесоари.</div>
+            </a>
+            <a href="home_decor.html" class="category-title">Дом и декорация</a>
         </div>
-        <div class="category" onclick="location.href='prototyping.html';">
-            <img src="images/3D прототипиране.jpg" alt="3D Прототипиране">
-            <div class="overlay">3D Прототипиране</div>
+        <div class="category-container">
+            <a href="prototyping.html">
+                <img src="images/3Д прототипиране.jpg" alt="3D Прототипиране">
+                <div class="overlay">Изработка на персонализирани части.</div>
+            </a>
+            <a href="prototyping.html" class="category-title">3D прототипиране</a>
         </div>
-        <div class="category" onclick="location.href='contacts.html';">
-            <img src="images/Контакти.jpg" alt="Контакти">
-            <div class="overlay">Контакти</div>
+        <div class="category-container contacts">
+            <a href="contacts.html">
+                <img src="images/Контакти.jpg" alt="Контакти">
+                <div class="overlay">Свържете се с нас за въпроси.</div>
+            </a>
+            <a href="contacts.html" class="category-title">Контакти</a>
         </div>
     </div>
 </body>
