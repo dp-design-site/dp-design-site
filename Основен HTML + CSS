@@ -62,7 +62,7 @@
             <div class="overlay">Персонализирани продукти</div>
         </div>
         <div class="category" onclick="location.href='home_decor.html';">
-            <img src="images/Дом и декорация.jpg" alt="Дом и декорация">
+            <img src="images/Дом и Декорация.jpg" alt="Дом и декорация">
             <div class="overlay">Дом и декорация</div>
         </div>
         <div class="category" onclick="location.href='prototyping.html';">
