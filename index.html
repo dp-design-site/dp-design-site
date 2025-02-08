@@ -191,8 +191,10 @@
         }
         
         .social-icons img {
-            width: 8px; /* По-малък размер */
-            height: 8px;
+    width: 32px !important; /* Принуждава браузъра да приложи този размер */
+    height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
             filter: brightness(0) invert(1); /* Прави ги бели */
             transition: transform 0.3s ease-in-out;
         }
