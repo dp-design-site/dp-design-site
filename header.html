@@ -14,13 +14,13 @@
 </nav>
 
 <header class="header-wrapper">
-    <h1 class="header-title"></h1>  <!-- Оставяме го празно, ще се попълни динамично -->
+    <h1 class="header-title">Заглавие</h1>  <!-- Поправено: ще се попълни динамично -->
     <div class="header-gradient"></div>
 </header>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // ✅ Смяна на заглавието в хедъра спрямо страницата
+        // ✅ Фиксирана промяна на заглавието
         let titles = {
             "index.html": "DP Design",
             "personalized.html": "Персонализирани продукти",
@@ -29,14 +29,14 @@
             "contacts.html": "Контакти"
         };
 
-        let currentPage = window.location.pathname.split("/").pop();
+        let currentPage = window.location.pathname.split("/").pop() || "index.html";
         let headerTitle = document.querySelector(".header-title");
 
         if (titles[currentPage] && headerTitle) {
             headerTitle.textContent = titles[currentPage];
         }
 
-        // ✅ Активен бутон в навигацията
+        // ✅ Фиксиран активен бутон
         let menuLinks = document.querySelectorAll(".nav-menu a");
         menuLinks.forEach(link => {
             if (link.getAttribute("href") === currentPage) {
@@ -45,7 +45,7 @@
         });
     });
 
-    // ✅ Функция за отваряне/затваряне на мобилното меню
+    // ✅ Фиксирано мобилно меню
     function toggleMenu() {
         let menu = document.querySelector(".nav-menu");
         menu.classList.toggle("open");
@@ -76,7 +76,7 @@
     }
 
     .nav-menu a {
-        color: #fce5cd;
+        color: #fce5cd; /* Фиксиран цвят на текстовете */
         text-decoration: none;
         font-size: 14px;
         font-weight: bold;
@@ -88,13 +88,38 @@
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
     }
 
-    /* ✅ Подчертаване на активната страница */
+    /* ✅ Поправка за активния бутон */
     .nav-menu a.active {
         font-size: 16px;
         font-weight: bold;
         color: #ffcc99;
         text-shadow: 0px 0px 8px rgba(255, 204, 153, 0.8);
         transform: scale(1.05);
+    }
+
+    /* ✅ Поправено лого */
+    .nav-logo {
+        font-size: 18px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #fce5cd !important; /* Поправено: логото не е лилаво */
+        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+    }
+
+    .nav-logo:hover {
+        transform: scale(1.05);
+        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
+    }
+
+    /* ✅ Фиксиран стил за заглавието */
+    .header-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #fce5cd;
+        position: absolute;
+        bottom: 10px;
+        left: 20px;
+        z-index: 2;
     }
 
     /* ✅ Хамбургер бутон */
@@ -143,29 +168,6 @@
             width: 100%;
             text-align: center;
         }
-    }
-
-    /* ✅ Заглавие и фон */
-    .header-wrapper {
-        position: relative;
-        height: 220px;
-        background: url('images/header-background.jpg') no-repeat center center/cover;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-start;
-        padding: 20px;
-        text-align: left;
-        overflow: hidden;
-    }
-
-    .header-title {
-        font-size: 32px;
-        font-weight: bold;
-        color: #fce5cd;
-        position: absolute;
-        bottom: 10px;
-        left: 20px;
-        z-index: 2;
     }
 
     /* ✅ Фиксиран градиент */
