@@ -1,1 +1,74 @@
+<!-- header.html -->
+<nav class="nav-bar">
+    <span class="nav-logo">dp | design</span>
+    <span class="hamburger" onclick="toggleMenu()">☰</span>
+    <div class="nav-menu">
+        <a href="index.html">Начало</a>
+        <a href="personalized.html">Персонализирани продукти</a>
+        <a href="home_decor.html">Дом и декорация</a>
+        <a href="prototyping.html">3D прототипиране</a>
+        <a href="contacts.html">Контакти</a>
+    </div>
+</nav>
 
+<script>
+    function toggleMenu() {
+        const menu = document.querySelector('.nav-menu');
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    }
+</script>
+
+<style>
+    .nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 0 20px;
+        z-index: 1000;
+    }
+    .nav-bar a {
+        color: #fce5cd;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 15px;
+    }
+    .nav-bar a:hover {
+        text-decoration: underline;
+    }
+    .nav-logo {
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .hamburger {
+        display: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    @media (max-width: 768px) {
+        .nav-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 10px 0;
+        }
+        .nav-menu a {
+            display: block;
+            text-align: center;
+            padding: 10px;
+        }
+        .hamburger {
+            display: block;
+        }
+    }
+</style>
