@@ -33,14 +33,20 @@
     .footer-content a {
     color: #fce5cd !important;
     text-decoration: none;
-    display: inline-block; /* Позволява transform да работи */
+    display: inline-block;
+    margin-right: 15px; /* Разстояние между елементите */
     transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
 }
 
-.footer-content a:hover {
-    transform: scale(1.2); /* Уголемяване с 10% */
-    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.9); /* Леко сияние */
+.footer-content a:last-child {
+    margin-right: 0; /* За да няма излишно разстояние след последния елемент */
 }
+
+.footer-content a:hover {
+    transform: scale(1.1);
+    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
+}
+
 
     
     .social-icons {
