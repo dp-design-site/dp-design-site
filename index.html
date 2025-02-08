@@ -15,53 +15,6 @@
             text-align: center;
         }
 
-        /* Хедър с фоново изображение и 3D ефект при скролване */
-        header {
-            background: url('images/header-background.jpg') no-repeat center center/cover;
-            height: 260px; /* 2/3 от предишната височина */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
-            position: relative;
-            /* Плавен преход към долния фон */
-            box-shadow: inset 0 -50px 50px rgba(18, 18, 18, 1);
-        }
-
-        /* Навигационно меню */
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50px; /* По-ниска навигация */
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 0 20px;
-            z-index: 1000; /* За да е над другото съдържание */
-        }
-        .nav-bar a {
-            color: #fce5cd;
-            text-decoration: none;
-            font-size: 14px; /* Намален размер на текста */
-            font-weight: bold;
-            margin-left: 30px;
-        }
-        .nav-bar a:hover {
-            text-decoration: underline;
-        }
-
-        /* Лого в ляво на навигацията */
-        .nav-logo {
-            margin-right: auto;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
         /* Контейнер за категориите */
         .categories-wrapper {
             display: flex;
@@ -112,137 +65,32 @@
             transform: scale(1.1);
         }
 
-        /* Описание при ховър - центрирано 100% */
+        /* Описание при ховър */
         .overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90%;
-            height: auto;
             background: rgba(0, 0, 0, 0.6);
             color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             font-size: 18px;
             font-weight: bold;
             opacity: 0;
             transition: 0.5s ease-in-out;
             padding: 15px;
-            text-align: center;
             border-radius: 10px;
         }
 
         .category-container:hover .overlay {
             opacity: 1;
         }
-
-        /* Леко изсветляване при докосване на мобилни устройства */
-        @media (max-width: 768px) {
-            .category-container:active img {
-                filter: brightness(1.2);
-            }
-            .category-container:active .overlay {
-                opacity: 1;
-            }
-        }
-
-        /* Заглавия като бутони */
-        .category-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 10px;
-            padding: 10px;
-            background: transparent;
-            color: #fce5cd; /* Основен цвят на текстовете */
-            border-radius: 5px;
-            transition: background 0.3s ease
-::contentReference[oaicite:0]{index=0}
-        
-                    /* Стил за футъра */
-            footer {
-                background: rgba(0, 0, 0, 0.9);
-                color: #fce5cd; /* Основен цвят на текстовете */
-                padding: 20px;
-                margin-top: 50px;
-                text-align: center;
-            }
-            
-            /* Контейнер за футъра */
-            .footer-content {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 20px; /* Разстояние между елементите */
-                flex-wrap: wrap; /* Ако няма място, да се подреждат надолу */
-            }
-            
-            /* Стил за телефон и имейл */
-            .footer-content a {
-                color: #fce5cd !important; /* Цвят като останалия текст */
-                text-decoration: none;
-                font-size: 16px;
-                transition: color 0.3s ease-in-out;
-            }
-            
-            /* Ховър ефект за телефон и имейл */
-            .footer-content a:hover {
-                color: #ffffff; /* Леко изсветляване при ховър */
-                text-decoration: underline;
-            }
-            
-            /* Контейнер за социалните икони */
-            .social-icons {
-                display: flex;
-                gap: 15px; /* Разстояние между иконите */
-                align-items: center;
-            }
-            
-            /* Стил за социалните икони */
-            .social-icons img {
-                width: 32px;
-                height: 32px;
-                transition: transform 0.3s ease-in-out;
-            }
-            
-            /* Ховър ефект за социалните икони */
-            .social-icons img:hover {
-                transform: scale(1.2); /* Леко уголемяване при ховър */
-                opacity: 0.8;
-            }
-
-        
-        /* Добавяне на ховър ефект */
-        .social-icons img:hover {
-            transform: scale(1.2); /* Леко уголемяване при ховър */
-            opacity: 0.8;
-        }
-
-
-
     </style>
 </head>
-<body>
-    <!-- Навигационно меню -->
-   <nav class="nav-bar">
-        <span class="nav-logo">dp | design</span>
-        <span class="hamburger" onclick="toggleMenu()">☰</span>
-        <div class="nav-menu">
-            <a href="index.html">Начало</a>
-            <a href="personalized.html">Персонализирани продукти</a>
-            <a href="home_decor.html">Дом и декорация</a>
-            <a href="prototyping.html">3D прототипиране</a>
-            <a href="contacts.html">Контакти</a>
-        </div>
-    </nav>
-    
-    <!-- Хедър с фоново изображение -->
-    <header>
-        <h1>DP Design</h1>
-    </header>
-    
+<body onload="loadComponents()">
+    <!-- Динамично вмъкнат хедър -->
+    <div id="header"></div>
+
     <!-- Основни категории -->
     <div class="categories-wrapper">
         <div class="category-container">
@@ -274,28 +122,19 @@
             <a href="contacts.html" class="category-title">Контакти</a>
         </div>
     </div>
-    
-    <!-- Долен футър -->
-    <!-- Долен футър -->
-<footer>
-    <div class="footer-content">
-        <span>София, България</span>
-        <a href="tel:+359898747472">📞 +359898747472</a>
-        <a href="mailto:danypavlov@gmail.com">✉ danypavlov@gmail.com</a>
-        <div class="social-icons">
-            <a href="https://www.facebook.com/" target="_blank">
-                <img src="images/facebook-icon.png" alt="Facebook">
-            </a>
-            <a href="https://www.instagram.com/" target="_blank">
-                <img src="images/instagram-icon.png" alt="Instagram">
-            </a>
-            <a href="https://wa.me/YOUR_PHONE_NUMBER" target="_blank">
-                <img src="images/whatsapp-icon.png" alt="WhatsApp">
-            </a>
-        </div>
-    </div>
-</footer>
 
+    <!-- Динамично вмъкнат футър -->
+    <div id="footer"></div>
 
+    <script>
+        function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => document.getElementById('header').innerHTML = data);
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => document.getElementById('footer').innerHTML = data);
+        }
+    </script>
 </body>
 </html>
