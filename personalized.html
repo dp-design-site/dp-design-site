@@ -4,6 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Категория</title>
+    <script>
+        // Функция за вмъкване на хедъра и футъра динамично
+        function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                    highlightActivePage();
+                });
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => document.getElementById('footer').innerHTML = data);
+        }
+
+        // Функция за маркиране на активната страница
+        function highlightActivePage() {
+            const links = document.querySelectorAll(".nav-menu a");
+            links.forEach(link => {
+                if (link.href === window.location.href) {
+                    link.classList.add("active");
+                }
+            });
+        }
+    </script>
     <style>
         body {
             background-color: #121212;
@@ -12,164 +36,20 @@
             margin: 0;
             padding: 0;
             text-align: center;
+            overflow-x: hidden; /* Премахва страничния скрол */
         }
 
-        /* Фон за всяка страница */
-        .category-header {
-            background: url('images/header-background.jpg') no-repeat center center/cover;
-            height: 260px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            box-shadow: inset 0 -50px 50px rgba(18, 18, 18, 1);
-           
-        }
-
-        .category-title {
-            font-size: 32px;
+        /* Активна страница в менюто */
+        .nav-menu a.active {
+            font-size: 16px;
             font-weight: bold;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
-            border-radius: 5px;
+            color: #ffcc99;
         }
-
-        .content {
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: left;
-        }
-
-        /* Навигационно меню с хамбургер бутон */
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.5); /* По-прозрачна навигация */
-            padding: 0 20px;
-            z-index: 1000;
-        }
-
-        .nav-bar a {
-            color: #fce5cd;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            margin-left: 15px;
-        }
-
-        .nav-bar a:hover {
-            text-decoration: underline;
-        }
-
-        .nav-logo {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .hamburger {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .nav-menu {
-            display: flex;
-        }
-
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 50px;
-                left: 0;
-                width: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                padding: 10px 0;
-            }
-
-            .nav-menu a {
-                display: block;
-                text-align: center;
-                padding: 10px;
-            }
-
-            .hamburger {
-                display: block;
-            }
-        }
-
-        /* Коригиране на категориите */
-        .products-wrapper {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            padding: 20px;
-        }
-
-        .product {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            width: 250px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .product img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        .product h2 {
-            font-size: 20px;
-            color: #fce5cd;
-        }
-
-        .product p {
-            font-size: 14px;
-            color: #ddd;
-        }
-
-        .product button {
-            background: #fce5cd;
-            color: #121212;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .product button:hover {
-            background: #e5c1a0;
-        }
-
     </style>
 </head>
-<body>
-    <!-- Навигационно меню -->
-    <nav class="nav-bar">
-        <span class="nav-logo">dp | design</span>
-        <span class="hamburger" onclick="toggleMenu()">☰</span>
-        <div class="nav-menu">
-            <a href="index.html">Начало</a>
-            <a href="personalized.html">Персонализирани продукти</a>
-            <a href="home_decor.html">Дом и декорация</a>
-            <a href="prototyping.html">3D прототипиране</a>
-            <a href="contacts.html">Контакти</a>
-        </div>
-    </nav>
+<body onload="loadComponents()">
+    <!-- Динамично вмъкнат хедър -->
+    <div id="header"></div>
     
     <header class="category-header">
         <h1 class="category-title">Заглавие на категорията</h1>
@@ -194,32 +74,7 @@
         </div>
     </div>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.querySelector('.nav-menu');
-            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-        }
-    </script>
-
-            <!-- долен футър -->
-           <footer>
-        <div class="footer-content">
-            <span>София, България</span>
-            <a href="tel:+359898747472">📞 +359898747472</a>
-            <a href="mailto:danypavlov@gmail.com">✉ danypavlov@gmail.com</a>
-            <div class="social-icons">
-                <a href="https://www.facebook.com/" target="_blank">
-                    <img src="images/facebook-icon.png" alt="Facebook">
-                </a>
-                <a href="https://www.instagram.com/" target="_blank">
-                    <img src="images/instagram-icon.png" alt="Instagram">
-                </a>
-                <a href="https://wa.me/YOUR_PHONE_NUMBER" target="_blank">
-                    <img src="images/whatsapp-icon.png" alt="WhatsApp">
-                </a>
-            </div>
-        </div>
-    </footer>
-    
+    <!-- Динамично вмъкнат футър -->
+    <div id="footer"></div>
 </body>
 </html>
