@@ -14,13 +14,13 @@
 </nav>
 
 <header class="header-wrapper">
-    <h1 class="header-title">Заглавие</h1>
+    <h1 class="header-title">DP Design</h1> <!-- Поправено: динамично заглавие -->
     <div class="header-gradient"></div>
 </header>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // ✅ Фиксирана промяна на заглавието
+        // ✅ Динамична промяна на заглавието според страницата
         let titles = {
             "index.html": "DP Design",
             "personalized.html": "Персонализирани продукти",
@@ -36,10 +36,10 @@
             headerTitle.textContent = titles[currentPage];
         }
 
-        // ✅ Фиксиран активен бутон
+        // ✅ Оправен активен бутон
         let menuLinks = document.querySelectorAll(".nav-menu a");
         menuLinks.forEach(link => {
-            if (link.getAttribute("href") === currentPage) {
+            if (link.getAttribute("href") === currentPage || (currentPage === "" && link.getAttribute("href") === "index.html")) {
                 link.classList.add("active");
             }
         });
