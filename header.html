@@ -14,13 +14,13 @@
 </nav>
 
 <header class="header-wrapper">
-    <h1 class="header-title">DP Design</h1> <!-- Поправено: динамично заглавие -->
+    <h1 class="header-title">Заглавие</h1> <!-- Заглавието вече се обновява правилно -->
     <div class="header-gradient"></div>
 </header>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // ✅ Динамична промяна на заглавието според страницата
+        // ✅ Заглавия според страницата
         let titles = {
             "index.html": "DP Design",
             "personalized.html": "Персонализирани продукти",
@@ -29,17 +29,19 @@
             "contacts.html": "Контакти"
         };
 
-        let currentPage = window.location.pathname.split("/").pop() || "index.html";
-        let headerTitle = document.querySelector(".header-title");
+        let path = window.location.pathname.split("/").pop();
+        if (!path) path = "index.html"; // Ако е празно, значи сме на началната страница
 
-        if (titles[currentPage] && headerTitle) {
-            headerTitle.textContent = titles[currentPage];
+        let headerTitle = document.querySelector(".header-title");
+        if (titles[path] && headerTitle) {
+            headerTitle.textContent = titles[path];
         }
 
-        // ✅ Оправен активен бутон
+        // ✅ Активен бутон в менюто
         let menuLinks = document.querySelectorAll(".nav-menu a");
         menuLinks.forEach(link => {
-            if (link.getAttribute("href") === currentPage || (currentPage === "" && link.getAttribute("href") === "index.html")) {
+            let href = link.getAttribute("href");
+            if (href === path || (path === "index.html" && href === "index.html")) {
                 link.classList.add("active");
             }
         });
@@ -97,12 +99,12 @@
         transform: scale(1.05);
     }
 
-    /* ✅ Поправено лого */
+    /* ✅ Лого */
     .nav-logo {
         font-size: 18px;
         font-weight: bold;
         text-decoration: none;
-        color: #fce5cd !important; /* Поправено: логото не е лилаво */
+        color: #fce5cd !important;
         transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
     }
 
@@ -115,7 +117,7 @@
     .header-wrapper {
         position: relative;
         height: 220px;
-        background: url('images/header-background.jpg') no-repeat center center/cover; /* Връща снимката */
+        background: url('images/header-background.jpg') no-repeat center center/cover;
         display: flex;
         align-items: flex-end;
         justify-content: flex-start;
