@@ -17,6 +17,42 @@
     <h1 class="header-title">Персонализирани продукти</h1>
     <div class="header-gradient"></div>
 </header>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let headerTitle = document.querySelector(".header-title");
+        
+        if (headerTitle) {
+            // Взима името на страницата от URL
+            let path = window.location.pathname.split("/").pop();
+            let pageName = path.replace(".html", "").replace("_", " ");
+
+            // Преобразува първата буква в главна
+            pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+            // Ако сме на index.html -> задава "DP Design"
+            if (pageName === "Index" || pageName === "") {
+                pageName = "DP Design";
+            }
+
+            // Променя заглавието в хедъра
+            headerTitle.textContent = pageName;
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentPath = window.location.pathname.split("/").pop();
+        let menuLinks = document.querySelectorAll(".nav-menu a");
+
+        menuLinks.forEach(link => {
+            let href = link.getAttribute("href");
+            if (currentPath === href) {
+                link.classList.add("active");
+            }
+        });
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
