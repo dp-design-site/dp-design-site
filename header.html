@@ -14,7 +14,7 @@
 </nav>
 
 <header class="header-wrapper">
-    <h1 class="header-title">Заглавие</h1>  <!-- Поправено: ще се попълни динамично -->
+    <h1 class="header-title">Заглавие</h1>
     <div class="header-gradient"></div>
 </header>
 
@@ -76,7 +76,7 @@
     }
 
     .nav-menu a {
-        color: #fce5cd; /* Фиксиран цвят на текстовете */
+        color: #fce5cd;
         text-decoration: none;
         font-size: 14px;
         font-weight: bold;
@@ -112,6 +112,18 @@
     }
 
     /* ✅ Фиксиран стил за заглавието */
+    .header-wrapper {
+        position: relative;
+        height: 220px;
+        background: url('images/header-background.jpg') no-repeat center center/cover; /* Връща снимката */
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+        padding: 20px;
+        text-align: left;
+        overflow: hidden;
+    }
+
     .header-title {
         font-size: 32px;
         font-weight: bold;
