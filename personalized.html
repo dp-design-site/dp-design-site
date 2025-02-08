@@ -53,7 +53,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.5); /* По-прозрачна навигация */
             padding: 0 20px;
             z-index: 1000;
         }
@@ -109,43 +109,50 @@
         }
 
         /* Коригиране на категориите */
-        .categories-wrapper {
+        .products-wrapper {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            text-align: center;
             gap: 20px;
-            overflow: hidden;
-            align-items: center;
-            padding-top: 20px;
+            flex-wrap: wrap;
+            padding: 20px;
         }
 
-        .category-container {
-            position: relative;
-            overflow: hidden;
-            width: 90%; /* Добавяне на рамка отстрани */
-            max-width: 300px;
-            text-align: center;
+        .product {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
             border-radius: 10px;
+            text-align: center;
+            width: 250px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        @media (max-width: 768px) {
-            .category-container {
-                width: 90%;
-                max-width: 400px;
-            }
-        }
-
-        .category-container img {
+        .product img {
             width: 100%;
-            height: auto;
-            transition: 0.3s ease-in-out; /* Намаляване на времето за ховър */
             border-radius: 10px;
         }
 
-        .category-container:hover img {
-            transform: scale(1.05);
+        .product h2 {
+            font-size: 20px;
+            color: #fce5cd;
+        }
+
+        .product p {
+            font-size: 14px;
+            color: #ddd;
+        }
+
+        .product button {
+            background: #fce5cd;
+            color: #121212;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .product button:hover {
+            background: #e5c1a0;
         }
 
         /* Долен футър */
@@ -159,7 +166,6 @@
     </style>
 </head>
 <body>
-    
     <!-- Навигационно меню -->
     <nav class="nav-bar">
         <span class="nav-logo">dp | design</span>
@@ -181,12 +187,26 @@
         <p>Тук ще има описание на категорията и примерни продукти/услуги.</p>
     </div>
 
+    <div class="products-wrapper">
+        <div class="product">
+            <img src="images/product1.jpg" alt="Продукт 1">
+            <h2>Продукт 1</h2>
+            <p>Кратко описание на продукта.</p>
+            <button>Виж повече</button>
+        </div>
+        <div class="product">
+            <img src="images/product2.jpg" alt="Продукт 2">
+            <h2>Продукт 2</h2>
+            <p>Кратко описание на продукта.</p>
+            <button>Виж повече</button>
+        </div>
+    </div>
+
     <script>
         function toggleMenu() {
             const menu = document.querySelector('.nav-menu');
             menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
         }
     </script>
-
 </body>
 </html>
