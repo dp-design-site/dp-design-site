@@ -7,17 +7,27 @@
         <a href="mailto:danypavlov@gmail.com">✉ danypavlov@gmail.com</a>
         <div class="social-icons">
             <a href="https://www.facebook.com/" target="_blank">
-                <img src="https://github.com/dp-design-site/dp-design-site/blob/main/images/facebook-icon.png" alt="Facebook">
+                <img class="social-icon" data-src="images/facebook-icon.png" alt="Facebook">
             </a>
             <a href="https://www.instagram.com/" target="_blank">
-                <img src="./images/instagram-icon.png" alt="Instagram">
+                <img class="social-icon" data-src="images/instagram-icon.png" alt="Instagram">
             </a>
             <a href="https://wa.me/YOUR_PHONE_NUMBER" target="_blank">
-                <img src="./images/whatsapp-icon.png" alt="WhatsApp">
+                <img class="social-icon" data-src="images/whatsapp-icon.png" alt="WhatsApp">
             </a>
         </div>
     </div>
+
+    <script>
+        // Презарежда изображенията динамично след като футърът се вмъкне
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.social-icon').forEach(img => {
+                img.src = img.getAttribute('data-src');
+            });
+        });
+    </script>
 </footer>
+
 
 <style>
     footer {
