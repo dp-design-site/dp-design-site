@@ -1,7 +1,9 @@
 <!-- header.html -->
 <nav class="nav-bar">
-    <a href="index.html" class="nav-logo">dp | design</a>
-    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <div class="nav-left">
+        <a href="index.html" class="nav-logo">dp | design</a>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
     <div class="nav-menu">
         <a href="index.html">Начало</a>
         <a href="personalized.html">Персонализирани продукти</a>
@@ -19,33 +21,22 @@
 <script>
     function toggleMenu() {
         let menu = document.querySelector(".nav-menu");
-        let hamburger = document.querySelector(".hamburger");
-
-        if (!menu || !hamburger) {
-            console.error("❌ [Error] - Менюто или бутонът не са намерени!");
-            return;
-        }
-
         menu.classList.toggle("open");
-
-        // Смяна на иконата ☰ ↔ ✖ при отваряне/затваряне
-        hamburger.innerHTML = menu.classList.contains("open") ? "✖" : "☰";
-        console.log("✅ Менюто е " + (menu.classList.contains("open") ? "отворено" : "затворено"));
     }
 
     window.addEventListener("scroll", function () {
         let scrollY = window.scrollY;
         let title = document.querySelector(".header-title");
 
-        if (title) {
-            let fadeOut = Math.max(1 - scrollY / 150, 0);
-            title.style.opacity = fadeOut;
-            title.style.transform = `translateY(${scrollY / 3}px)`;
-        }
+        // Плавно скриване на заглавието при скрол
+        let fadeOut = Math.max(1 - scrollY / 150, 0);
+        title.style.opacity = fadeOut;
+        title.style.transform = `translateY(${scrollY / 3}px)`;
     });
 </script>
 
 <style>
+    /* 🟢 Основен стил на навигационния бар */
     .nav-bar {
         position: fixed;
         top: 0;
@@ -60,18 +51,10 @@
         z-index: 1000;
     }
 
-    .nav-bar a {
-        color: #fce5cd;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: bold;
-        margin-left: 15px;
-        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-    }
-
-    .nav-bar a:hover {
-        transform: scale(1.05);
-        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
+    /* Групиране на логото и хамбургер бутона в лявата част */
+    .nav-left {
+        display: flex;
+        align-items: center;
     }
 
     .nav-logo {
@@ -87,7 +70,7 @@
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
     }
 
-    /* Хамбургер бутон */
+    /* 🟢 Хамбургер бутон */
     .hamburger {
         display: none;
         font-size: 24px;
@@ -96,6 +79,7 @@
         background: none;
         border: none;
         padding: 10px;
+        margin-left: 10px;
         transition: transform 0.3s ease-in-out;
     }
 
@@ -103,6 +87,7 @@
         transform: scale(1.2);
     }
 
+    /* 🟢 Навигационно меню */
     .nav-menu {
         display: flex;
         flex-wrap: wrap;
@@ -111,12 +96,7 @@
 
     @media (max-width: 768px) {
         .hamburger {
-            display: block;
-            font-size: 26px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #fce5cd;
+            display: block; /* Показва бутона само в мобилен изглед */
         }
 
         .nav-menu {
@@ -151,6 +131,7 @@
         }
     }
 
+    /* 🟢 Фоново изображение в заглавната част */
     .header-wrapper {
         position: relative;
         height: 220px;
@@ -163,6 +144,7 @@
         overflow: hidden;
     }
 
+    /* 🟢 Текст на заглавието (Поставен в долния ляв ъгъл) */
     .header-title {
         font-size: 32px;
         font-weight: bold;
@@ -170,16 +152,15 @@
         opacity: 1;
         transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
         position: absolute;
-        bottom: 2px;
-        left: 40px;
+        bottom: 10px; /* Долу в левия ъгъл */
+        left: 20px;
         z-index: 2;
     }
 
-    /* Градиентът започва от самото начало */
+    /* 🟢 Градиент за плавно преливане в долния край на изображението */
     .header-gradient {
         position: absolute;
         bottom: 0;
-        left: 0;
         width: 100%;
         height: 100px;
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
