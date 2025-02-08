@@ -182,24 +182,27 @@
         .footer-content a:hover {
             text-decoration: underline;
         }
-        /* Стил за социалните икони */
+               /* Стил за социалните икони */
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 10px; /* Разстояние между иконите */
+            gap: 15px; /* Разстояние между иконите */
             margin-top: 10px;
         }
         
         .social-icons img {
-            width: 12px; /* Намаляване на размера */
-            height: 12px;
+            width: 32px; /* По-малък размер */
+            height: 32px;
             filter: brightness(0) invert(1); /* Прави ги бели */
             transition: transform 0.3s ease-in-out;
         }
         
+        /* Добавяне на ховър ефект */
         .social-icons img:hover {
-            transform: scale(1.3); /* Ефект при ховър */
+            transform: scale(1.2); /* Леко уголемяване при ховър */
+            opacity: 0.8;
         }
+
 
 
     </style>
@@ -259,11 +262,18 @@
         <a href="tel:+359898747472">📞 +359898747472</a>
         <a href="mailto:danypavlov@gmail.com">✉ danypavlov@gmail.com</a>
         <div class="social-icons">
-            <a href="#"><img src="images/facebook-icon.png" alt="Facebook"></a>
-            <a href="#"><img src="images/instagram-icon.png" alt="Instagram"></a>
-            <a href="#"><img src="images/whatsapp-icon.png" alt="WhatsApp"></a>
+            <a href="https://www.facebook.com/" target="_blank">
+                <img src="images/facebook-icon.png" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/" target="_blank">
+                <img src="images/instagram-icon.png" alt="Instagram">
+            </a>
+            <a href="https://wa.me/YOUR_PHONE_NUMBER" target="_blank">
+                <img src="images/whatsapp-icon.png" alt="WhatsApp">
+            </a>
         </div>
     </div>
 </footer>
+
 </body>
 </html>
