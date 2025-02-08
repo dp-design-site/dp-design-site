@@ -15,23 +15,6 @@
     <div class="header-gradient"></div>
 </header>
 
-<script>
-    function toggleMenu() {
-        let menu = document.querySelector(".nav-menu");
-        menu.classList.toggle("open");
-    }
-
-    window.addEventListener("scroll", function () {
-        let scrollY = window.scrollY;
-        let title = document.querySelector(".header-title");
-
-        // Плавно скриване на заглавието при скрол
-        let fadeOut = Math.max(1 - scrollY / 150, 0);
-        title.style.opacity = fadeOut;
-        title.style.transform = `translateY(${scrollY / 3}px)`;
-    });
-</script>
-
 <style>
     .nav-bar {
         position: fixed;
