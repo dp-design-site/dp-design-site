@@ -161,43 +161,58 @@
             transition: background 0.3s ease
 ::contentReference[oaicite:0]{index=0}
         
-        /* Долен футър */
-        footer {
-            background: rgba(0, 0, 0, 0.9);
-            color: #fce5cd;
-            padding: 20px;
-            margin-top: 50px;
-        }
-        .footer-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }
-        .footer-content a {
-            color: #fce5cd;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        .footer-content a:hover {
-            text-decoration: underline;
-        }
-               /* Стил за социалните икони */
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 15px; /* Разстояние между иконите */
-            margin-top: 10px;
-        }
-        
-        .social-icons img {
-    width: 32px !important; /* Принуждава браузъра да приложи този размер */
-    height: 32px !important;
-    max-width: 32px !important;
-    max-height: 32px !important;
-            filter: brightness(0) invert(1); /* Прави ги бели */
-            transition: transform 0.3s ease-in-out;
-        }
+                    /* Стил за футъра */
+            footer {
+                background: rgba(0, 0, 0, 0.9);
+                color: #fce5cd; /* Основен цвят на текстовете */
+                padding: 20px;
+                margin-top: 50px;
+                text-align: center;
+            }
+            
+            /* Контейнер за футъра */
+            .footer-content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 20px; /* Разстояние между елементите */
+                flex-wrap: wrap; /* Ако няма място, да се подреждат надолу */
+            }
+            
+            /* Стил за телефон и имейл */
+            .footer-content a {
+                color: #fce5cd !important; /* Цвят като останалия текст */
+                text-decoration: none;
+                font-size: 16px;
+                transition: color 0.3s ease-in-out;
+            }
+            
+            /* Ховър ефект за телефон и имейл */
+            .footer-content a:hover {
+                color: #ffffff; /* Леко изсветляване при ховър */
+                text-decoration: underline;
+            }
+            
+            /* Контейнер за социалните икони */
+            .social-icons {
+                display: flex;
+                gap: 15px; /* Разстояние между иконите */
+                align-items: center;
+            }
+            
+            /* Стил за социалните икони */
+            .social-icons img {
+                width: 32px;
+                height: 32px;
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            /* Ховър ефект за социалните икони */
+            .social-icons img:hover {
+                transform: scale(1.2); /* Леко уголемяване при ховър */
+                opacity: 0.8;
+            }
+
         
         /* Добавяне на ховър ефект */
         .social-icons img:hover {
@@ -276,6 +291,7 @@
         </div>
     </div>
 </footer>
+
 
 </body>
 </html>
