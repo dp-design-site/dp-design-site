@@ -20,20 +20,23 @@
     function toggleMenu() {
         let menu = document.querySelector(".nav-menu");
         let hamburger = document.querySelector(".hamburger");
+
         if (!menu || !hamburger) {
-            console.error("❌ [Error] - Менюто или бутонът не са намерени в DOM!");
+            console.error("❌ [Error] - Менюто или бутонът не са намерени!");
             return;
         }
+
         menu.classList.toggle("open");
 
-        // Смяна на иконата ☰ ↔ ✖ при отворено меню
+        // Смяна на иконата ☰ ↔ ✖ при отваряне/затваряне
         hamburger.innerHTML = menu.classList.contains("open") ? "✖" : "☰";
-        console.log("✅ [Success] - Менюто е " + (menu.classList.contains("open") ? "отворено" : "затворено"));
+        console.log("✅ Менюто е " + (menu.classList.contains("open") ? "отворено" : "затворено"));
     }
 
     window.addEventListener("scroll", function () {
         let scrollY = window.scrollY;
         let title = document.querySelector(".header-title");
+
         if (title) {
             let fadeOut = Math.max(1 - scrollY / 150, 0);
             title.style.opacity = fadeOut;
@@ -107,21 +110,6 @@
     }
 
     @media (max-width: 768px) {
-        .nav-menu {
-            display: none;
-            flex-direction: column;
-            position: absolute;
-            top: 50px;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px 0;
-        }
-
-        .nav-menu.open {
-            display: flex;
-        }
-
         .hamburger {
             display: block;
             font-size: 26px;
@@ -131,10 +119,35 @@
             color: #fce5cd;
         }
 
+        .nav-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 10px;
+            text-align: center;
+            z-index: 999;
+        }
+
+        .nav-menu.open {
+            display: flex;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            height: auto;
+            text-align: center;
+        }
+
         .nav-menu a {
             display: block;
+            padding: 15px;
+            font-size: 18px;
+            width: 100%;
             text-align: center;
-            padding: 10px;
         }
     }
 
