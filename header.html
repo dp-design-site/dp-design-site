@@ -11,11 +11,6 @@
     </div>
 </nav>
 
-<header class="header-wrapper">
-    <div class="header-overlay"></div>
-    <h1 class="header-title">dp | design</h1>
-</header>
-
 <script>
     function toggleMenu() {
         let menu = document.querySelector(".nav-menu");
@@ -24,17 +19,10 @@
 
     window.addEventListener("scroll", function () {
         let scrollY = window.scrollY;
-        let title = document.querySelector(".header-title");
         let overlay = document.querySelector(".header-overlay");
-
-        // Плавно скриване на заглавието при скрол
-        let fadeOut = Math.max(1 - scrollY / 150, 0);
-        title.style.opacity = fadeOut;
-        title.style.transform = `translateY(${scrollY / 3}px)`; // Леко изместване нагоре
-
-        // Динамично покриване на фоновата снимка от черния бекграунд
-        let cover = Math.min(scrollY / 2, 100);
-        overlay.style.clipPath = `inset(${cover}px 0 0 0)`;
+        let maxMove = 80; // Колко пиксела да се вдига преливането
+        let moveUp = Math.min(scrollY / 3, maxMove);
+        overlay.style.clipPath = `inset(0 0 ${moveUp}px 0)`;
     });
 </script>
 
@@ -48,21 +36,43 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.5);
         padding: 0 20px;
         z-index: 1000;
     }
-
-    .nav-menu {
-        display: flex;
+    .nav-bar a {
+        color: #fce5cd;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 15px;
+        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
     }
-
+    .nav-bar a:hover {
+        transform: scale(1.1);
+        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
+    }
+    .nav-logo {
+        font-size: 18px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #fce5cd;
+        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+    }
+    .nav-logo:hover {
+        transform: scale(1.1);
+        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
+    }
     .hamburger {
         display: none;
         font-size: 24px;
         cursor: pointer;
     }
-
+    .nav-menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
     @media (max-width: 768px) {
         .nav-menu {
             display: none;
@@ -74,46 +84,16 @@
             background: rgba(0, 0, 0, 0.9);
             padding: 10px 0;
         }
-
         .nav-menu.open {
             display: flex;
         }
-
+        .nav-menu a {
+            display: block;
+            text-align: center;
+            padding: 10px;
+        }
         .hamburger {
             display: block;
         }
-    }
-
-    .header-wrapper {
-        position: relative;
-        height: 260px;
-        background: url('images/header-background.jpg') no-repeat center center/cover;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-start;
-        padding: 20px;
-        text-align: left;
-        overflow: hidden;
-    }
-
-    .header-title {
-        font-size: 32px;
-        font-weight: bold;
-        color: #fce5cd;
-        opacity: 1;
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        position: absolute;
-        bottom: 20px;
-        left: 20px;
-        z-index: 2;
-    }
-
-    .header-overlay {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: rgba(18, 18, 18, 1);
-        clip-path: inset(0 0 0 0);
-        transition: clip-path 0.3s ease-in-out;
     }
 </style>
