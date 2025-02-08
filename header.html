@@ -17,6 +17,7 @@
     <h1 class="header-title">Персонализирани продукти</h1>
     <div class="header-gradient"></div>
 </header>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         let headerTitle = document.querySelector(".header-title");
@@ -64,6 +65,24 @@
             }
         };
     });
+    // Променя заглавието в хедъра според страницата
+document.addEventListener("DOMContentLoaded", function () {
+    let titles = {
+        "index.html": "DP Design",
+        "personalized.html": "Персонализирани продукти",
+        "home_decor.html": "Дом и декорация",
+        "prototyping.html": "3D Прототипиране",
+        "contacts.html": "Контакти"
+    };
+
+    let currentPage = window.location.pathname.split("/").pop();
+    let headerTitle = document.querySelector(".header-title");
+
+    if (titles[currentPage] && headerTitle) {
+        headerTitle.textContent = titles[currentPage];
+    }
+});
+
 </script>
 
 <script>
@@ -76,6 +95,19 @@
             headerTitle.textContent = pageTitle;
         }
     });
+
+    // Функция за открояване на активния бутон в навигацията
+document.addEventListener("DOMContentLoaded", function () {
+    let currentPage = window.location.pathname.split("/").pop(); // Взима името на текущия файл
+    let menuLinks = document.querySelectorAll(".nav-menu a");
+
+    menuLinks.forEach(link => {
+        if (link.getAttribute("href") === currentPage) {
+            link.classList.add("active"); // Добавя класа за затъмняване
+        }
+    });
+});
+
 </script>
 
 
