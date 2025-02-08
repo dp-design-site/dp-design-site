@@ -11,8 +11,8 @@
 </nav>
 
 <header class="header-wrapper">
-    <div class="header-overlay"></div>
     <h1 class="header-title">dp | design</h1>
+    <div class="header-gradient"></div>
 </header>
 
 <script>
@@ -23,18 +23,12 @@
 
     window.addEventListener("scroll", function () {
         let scrollY = window.scrollY;
-        let overlay = document.querySelector(".header-overlay");
         let title = document.querySelector(".header-title");
 
         // Плавно скриване на заглавието при скрол
         let fadeOut = Math.max(1 - scrollY / 150, 0);
         title.style.opacity = fadeOut;
         title.style.transform = `translateY(${scrollY / 3}px)`;
-
-        // Динамично преливане върху фоновото изображение
-        let maxMove = 80;
-        let moveUp = Math.min(scrollY / 3, maxMove);
-        overlay.style.clipPath = `inset(0 0 ${moveUp}px 0)`;
     });
 </script>
 
@@ -144,12 +138,12 @@
         z-index: 2;
     }
 
-    .header-overlay {
+    /* Градиент за плавно преливане само в долния край */
+    .header-gradient {
         position: absolute;
+        bottom: 0;
         width: 100%;
-        height: 100%;
-        background: rgba(18, 18, 18, 0.8);
-        clip-path: inset(0 0 0 0);
-        transition: clip-path 0.3s ease-in-out;
+        height: 50px;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
     }
 </style>
