@@ -17,7 +17,7 @@
 
         /* Фон за всяка страница (сменя се за 3D прототипиране) */
         .category-header {
-            background: url('images/default-category-bg.jpg') no-repeat center center/cover;
+            background: url('images/header-background.jpg') no-repeat center center/cover;
             height: 260px;
             display: flex;
             flex-direction: column;
@@ -89,6 +89,45 @@
             margin-top: 50px;
             text-align: center;
         }
+        /* Навигационно меню */
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 0 20px;
+    z-index: 1000;
+}
+
+.nav-bar a {
+    color: #fce5cd;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.nav-bar a:hover {
+    text-decoration: underline;
+}
+
+/* Лого в ляво на навигацията */
+.nav-logo {
+    margin-right: auto;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Коригиране на отстоянието, за да не се застъпва */
+.category-header {
+    margin-top: 50px;
+}
+
     </style>
 </head>
 <body>
