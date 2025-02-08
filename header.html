@@ -15,29 +15,6 @@
     <h1 class="header-title">dp | design</h1>
 </header>
 
-<script>
-    function toggleMenu() {
-        let menu = document.querySelector(".nav-menu");
-        menu.classList.toggle("open");
-    }
-
-    window.addEventListener("scroll", function () {
-        let scrollY = window.scrollY;
-        let overlay = document.querySelector(".header-overlay");
-        let title = document.querySelector(".header-title");
-
-        // Плавно скриване на заглавието при скрол
-        let fadeOut = Math.max(1 - scrollY / 150, 0);
-        title.style.opacity = fadeOut;
-        title.style.transform = `translateY(${scrollY / 3}px)`;
-
-        // Преливането да покрива динамично фоновото изображение
-        let maxMove = 80;
-        let moveUp = Math.min(scrollY / 3, maxMove);
-        overlay.style.clipPath = `inset(0 0 ${moveUp}px 0)`;
-    });
-</script>
-
 <style>
     .nav-bar {
         position: fixed;
