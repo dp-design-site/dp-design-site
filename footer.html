@@ -21,13 +21,23 @@
 
 
 <style>
-    footer {
-        background: rgba(0, 0, 0, 0.5);
-        color: #fce5cd;
-        padding: 20px;
-        margin-top: 50px;
-        text-align: center;
-    }
+   footer {
+    background: rgba(0, 0, 0, 0.5); /* По-прозрачен бекграунд */
+    color: #fce5cd;
+    padding: 20px;
+    margin-top: 50px;
+    text-align: center;
+}
+
+    .footer-content a {
+    color: #fce5cd !important; /* Основен цвят на текста */
+    text-decoration: none;
+}
+
+.footer-content a:hover {
+    text-decoration: underline; /* Подчертаване при ховър */
+}
+    
     .social-icons {
         display: flex;
         justify-content: center;
