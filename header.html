@@ -97,10 +97,14 @@
 
     /* ✅ Навигационно меню за мобилни устройства */
     .nav-menu {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Подравняване в центъра */
+    gap: 15px; /* Разстояние между бутоните */
+    padding: 0 15px;
+    flex-grow: 1; /* Позволява адаптиране */
+}
+
 
     @media (max-width: 768px) {
         .hamburger {
