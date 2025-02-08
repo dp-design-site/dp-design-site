@@ -14,102 +14,43 @@
 </nav>
 
 <header class="header-wrapper">
-    <h1 class="header-title">Персонализирани продукти</h1>
+    <h1 class="header-title"></h1>  <!-- Оставяме го празно, ще се попълни динамично -->
     <div class="header-gradient"></div>
 </header>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // ✅ Смяна на заглавието в хедъра спрямо страницата
+        let titles = {
+            "index.html": "DP Design",
+            "personalized.html": "Персонализирани продукти",
+            "home_decor.html": "Дом и декорация",
+            "prototyping.html": "3D Прототипиране",
+            "contacts.html": "Контакти"
+        };
+
+        let currentPage = window.location.pathname.split("/").pop();
         let headerTitle = document.querySelector(".header-title");
-        
-        if (headerTitle) {
-            // Взима името на страницата от URL
-            let path = window.location.pathname.split("/").pop();
-            let pageName = path.replace(".html", "").replace("_", " ");
 
-            // Преобразува първата буква в главна
-            pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
-
-            // Ако сме на index.html -> задава "DP Design"
-            if (pageName === "Index" || pageName === "") {
-                pageName = "DP Design";
-            }
-
-            // Променя заглавието в хедъра
-            headerTitle.textContent = pageName;
+        if (titles[currentPage] && headerTitle) {
+            headerTitle.textContent = titles[currentPage];
         }
-    });
-</script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let currentPath = window.location.pathname.split("/").pop();
+        // ✅ Активен бутон в навигацията
         let menuLinks = document.querySelectorAll(".nav-menu a");
-
         menuLinks.forEach(link => {
-            let href = link.getAttribute("href");
-            if (currentPath === href) {
+            if (link.getAttribute("href") === currentPage) {
                 link.classList.add("active");
             }
         });
     });
-</script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // ✅ Глобална функция за отваряне/затваряне на мобилното меню
-        window.toggleMenu = function () {
-            let menu = document.querySelector(".nav-menu");
-            if (menu) {
-                menu.classList.toggle("open");
-            }
-        };
-    });
-    // Променя заглавието в хедъра според страницата
-document.addEventListener("DOMContentLoaded", function () {
-    let titles = {
-        "index.html": "DP Design",
-        "personalized.html": "Персонализирани продукти",
-        "home_decor.html": "Дом и декорация",
-        "prototyping.html": "3D Прототипиране",
-        "contacts.html": "Контакти"
-    };
-
-    let currentPage = window.location.pathname.split("/").pop();
-    let headerTitle = document.querySelector(".header-title");
-
-    if (titles[currentPage] && headerTitle) {
-        headerTitle.textContent = titles[currentPage];
+    // ✅ Функция за отваряне/затваряне на мобилното меню
+    function toggleMenu() {
+        let menu = document.querySelector(".nav-menu");
+        menu.classList.toggle("open");
     }
-});
-
 </script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let pageTitle = document.title; // Взима заглавието на страницата
-        let headerTitle = document.querySelector(".header-title");
-
-        // Ако заглавието съществува, го обновява
-        if (headerTitle) {
-            headerTitle.textContent = pageTitle;
-        }
-    });
-
-    // Функция за открояване на активния бутон в навигацията
-document.addEventListener("DOMContentLoaded", function () {
-    let currentPage = window.location.pathname.split("/").pop(); // Взима името на текущия файл
-    let menuLinks = document.querySelectorAll(".nav-menu a");
-
-    menuLinks.forEach(link => {
-        if (link.getAttribute("href") === currentPage) {
-            link.classList.add("active"); // Добавя класа за затъмняване
-        }
-    });
-});
-
-</script>
-
 
 <style>
     /* ✅ Основен стил на навигационния бар */
@@ -126,30 +67,12 @@ document.addEventListener("DOMContentLoaded", function () {
         padding: 0 20px;
         z-index: 1000;
     }
-    .nav-menu a.active {
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffcc99;
-    text-shadow: 0px 0px 8px rgba(255, 204, 153, 0.8);
-    transform: scale(1.05);
-}
 
-    .nav-left {
+    .nav-menu {
         display: flex;
-        align-items: center;
-    }
-
-    .nav-logo {
-        font-size: 18px;
-        font-weight: bold;
-        text-decoration: none;
-        color: #fce5cd;
-        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-    }
-
-    .nav-logo:hover {
-        transform: scale(1.05);
-        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
+        justify-content: flex-end;
+        gap: 15px;
+        padding-right: 20px;
     }
 
     .nav-menu a {
@@ -157,13 +80,21 @@ document.addEventListener("DOMContentLoaded", function () {
         text-decoration: none;
         font-size: 14px;
         font-weight: bold;
-        margin-left: 15px;
         transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
     }
 
     .nav-menu a:hover {
         transform: scale(1.05);
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
+    }
+
+    /* ✅ Подчертаване на активната страница */
+    .nav-menu a.active {
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffcc99;
+        text-shadow: 0px 0px 8px rgba(255, 204, 153, 0.8);
+        transform: scale(1.05);
     }
 
     /* ✅ Хамбургер бутон */
@@ -182,15 +113,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .hamburger:hover {
         transform: scale(1.2);
     }
-
-    /* ✅ Навигационно меню за мобилни устройства */
-   .nav-menu {
-    display: flex;
-    justify-content: flex-end; /* Подравнява бутоните в дясно */
-    gap: 15px; /* Разстояние между бутоните */
-    padding-right: 20px; /* Оставя малко разстояние от ръба */
-}
-
 
     @media (max-width: 768px) {
         .hamburger {
