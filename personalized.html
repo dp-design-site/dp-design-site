@@ -95,5 +95,28 @@
         .hamburger {
             display: block;
         }
+        header-wrapper {
+        position: relative;
+        height: 260px;
+        background: url('images/header-background.jpg') no-repeat center center/cover;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+        padding: 20px;
+        text-align: left;
+        overflow: hidden;
+    }
+
+    .header-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #fce5cd;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        position: absolute;
+        bottom: 20px; /* Долу в левия ъгъл */
+        left: 20px;
+        z-index: 2;
+    }
     }
 </style>
