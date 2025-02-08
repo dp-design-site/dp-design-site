@@ -21,26 +21,12 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // ✅ Глобална функция за отваряне/затваряне на мобилното меню
-        function toggleMenu() {
+        window.toggleMenu = function () {
             let menu = document.querySelector(".nav-menu");
             if (menu) {
                 menu.classList.toggle("open");
             }
-        }
-        
-        // ✅ Уверяваме се, че toggleMenu е достъпна глобално
-        window.toggleMenu = toggleMenu;
-
-        // ✅ Плавно скриване на заглавието при скрол
-        let title = document.querySelector(".header-title");
-        if (title) {
-            window.addEventListener("scroll", function () {
-                let scrollY = window.scrollY;
-                let fadeOut = Math.max(1 - scrollY / 150, 0);
-                title.style.opacity = fadeOut;
-                title.style.transform = `translateY(${scrollY / 3}px)`;
-            });
-        }
+        };
     });
 </script>
 
@@ -164,8 +150,6 @@
         font-size: 32px;
         font-weight: bold;
         color: #fce5cd;
-        opacity: 1;
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
         position: absolute;
         bottom: 10px;
         left: 20px;
