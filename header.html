@@ -19,7 +19,15 @@
 <script>
     function toggleMenu() {
         let menu = document.querySelector(".nav-menu");
+        let hamburger = document.querySelector(".hamburger");
         menu.classList.toggle("open");
+
+        // Смяна на иконата ☰ ↔ ✖ при отворено меню
+        if (menu.classList.contains("open")) {
+            hamburger.innerHTML = "✖";
+        } else {
+            hamburger.innerHTML = "☰";
+        }
     }
 
     window.addEventListener("scroll", function () {
@@ -79,6 +87,15 @@
         display: none;
         font-size: 24px;
         cursor: pointer;
+        color: #fce5cd;
+        background: none;
+        border: none;
+        padding: 10px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .hamburger:hover {
+        transform: scale(1.2);
     }
 
     .nav-menu {
@@ -95,7 +112,7 @@
             top: 50px;
             left: 0;
             width: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.8);
             padding: 10px 0;
         }
 
@@ -105,7 +122,6 @@
 
         .hamburger {
             display: block;
-            cursor: pointer;
         }
 
         .nav-menu a {
@@ -134,12 +150,12 @@
         opacity: 1;
         transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
         position: absolute;
-        bottom: 2px; /* Долу в левия ъгъл */
+        bottom: 2px;
         left: 40px;
         z-index: 2;
     }
 
-    /* Градиентът да започва от самото начало */
+    /* Градиентът започва от самото начало */
     .header-gradient {
         position: absolute;
         bottom: 0;
