@@ -20,24 +20,25 @@
     function toggleMenu() {
         let menu = document.querySelector(".nav-menu");
         let hamburger = document.querySelector(".hamburger");
+        if (!menu || !hamburger) {
+            console.error("❌ [Error] - Менюто или бутонът не са намерени в DOM!");
+            return;
+        }
         menu.classList.toggle("open");
 
         // Смяна на иконата ☰ ↔ ✖ при отворено меню
-        if (menu.classList.contains("open")) {
-            hamburger.innerHTML = "✖";
-        } else {
-            hamburger.innerHTML = "☰";
-        }
+        hamburger.innerHTML = menu.classList.contains("open") ? "✖" : "☰";
+        console.log("✅ [Success] - Менюто е " + (menu.classList.contains("open") ? "отворено" : "затворено"));
     }
 
     window.addEventListener("scroll", function () {
         let scrollY = window.scrollY;
         let title = document.querySelector(".header-title");
-
-        // Плавно скриване на заглавието при скрол
-        let fadeOut = Math.max(1 - scrollY / 150, 0);
-        title.style.opacity = fadeOut;
-        title.style.transform = `translateY(${scrollY / 3}px)`;
+        if (title) {
+            let fadeOut = Math.max(1 - scrollY / 150, 0);
+            title.style.opacity = fadeOut;
+            title.style.transform = `translateY(${scrollY / 3}px)`;
+        }
     });
 </script>
 
