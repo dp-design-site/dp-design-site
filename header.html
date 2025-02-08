@@ -23,17 +23,20 @@
     }
 
     window.addEventListener("scroll", function () {
-        let scrollY = window.scrollY;
-        let overlay = document.querySelector(".header-overlay");
-        let title = document.querySelector(".header-title");
-        let maxMove = 80; // Колко пиксела да се вдига преливането
-        let moveUp = Math.min(scrollY / 3, maxMove);
-        overlay.style.clipPath = `inset(0 0 ${moveUp}px 0)`;
+    let scrollY = window.scrollY;
+    let overlay = document.querySelector(".header-overlay");
+    let title = document.querySelector(".header-title");
 
-        // Плавно изчезване на заглавието при скрол
-        let fadeOut = Math.max(1 - scrollY / 150, 0);
-        title.style.opacity = fadeOut;
-    });
+    // Придвижване на преливането (max 100px нагоре)
+    let moveUp = Math.min(scrollY / 3, 100);
+    overlay.style.clipPath = `inset(0 0 ${moveUp}px 0)`;
+
+    // Плавно скриване на заглавието при скрол (fade-out)
+    let fadeOut = Math.max(1 - scrollY / 150, 0);
+    title.style.opacity = fadeOut;
+    title.style.transform = `translateY(${scrollY / 3}px)`; // Леко изместване нагоре при скрол
+});
+
 </script>
 
 <style>
@@ -84,30 +87,36 @@
         justify-content: flex-end;
     }
     .header-wrapper {
-        position: relative;
-        height: 260px;
-        background: url('images/header-background.jpg') no-repeat center center/cover;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-start;
-        padding: 20px;
-        text-align: left;
-    }
-    .header-title {
-        font-size: 32px;
-        font-weight: bold;
-        color: #fce5cd;
-        opacity: 1;
-        transition: opacity 0.3s ease-in-out;
-    }
-    .header-overlay {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: rgba(18, 18, 18, 1);
-        clip-path: inset(0 0 0 0);
-        transition: clip-path 0.3s ease-in-out;
-    }
+    position: relative;
+    height: 260px;
+    background: url('images/header-background.jpg') no-repeat center center/cover;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 20px;
+    text-align: left;
+    overflow: hidden;
+}
+
+.header-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #fce5cd;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    position: relative;
+    z-index: 2;
+}
+
+.header-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(18, 18, 18, 1);
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 0.3s ease-in-out;
+}
+
     @media (max-width: 768px) {
         .nav-menu {
             display: none;
