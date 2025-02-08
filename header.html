@@ -30,6 +30,19 @@
     });
 </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let pageTitle = document.title; // Взима заглавието на страницата
+        let headerTitle = document.querySelector(".header-title");
+
+        // Ако заглавието съществува, го обновява
+        if (headerTitle) {
+            headerTitle.textContent = pageTitle;
+        }
+    });
+</script>
+
+
 <style>
     /* ✅ Основен стил на навигационния бар */
     .nav-bar {
