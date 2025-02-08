@@ -13,6 +13,7 @@
             margin: 0;
             padding: 0;
             text-align: center;
+            overflow-x: hidden; /* Скриване на хоризонталния скрол */
         }
 
         /* Контейнер за категориите */
@@ -22,10 +23,9 @@
             justify-content: center;
             text-align: center;
             gap: 20px;
-            overflow: hidden;
             min-height: 100vh;
             align-items: center;
-            padding-top: 60px; /* За да не се застъпва с навигацията */
+            padding: 40px 20px 0 20px; /* Намаляване на разстоянието отгоре */
         }
 
         /* Стилове за всяка категория */
@@ -47,7 +47,7 @@
                 height: auto; /* Автоматична височина на секцията */
             }
             .category-container {
-                width: 90%; /* Сега ще има малко рамка отстрани */
+                width: 90%;
                 max-width: 400px;
             }
         }
@@ -60,7 +60,7 @@
             border-radius: 10px;
         }
 
-        /* Ефект при ховър на десктоп */
+        /* Ефект при ховър */
         .category-container:hover img {
             transform: scale(1.1);
         }
@@ -72,23 +72,58 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90%;
+            height: auto;
             background: rgba(0, 0, 0, 0.6);
             color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             font-size: 18px;
             font-weight: bold;
             opacity: 0;
             transition: 0.5s ease-in-out;
             padding: 15px;
+            text-align: center;
             border-radius: 10px;
         }
 
         .category-container:hover .overlay {
             opacity: 1;
         }
+
+        /* Леко изсветляване при докосване на мобилни устройства */
+        @media (max-width: 768px) {
+            .category-container:active img {
+                filter: brightness(1.2);
+            }
+            .category-container:active .overlay {
+                opacity: 1;
+            }
+        }
+
+        /* Заглавия под категориите - корекция на цвета */
+        .category-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 10px;
+            background: transparent;
+            color: #fce5cd; /* Цветът, който използваме за целия сайт */
+            border-radius: 5px;
+            transition: background 0.3s ease, transform 0.3s ease-in-out;
+            display: inline-block;
+        }
+
+        .category-title:hover {
+            transform: scale(1.05);
+            text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
+        }
+
     </style>
 </head>
-<body onload="loadComponents()">
-    <!-- Динамично вмъкнат хедър -->
+<body>
+    <!-- Динамичен хедър -->
     <div id="header"></div>
 
     <!-- Основни категории -->
@@ -123,18 +158,27 @@
         </div>
     </div>
 
-    <!-- Динамично вмъкнат футър -->
+    <!-- Динамичен футър -->
     <div id="footer"></div>
 
+    <!-- Скриптове за вмъкване на хедър и футър -->
     <script>
         function loadComponents() {
             fetch('header.html')
                 .then(response => response.text())
-                .then(data => document.getElementById('header').innerHTML = data);
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                });
+
             fetch('footer.html')
                 .then(response => response.text())
-                .then(data => document.getElementById('footer').innerHTML = data);
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
         }
+
+        loadComponents();
     </script>
+
 </body>
 </html>
