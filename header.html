@@ -1,4 +1,3 @@
-<!-- header.html -->
 <nav class="nav-bar">
     <a href="index.html" class="nav-logo">dp | design</a>
     <span class="hamburger" onclick="toggleMenu()">☰</span>
@@ -11,15 +10,29 @@
     </div>
 </nav>
 
+<header class="header-wrapper">
+    <div class="header-overlay"></div>
+    <h1 class="header-title">dp | design</h1>
+</header>
+
 <script>
     function toggleMenu() {
         let menu = document.querySelector(".nav-menu");
         menu.classList.toggle("open");
     }
+
     window.addEventListener("scroll", function () {
         let scrollY = window.scrollY;
         let overlay = document.querySelector(".header-overlay");
-        let maxMove = 200; // Колко пиксела да се вдига преливането
+        let title = document.querySelector(".header-title");
+
+        // Плавно скриване на заглавието при скрол
+        let fadeOut = Math.max(1 - scrollY / 150, 0);
+        title.style.opacity = fadeOut;
+        title.style.transform = `translateY(${scrollY / 3}px)`;
+
+        // Преливането да покрива динамично фоновото изображение
+        let maxMove = 80;
         let moveUp = Math.min(scrollY / 3, maxMove);
         overlay.style.clipPath = `inset(0 0 ${moveUp}px 0)`;
     });
@@ -35,7 +48,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.7);
         padding: 0 20px;
         z-index: 1000;
     }
@@ -48,7 +61,7 @@
         transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
     }
     .nav-bar a:hover {
-        transform: scale(1.05);
+        transform: scale(1.1);
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
     }
     .nav-logo {
@@ -59,8 +72,8 @@
         transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
     }
     .nav-logo:hover {
-        transform: scale(1.05);
-        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5);
+        transform: scale(1.1);
+        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
     }
     .hamburger {
         display: none;
@@ -80,19 +93,47 @@
             top: 50px;
             left: 0;
             width: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.9);
             padding: 10px 0;
         }
         .nav-menu.open {
             display: flex;
         }
-        .nav-menu a {
-            display: block;
-            text-align: center;
-            padding: 10px;
-        }
         .hamburger {
             display: block;
         }
+    }
+
+    .header-wrapper {
+        position: relative;
+        height: 260px;
+        background: url('images/header-background.jpg') no-repeat center center/cover;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+        padding: 20px;
+        text-align: left;
+        overflow: hidden;
+    }
+
+    .header-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #fce5cd;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        position: absolute;
+        bottom: 20px; /* Поставя текста в долния край на хедъра */
+        left: 20px; /* Премества го в левия край */
+        z-index: 2;
+    }
+
+    .header-overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(18, 18, 18, 0.8); /* Оправен фон */
+        clip-path: inset(0 0 0 0);
+        transition: clip-path 0.3s ease-in-out;
     }
 </style>
