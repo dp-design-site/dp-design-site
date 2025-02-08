@@ -20,22 +20,27 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // ✅ Глобална функция за отваряне/затваряне на мобилното меню
         function toggleMenu() {
             let menu = document.querySelector(".nav-menu");
-            menu.classList.toggle("open");
+            if (menu) {
+                menu.classList.toggle("open");
+            }
         }
         
-        // ✅ Гарантираме, че `toggleMenu()` е глобална
+        // ✅ Уверяваме се, че toggleMenu е достъпна глобално
         window.toggleMenu = toggleMenu;
 
         // ✅ Плавно скриване на заглавието при скрол
-        window.addEventListener("scroll", function () {
-            let scrollY = window.scrollY;
-            let title = document.querySelector(".header-title");
-            let fadeOut = Math.max(1 - scrollY / 150, 0);
-            title.style.opacity = fadeOut;
-            title.style.transform = `translateY(${scrollY / 3}px)`;
-        });
+        let title = document.querySelector(".header-title");
+        if (title) {
+            window.addEventListener("scroll", function () {
+                let scrollY = window.scrollY;
+                let fadeOut = Math.max(1 - scrollY / 150, 0);
+                title.style.opacity = fadeOut;
+                title.style.transform = `translateY(${scrollY / 3}px)`;
+            });
+        }
     });
 </script>
 
