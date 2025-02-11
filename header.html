@@ -53,44 +53,34 @@
                 console.log("✅ Активната страница е: ", href);
             }
         });
-
-        // ✅ Функция за отваряне/затваряне на менюто (фиксирана!)
-        window.toggleMenu = function () {
-            console.log("☰ Кликнато е върху бутона за меню!");
-
-            let menu = document.querySelector(".nav-menu");
-            let overlay = document.querySelector(".menu-overlay");
-
-            if (menu.classList.contains("open")) {
-                menu.classList.remove("open");
-                overlay.classList.remove("visible");
-                console.log("❌ Менюто е скрито!");
-            } else {
-                menu.classList.add("open");
-                overlay.classList.add("visible");
-                console.log("✅ Менюто е отворено!");
-            }
-        };
     });
-</script>
-<script>
+
+    // ✅ Правим `toggleMenu()` глобална функция
     window.toggleMenu = function () {
         console.log("☰ Кликнато е върху бутона за меню!");
+
         let menu = document.querySelector(".nav-menu");
         let overlay = document.querySelector(".menu-overlay");
+
+        if (!menu || !overlay) {
+            console.error("❌ Грешка: Не е намерен елемент за менюто или overlay!");
+            return;
+        }
 
         if (menu.classList.contains("open")) {
             menu.classList.remove("open");
             overlay.classList.remove("visible");
-            console.log("❌ Менюто е скрито!");
+            console.log("❌ Менюто е затворено!");
         } else {
             menu.classList.add("open");
             overlay.classList.add("visible");
             console.log("✅ Менюто е отворено!");
         }
     };
-</script>
 
+    // ✅ Проверка дали toggleMenu() съществува
+    console.log("🚀 Проверка на toggleMenu():", window.toggleMenu);
+</script>
 
 
 <!-- ✅ CSS -->
