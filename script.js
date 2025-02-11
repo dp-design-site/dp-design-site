@@ -18,10 +18,12 @@ function toggleMenu() {
     console.log(menu.classList.contains("open") ? "✅ Менюто е отворено!" : "❌ Менюто е затворено!");
 }
 
-// ✅ Изпълняваме toggleMenu само ако има бутон
-document.addEventListener("DOMContentLoaded", function () {
-    const menuButton = document.getElementById("menuButton");
-    const menuOverlay = document.getElementById("menuOverlay");
+// ✅ Функция за инициализиране на менюто
+function initMenu() {
+    console.log("🚀 Инициализация на менюто!");
+
+    let menuButton = document.getElementById("menuButton");
+    let menuOverlay = document.getElementById("menuOverlay");
 
     if (menuButton) {
         menuButton.addEventListener("click", toggleMenu);
@@ -36,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.warn("⚠️ Фонът на менюто не е намерен!");
     }
-});
+}
 
 // ✅ Функция за динамично заглавие и активна страница
 function updatePageState() {
@@ -72,8 +74,14 @@ function updatePageState() {
             link.classList.remove("active");
         }
     });
+
+    // ❗ Инициализираме менюто при смяна на страницата
+    initMenu();
 }
 
-// ✅ Изпълняваме updatePageState при зареждане и навигация
-document.addEventListener("DOMContentLoaded", updatePageState);
+// ✅ Изпълняваме updatePageState и initMenu при зареждане и навигация
+document.addEventListener("DOMContentLoaded", function () {
+    updatePageState();
+    initMenu();
+});
 window.addEventListener("popstate", updatePageState);
