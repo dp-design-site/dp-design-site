@@ -1,3 +1,4 @@
+<!-- Навигационно меню -->
 <nav class="nav-bar">
     <div class="nav-left">
         <a href="index.html" class="nav-logo">dp | design</a>
@@ -12,14 +13,30 @@
     </div>
 </nav>
 
+<!-- Хедър с фоново изображение и динамично заглавие -->
 <header class="header-wrapper">
     <h1 class="header-title">dp | design</h1>
     <div class="header-gradient"></div>
 </header>
 
+<!-- JavaScript -->
 <script>
+    // ✅ Функция за отваряне/затваряне на мобилното меню
+    function toggleMenu() {
+        let menu = document.querySelector(".nav-menu");
+        let overlay = document.querySelector(".menu-overlay");
+
+        if (menu.classList.contains("open")) {
+            menu.classList.remove("open");
+            overlay.classList.remove("visible");
+        } else {
+            menu.classList.add("open");
+            overlay.classList.add("visible");
+        }
+    }
+
+    // ✅ Функция за динамично задаване на заглавието
     document.addEventListener("DOMContentLoaded", function () {
-        let headerTitle = document.querySelector(".header-title");
         let titles = {
             "index.html": "DP Design",
             "personalized.html": "Персонализирани продукти",
@@ -27,31 +44,31 @@
             "prototyping.html": "3D Прототипиране",
             "contacts.html": "Контакти"
         };
+
         let currentPage = window.location.pathname.split("/").pop();
+        let headerTitle = document.querySelector(".header-title");
+
         if (titles[currentPage] && headerTitle) {
             headerTitle.textContent = titles[currentPage];
         }
     });
 
-    function toggleMenu() {
-        let menu = document.querySelector(".nav-menu");
-        let overlay = document.querySelector(".menu-overlay");
-        menu.classList.toggle("open");
-        overlay.classList.toggle("show");
-    }
+    // ✅ Функция за подчертаване на активния бутон
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentPage = window.location.pathname.split("/").pop();
+        let menuLinks = document.querySelectorAll(".nav-menu a");
 
-    document.addEventListener("click", function (event) {
-        let menu = document.querySelector(".nav-menu");
-        let hamburger = document.querySelector(".hamburger");
-        let overlay = document.querySelector(".menu-overlay");
-        if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
-            menu.classList.remove("open");
-            overlay.classList.remove("show");
-        }
+        menuLinks.forEach(link => {
+            if (link.getAttribute("href") === currentPage) {
+                link.classList.add("active");
+            }
+        });
     });
 </script>
 
+<!-- CSS -->
 <style>
+    /* ✅ Основен стил на навигационния бар */
     .nav-bar {
         position: fixed;
         top: 0;
@@ -64,14 +81,6 @@
         background: rgba(0, 0, 0, 0.5);
         padding: 0 20px;
         z-index: 1000;
-    }
-
-    .nav-menu a.active {
-        font-size: 16px;
-        font-weight: bold;
-        color: #ffcc99;
-        text-shadow: 0px 0px 8px rgba(255, 204, 153, 0.8);
-        transform: scale(1.05);
     }
 
     .nav-left {
@@ -92,12 +101,6 @@
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
     }
 
-    .nav-menu {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
-
     .nav-menu a {
         color: #fce5cd;
         text-decoration: none;
@@ -107,11 +110,20 @@
         transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
     }
 
+    .nav-menu a.active {
+        font-size: 16px;
+        font-weight: bold;
+        color: #ffcc99;
+        text-shadow: 0px 0px 8px rgba(255, 204, 153, 0.8);
+        transform: scale(1.05);
+    }
+
     .nav-menu a:hover {
         transform: scale(1.05);
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
     }
 
+    /* ✅ Хамбургер бутон */
     .hamburger {
         display: none;
         font-size: 24px;
@@ -128,54 +140,92 @@
         transform: scale(1.2);
     }
 
+    /* ✅ Навигационно меню за мобилни устройства */
+    .nav-menu {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        padding-right: 20px;
+    }
+
     @media (max-width: 768px) {
         .hamburger {
             display: block;
         }
 
-        .menu-overlay {
-            position: fixed;
+        .nav-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out;
-            z-index: 999;
-        }
-
-        .menu-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .nav-menu {
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            left: -100%;
-            width: 66%;
+            width: 60%;
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
             padding: 20px;
             text-align: left;
-            transition: left 0.3s ease-in-out;
-            z-index: 1000;
+            z-index: 999;
         }
 
         .nav-menu.open {
-            left: 0;
+            display: flex;
         }
 
         .nav-menu a {
             display: block;
             padding: 15px;
             font-size: 18px;
+            width: 100%;
+            text-align: left;
         }
     }
-</style>
 
-<div class="menu-overlay"></div>
+    /* ✅ Заглавие и фон */
+    .header-wrapper {
+        position: relative;
+        height: 220px;
+        background: url('images/header-background.jpg') no-repeat center center/cover;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+        padding: 20px;
+        text-align: left;
+        overflow: hidden;
+    }
+
+    .header-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #fce5cd;
+        position: absolute;
+        bottom: 10px;
+        left: 20px;
+        z-index: 2;
+    }
+
+    /* ✅ Фиксиран градиент */
+    .header-gradient {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
+    }
+
+    /* ✅ Фон за мобилното меню */
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        display: none;
+    }
+
+    .menu-overlay.visible {
+        display: block;
+    }
+</style>
