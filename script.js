@@ -44,18 +44,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ✅ Динамично заглавие
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ Динамично заглавие - старт!");
+    console.log("✅ Динамично заглавие и активна страница - старт!");
 
     // Обект с заглавия за различните страници
     let titles = {
         "index.html": "DP Design",
+        "": "DP Design", // За root URL без 'index.html'
         "personalized.html": "Персонализирани продукти",
         "home_decor.html": "Дом и декорация",
         "prototyping.html": "3D Прототипиране",
         "contacts.html": "Контакти"
     };
 
-    let currentPage = window.location.pathname.split("/").pop(); // Взимаме името на текущата страница
+    let currentPage = window.location.pathname.split("/").pop() || "index.html"; // Ако е празно -> значи е 'index.html'
     let headerTitle = document.querySelector(".header-title"); // Търсим заглавието в хедъра
 
     if (headerTitle) {
@@ -64,7 +65,21 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.error("❌ Не е намерен елемент .header-title!");
     }
+
+    // ✅ Активна страница в менюто
+    let menuLinks = document.querySelectorAll(".nav-menu a");
+
+    menuLinks.forEach(link => {
+        let href = link.getAttribute("href").split("/").pop() || "index.html"; // Ако е празно, значи е index.html
+        if (currentPage === href) {
+            link.classList.add("active");
+            console.log("✅ Активната страница е: ", href);
+        } else {
+            link.classList.remove("active"); // Премахва .active от всички останали
+        }
+    });
 });
+
 
 // ✅ Активна страница в менюто
 document.addEventListener("DOMContentLoaded", function () {
