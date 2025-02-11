@@ -16,7 +16,7 @@
 <!-- Фон за мобилното меню -->
 <div class="menu-overlay" onclick="toggleMenu()"></div>
 
-<!-- Хедър с фоново изображение и динамично заглавие -->
+<!-- ✅ Хедър с фоново изображение и динамично заглавие -->
 <header class="header-wrapper">
     <h1 class="header-title">Заглавие</h1>
     <div class="header-gradient"></div>
@@ -200,5 +200,38 @@
 
     .menu-overlay.visible {
         display: block;
+    }
+
+    /* ✅ Хедър с фоново изображение */
+    .header-wrapper {
+        position: relative;
+        height: 220px;
+        background: url('images/header-background.jpg') no-repeat center center/cover;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+        padding: 20px;
+        text-align: left;
+        overflow: hidden;
+    }
+
+    .header-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #fce5cd;
+        position: absolute;
+        bottom: 10px;
+        left: 20px;
+        z-index: 2;
+    }
+
+    /* ✅ Фиксиран градиент */
+    .header-gradient {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
     }
 </style>
