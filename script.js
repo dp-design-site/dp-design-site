@@ -43,10 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ✅ Динамично заглавие
-window.addEventListener("load", function () {
-    console.log("✅ Динамично заглавие и активна страница - старт!");
+function updatePageState() {
+    console.log("✅ Обновяване на заглавие и активна страница!");
 
-    // Обект с заглавия за различните страници
     let titles = {
         "index.html": "DP Design",
         "": "DP Design", // За root URL без 'index.html'
@@ -56,29 +55,35 @@ window.addEventListener("load", function () {
         "contacts.html": "Контакти"
     };
 
-    let currentPage = window.location.pathname.split("/").pop() || "index.html"; // Ако е празно -> значи е 'index.html'
-    let headerTitle = document.querySelector(".header-title"); // Търсим заглавието в хедъра
+    let currentPage = window.location.pathname.split("/").pop() || "index.html";
+    let headerTitle = document.querySelector(".header-title");
 
     if (headerTitle) {
-        headerTitle.textContent = titles[currentPage] || "DP Design"; // Ако страницата не е в списъка -> "DP Design"
+        headerTitle.textContent = titles[currentPage] || "DP Design";
         console.log("✅ Заглавието е сменено на: ", headerTitle.textContent);
     } else {
         console.error("❌ Не е намерен елемент .header-title!");
     }
 
-    // ✅ Активна страница в менюто
     let menuLinks = document.querySelectorAll(".nav-menu a");
 
     menuLinks.forEach(link => {
-        let href = link.getAttribute("href").split("/").pop() || "index.html"; // Ако е празно, значи е index.html
+        let href = link.getAttribute("href").split("/").pop() || "index.html";
         if (currentPage === href) {
             link.classList.add("active");
             console.log("✅ Активната страница е: ", href);
         } else {
-            link.classList.remove("active"); // Премахва .active от всички останали
+            link.classList.remove("active");
         }
     });
-});
+}
+
+// ✅ Изпълняваме функцията при зареждане на страницата
+document.addEventListener("DOMContentLoaded", updatePageState);
+
+// ✅ Изпълняваме я и при навигация (назад/напред бутони)
+window.addEventListener("popstate", updatePageState);
+
 
 
 // ✅ Активна страница в менюто
