@@ -24,53 +24,36 @@
 
 <!-- ✅ Скрипт -->
 <script>
-    function toggleMenu() {
-        console.log("☰ Кликнато е върху бутона за меню!");
-
-        let menu = document.querySelector(".nav-menu");
-        let overlay = document.querySelector(".menu-overlay");
-
-        if (menu.classList.contains("open")) {
-            menu.classList.remove("open");
-            overlay.classList.remove("visible");
-            console.log("❌ Менюто е скрито!");
-        } else {
-            menu.classList.add("open");
-            overlay.classList.add("visible");
-            console.log("✅ Менюто е отворено!");
-        }
-    }
-
     document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Страницата е заредена и скриптът работи!");
 
-        let titles = {
-            "index.html": "DP Design",
-            "personalized.html": "Персонализирани продукти",
-            "home_decor.html": "Дом и декорация",
-            "prototyping.html": "3D Прототипиране",
-            "contacts.html": "Контакти"
+        // ✅ Дефиниране на toggleMenu след зареждане на DOM
+        window.toggleMenu = function () {
+            console.log("☰ Кликнато е върху бутона за меню!");
+
+            let menu = document.querySelector(".nav-menu");
+            let overlay = document.querySelector(".menu-overlay");
+
+            if (!menu || !overlay) {
+                console.error("❌ Менюто или фонът не са намерени!");
+                return;
+            }
+
+            if (menu.classList.contains("open")) {
+                menu.classList.remove("open");
+                overlay.classList.remove("visible");
+                console.log("❌ Менюто е скрито!");
+            } else {
+                menu.classList.add("open");
+                overlay.classList.add("visible");
+                console.log("✅ Менюто е отворено!");
+            }
         };
 
-        let currentPage = window.location.pathname.split("/").pop();
-        let headerTitle = document.querySelector(".header-title");
-
-        if (headerTitle) {
-            headerTitle.textContent = titles[currentPage] || "DP Design";
-            console.log("ℹ️ Заглавието е сменено на: ", headerTitle.textContent);
-        }
-
-        // ✅ Подчертаване на активната страница
-        let menuLinks = document.querySelectorAll(".nav-menu a");
-        menuLinks.forEach(link => {
-            let href = link.getAttribute("href").split("/").pop();
-            if (currentPage === href) {
-                link.classList.add("active");
-                console.log("✅ Активната страница е: ", href);
-            }
-        });
+        console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
     });
 </script>
+
 
 <!-- ✅ CSS -->
 <style>
