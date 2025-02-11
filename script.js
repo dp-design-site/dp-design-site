@@ -1,14 +1,14 @@
 console.log("🔥 script.js е зареден успешно!");
 
+// ✅ Глобални променливи за хедъра и менюто
+let menu, menuOverlay, menuButton;
+
 // ✅ Функция за управление на менюто
 function toggleMenu() {
     console.log("☰ Кликнато е върху бутона за меню!");
 
-    let menu = document.getElementById("menu");
-    let menuOverlay = document.getElementById("menuOverlay");
-
     if (!menu || !menuOverlay) {
-        console.warn("⚠️ Менюто или фонът не са намерени! Прекратяване на toggleMenu.");
+        console.warn("⚠️ Менюто или фонът не са налични!");
         return;
     }
 
@@ -22,8 +22,9 @@ function toggleMenu() {
 function initMenu() {
     console.log("🚀 Инициализация на менюто!");
 
-    let menuButton = document.getElementById("menuButton");
-    let menuOverlay = document.getElementById("menuOverlay");
+    menu = document.getElementById("menu");
+    menuOverlay = document.getElementById("menuOverlay");
+    menuButton = document.getElementById("menuButton");
 
     if (menuButton) {
         menuButton.addEventListener("click", toggleMenu);
@@ -40,13 +41,13 @@ function initMenu() {
     }
 }
 
-// ✅ Функция за динамично заглавие и активна страница
+// ✅ Функция за обновяване на заглавието и активната страница
 function updatePageState() {
     console.log("✅ Обновяване на заглавие и активна страница!");
 
     let titles = {
         "index.html": "DP Design",
-        "": "DP Design", // За root URL без 'index.html'
+        "": "DP Design",
         "personalized.html": "Персонализирани продукти",
         "home_decor.html": "Дом и декорация",
         "prototyping.html": "3D Прототипиране",
@@ -60,7 +61,7 @@ function updatePageState() {
         headerTitle.textContent = titles[currentPage] || "DP Design";
         console.log("✅ Заглавието е сменено на: ", headerTitle.textContent);
     } else {
-        console.warn("⚠️ Не е намерен елемент .header-title! Заглавието няма да се промени.");
+        console.warn("⚠️ Не е намерен елемент .header-title!");
     }
 
     let menuLinks = document.querySelectorAll(".nav-menu a");
@@ -75,36 +76,46 @@ function updatePageState() {
         }
     });
 
-    // ❗ Винаги инициализираме менюто отново, за да работи след динамично зареждане
+    // ❗ Винаги инициализираме менюто отново след обновяване
     initMenu();
 }
 
-// ✅ Изчакваме `header.html`, преди да изпълним основния код
+// ✅ Функция за зареждане на хедъра и футъра и изчакване да бъдат добавени в DOM
 function loadComponents() {
     console.log("🔄 Зареждане на динамични компоненти...");
 
     fetch('header.html')
         .then(response => response.text())
         .then(data => {
-            document.getElementById('header').innerHTML = data;
-            console.log("✅ Хедърът е зареден!");
+            let headerContainer = document.getElementById('header');
+            if (headerContainer) {
+                headerContainer.innerHTML = data;
+                console.log("✅ Хедърът е зареден!");
 
-            // ❗ Изчакваме малко, за да гарантираме, че всички елементи са добавени
-            setTimeout(() => {
-                updatePageState();
-                initMenu(); // 🔥 Менюто ще работи и на втората страница
-            }, 100);
+                // ❗ Изчакваме малко, за да гарантираме, че всички елементи са в DOM
+                setTimeout(() => {
+                    updatePageState();
+                    initMenu();
+                }, 200);
+            } else {
+                console.error("❌ Не е намерен контейнер за хедъра!");
+            }
         });
 
     fetch('footer.html')
         .then(response => response.text())
         .then(data => {
-            document.getElementById('footer').innerHTML = data;
-            console.log("✅ Футърът е зареден!");
+            let footerContainer = document.getElementById('footer');
+            if (footerContainer) {
+                footerContainer.innerHTML = data;
+                console.log("✅ Футърът е зареден!");
+            } else {
+                console.error("❌ Не е намерен контейнер за футъра!");
+            }
         });
 }
 
-// ✅ Изпълняваме `loadComponents()` само ако има динамичен хедър
+// ✅ Изчакваме `header.html`, преди да изпълним основния код
 document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("header")) {
         loadComponents();
