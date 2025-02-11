@@ -1,7 +1,7 @@
 <!-- Навигационно меню -->
 <nav class="nav-bar">
     <div class="nav-left">
-       <button class="hamburger" type="button" onclick="togglemenu()">☰</button>
+       <button class="hamburger" type="button" onclick="toggleMenu()">☰</button>
         <a href="index.html" class="nav-logo">dp | design</a>
     </div>
     <div class="nav-menu">
@@ -14,7 +14,7 @@
 </nav>
 
 <!-- Фон за мобилното меню -->
-<div class="menu-overlay" onclick="togglemenu()"></div>
+<div class="menu-overlay" onclick="toggleMenu()"></div>
 
 <!-- Хедър с фоново изображение и динамично заглавие -->
 <header class="header-wrapper">
@@ -25,7 +25,7 @@
 <!-- ✅ Преместваме JavaScript блока най-долу -->
 <script>
     // ✅ Дефиниране на toggleMenu в глобалния обхват
-    window.togglemenu = function () {
+    window.toggleMenu = function () {
         console.log("☰ Кликнато е върху бутона за меню!");
 
         let menu = document.querySelector(".nav-menu");
