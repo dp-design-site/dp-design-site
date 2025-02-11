@@ -28,7 +28,7 @@
     window.toggleMenu = function () {
         console.log("☰ Кликнато е върху бутона за меню!");
 
-        let menu = document.querySelector(".nav-menu");
+        let Menu = document.querySelector(".nav-menu");
         let overlay = document.querySelector(".menu-overlay");
 
         if (menu.classList.contains("open")) {
@@ -64,7 +64,7 @@
         }
 
         // ✅ Подчертаване на активната страница
-        let menuLinks = document.querySelectorAll(".nav-menu a");
+        let MenuLinks = document.querySelectorAll(".nav-menu a");
         menuLinks.forEach(link => {
             let href = link.getAttribute("href").split("/").pop();
             if (currentPage === href) {
