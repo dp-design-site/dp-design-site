@@ -1,10 +1,10 @@
 <!-- Навигационно меню -->
 <nav class="nav-bar">
     <div class="nav-left">
-        <button class="hamburger" type="button" onclick="toggleMenu()">☰</button>
+        <button class="hamburger" id="menuButton">☰</button>
         <a href="index.html" class="nav-logo">dp | design</a>
     </div>
-    <div class="nav-menu">
+    <div class="nav-menu" id="menu">
         <a href="index.html">Начало</a>
         <a href="personalized.html">Персонализирани продукти</a>
         <a href="home_decor.html">Дом и декорация</a>
@@ -14,53 +14,30 @@
 </nav>
 
 <!-- Фон за мобилното меню -->
-<div class="menu-overlay" onclick="toggleMenu()"></div>
+<div class="menu-overlay" id="menuOverlay"></div>
 
-<!-- ✅ Хедър с фоново изображение и динамично заглавие -->
-<header class="header-wrapper">
-    <h1 class="header-title">Заглавие</h1>
-    <div class="header-gradient"></div>
-</header>
-
-
-<script defer>
-    console.log("🔥 Скриптът се изпълнява!");
-
-    // ✅ Дефинирай глобално toggleMenu
-    function toggleMenu() {
-        console.log("☰ Кликнато е върху бутона за меню!");
-
-        let menu = document.querySelector(".nav-menu");
-        let overlay = document.querySelector(".menu-overlay");
-
-        if (!menu || !overlay) {
-            console.error("❌ Менюто или фонът не са намерени!");
-            return;
-        }
-
-        if (menu.classList.contains("open")) {
-            menu.classList.remove("open");
-            overlay.classList.remove("visible");
-            console.log("❌ Менюто е скрито!");
-        } else {
-            menu.classList.add("open");
-            overlay.classList.add("visible");
-            console.log("✅ Менюто е отворено!");
-        }
-    }
-
+<!-- ✅ Скриптът е най-долу преди </body> -->
+<script>
     document.addEventListener("DOMContentLoaded", function () {
-        console.log("✅ Страницата е заредена!");
+        console.log("✅ Страницата е заредена и скриптът работи!");
 
-        // ✅ Увери се, че toggleMenu е глобална
-        window.toggleMenu = toggleMenu;
+        const menuButton = document.getElementById("menuButton");
+        const menu = document.getElementById("menu");
+        const menuOverlay = document.getElementById("menuOverlay");
 
-        console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
+        function toggleMenu() {
+            menu.classList.toggle("open");
+            menuOverlay.classList.toggle("visible");
+            console.log(menu.classList.contains("open") ? "✅ Менюто е отворено!" : "❌ Менюто е затворено!");
+        }
+
+        // ✅ Свързваме бутона и overlay с event listeners
+        menuButton.addEventListener("click", toggleMenu);
+        menuOverlay.addEventListener("click", toggleMenu);
     });
 </script>
 
-
-<!-- ✅ CSS -->
+<!-- ✅ CSS (стилен и работещ код) -->
 <style>
     /* Основен стил на навигационния бар */
     .nav-bar {
@@ -82,59 +59,6 @@
         align-items: center;
     }
 
-    .nav-logo {
-        font-size: 18px;
-        font-weight: bold;
-        text-decoration: none;
-        color: #fce5cd;
-        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-    }
-
-    .nav-logo:hover {
-        transform: scale(1.05);
-        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
-    }
-
-    .nav-menu a {
-        color: #fce5cd;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: bold;
-        margin-left: 15px;
-        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-    }
-
-    .nav-menu a.active {
-        font-size: 16px;
-        font-weight: bold;
-        color: #ffcc99;
-        text-shadow: 0px 0px 8px rgba(255, 204, 153, 0.8);
-        transform: scale(1.05);
-    }
-
-    .nav-menu a:hover {
-        transform: scale(1.05);
-        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
-    }
-
-    /* ✅ Хамбургер бутон */
-    .hamburger {
-        display: block;
-        font-size: 24px;
-        cursor: pointer;
-        color: #fce5cd;
-        background: none;
-        border: none;
-        padding: 10px;
-        margin-right: 10px;
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .hamburger:hover {
-        transform: scale(1.2);
-    }
-
-    /* ✅ Навигационно меню за мобилни устройства */
     .nav-menu {
         display: flex;
         justify-content: flex-end;
@@ -142,9 +66,17 @@
         padding-right: 20px;
     }
 
+    /* ✅ Стилизация за мобилни устройства */
     @media (max-width: 768px) {
         .hamburger {
             display: block;
+            font-size: 24px;
+            cursor: pointer;
+            color: #fce5cd;
+            background: none;
+            border: none;
+            padding: 10px;
+            margin-right: 10px;
         }
 
         .nav-menu {
@@ -165,61 +97,19 @@
             display: flex;
         }
 
-        .nav-menu a {
-            display: block;
-            padding: 15px;
-            font-size: 18px;
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            text-align: left;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
         }
-    }
 
-    /* ✅ Фон за мобилното меню */
-    .menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 998;
-        display: none;
-    }
-
-    .menu-overlay.visible {
-        display: block;
-    }
-
-    /* ✅ Хедър с фоново изображение */
-    .header-wrapper {
-        position: relative;
-        height: 220px;
-        background: url('images/header-background.jpg') no-repeat center center/cover;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-start;
-        padding: 20px;
-        text-align: left;
-        overflow: hidden;
-    }
-
-    .header-title {
-        font-size: 32px;
-        font-weight: bold;
-        color: #fce5cd;
-        position: absolute;
-        bottom: 10px;
-        left: 20px;
-        z-index: 2;
-    }
-
-    /* ✅ Фиксиран градиент */
-    .header-gradient {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100px;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
+        .menu-overlay.visible {
+            display: block;
+        }
     }
 </style>
