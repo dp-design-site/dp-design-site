@@ -75,15 +75,21 @@ function updatePageState() {
         }
     });
 
-    // ❗ Инициализираме менюто при смяна на страницата, само ако е необходимо
-    if (document.getElementById("menuButton")) {
-        initMenu();
-    }
+    // ❗ Инициализираме менюто при смяна на страницата
+    initMenu();
 }
 
 // ✅ Изпълняваме updatePageState и initMenu при зареждане и навигация
 document.addEventListener("DOMContentLoaded", function () {
     updatePageState();
     initMenu();
+
+    // ❗ Слушател за кликове върху линковете в менюто, за да се обновява заглавието
+    let menuLinks = document.querySelectorAll(".nav-menu a");
+    menuLinks.forEach(link => {
+        link.addEventListener("click", function () {
+            setTimeout(updatePageState, 100); // Принудително обновяване след клик
+        });
+    });
 });
 window.addEventListener("popstate", updatePageState);
