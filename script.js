@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ✅ Динамично заглавие
-document.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("load", function () {
     console.log("✅ Динамично заглавие и активна страница - старт!");
 
     // Обект с заглавия за различните страници
