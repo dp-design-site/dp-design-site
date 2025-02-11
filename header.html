@@ -22,7 +22,7 @@
     <div class="header-gradient"></div>
 </header>
 
-<!-- ✅ JavaScript -->
+<!-- ✅ Скрипт -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Страницата е заредена и скриптът работи!");
@@ -37,14 +37,17 @@
             console.log(menu.classList.contains("open") ? "✅ Менюто е отворено!" : "❌ Менюто е затворено!");
         }
 
+        // ✅ Свързваме бутона и overlay с event listeners
         menuButton.addEventListener("click", toggleMenu);
         menuOverlay.addEventListener("click", toggleMenu);
+
+        console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
     });
 </script>
 
-<!-- ✅ CSS - Поправен -->
+<!-- ✅ CSS -->
 <style>
-    /* ✅ Основен стил на навигационния бар */
+    /* Основен стил на навигационния бар */
     .nav-bar {
         position: fixed;
         top: 0;
@@ -54,7 +57,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.5);
         padding: 0 20px;
         z-index: 1000;
     }
