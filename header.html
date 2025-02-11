@@ -1,7 +1,7 @@
 <!-- Навигационно меню -->
 <nav class="nav-bar">
     <div class="nav-left">
-        <button class="hamburger" type="button" onclick="toggleMenu()">☰</button>
+        <button class="hamburger" type="button">☰</button>
         <a href="index.html" class="nav-logo">dp | design</a>
     </div>
     <div class="nav-menu">
@@ -14,32 +14,18 @@
 </nav>
 
 <!-- Фон за мобилното меню -->
-<div class="menu-overlay" onclick="toggleMenu()"></div>
+<div class="menu-overlay"></div>
 
 <!-- Хедър с фоново изображение и динамично заглавие -->
 <header class="header-wrapper">
-    <h1 class="header-title">DP Design</h1>
+    <h1 class="header-title">Заглавие</h1>
     <div class="header-gradient"></div>
 </header>
 
 <!-- JavaScript -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // ✅ Фиксира проблема с липсата на дефиниция на toggleMenu
-        window.toggleMenu = function () {
-            let menu = document.querySelector(".nav-menu");
-            let overlay = document.querySelector(".menu-overlay");
-
-            if (menu.classList.contains("open")) {
-                menu.classList.remove("open");
-                overlay.classList.remove("visible");
-            } else {
-                menu.classList.add("open");
-                overlay.classList.add("visible");
-            }
-        };
-
-        // ✅ Фиксира динамичната смяна на заглавието
+        // ✅ Динамична смяна на заглавието
         let titles = {
             "index.html": "DP Design",
             "personalized.html": "Персонализирани продукти",
@@ -55,12 +41,35 @@
             headerTitle.textContent = titles[currentPage];
         }
 
-        // ✅ Фиксира подчертаването на активния бутон
+        // ✅ Подчертаване на активната страница в менюто
         let menuLinks = document.querySelectorAll(".nav-menu a");
         menuLinks.forEach(link => {
-            if (link.getAttribute("href") === currentPage) {
+            let href = link.getAttribute("href").split("/").pop();
+            if (currentPage === href) {
                 link.classList.add("active");
             }
+        });
+    });
+
+    // ✅ Менюто ще се отваря при hover (тествай дали се показва)
+    document.addEventListener("DOMContentLoaded", function () {
+        let menu = document.querySelector(".nav-menu");
+        let overlay = document.querySelector(".menu-overlay");
+
+        document.querySelector(".hamburger").addEventListener("mouseover", function () {
+            menu.classList.add("open");
+            overlay.classList.add("visible");
+        });
+
+        // ✅ Затваря менюто при излизане с мишката
+        menu.addEventListener("mouseleave", function () {
+            menu.classList.remove("open");
+            overlay.classList.remove("visible");
+        });
+
+        overlay.addEventListener("mouseleave", function () {
+            menu.classList.remove("open");
+            overlay.classList.remove("visible");
         });
     });
 </script>
@@ -122,9 +131,9 @@
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
     }
 
-    /* ✅ Хамбургер бутон (сега е вляво от логото) */
+    /* ✅ Хамбургер бутон (вляво от логото) */
     .hamburger {
-        display: none;
+        display: block;
         font-size: 24px;
         cursor: pointer;
         color: #fce5cd;
