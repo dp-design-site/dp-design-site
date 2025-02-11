@@ -219,38 +219,3 @@
     }
 </style>
 
-<!-- Целият HTML код тук -->
-
-<!-- ✅ Постави JavaScript тук, точно преди </body> -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        console.log("✅ Страницата е заредена и скриптът работи!");
-
-        // ✅ Дефиниране на toggleMenu след зареждане на DOM
-        window.toggleMenu = function () {
-            console.log("☰ Кликнато е върху бутона за меню!");
-
-            let menu = document.querySelector(".nav-menu");
-            let overlay = document.querySelector(".menu-overlay");
-
-            if (!menu || !overlay) {
-                console.error("❌ Менюто или фонът не са намерени!");
-                return;
-            }
-
-            if (menu.classList.contains("open")) {
-                menu.classList.remove("open");
-                overlay.classList.remove("visible");
-                console.log("❌ Менюто е скрито!");
-            } else {
-                menu.classList.add("open");
-                overlay.classList.add("visible");
-                console.log("✅ Менюто е отворено!");
-            }
-        };
-
-        console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
-    });
-</script>
-</html>
-
