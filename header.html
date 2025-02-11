@@ -1,7 +1,7 @@
 <!-- Навигационно меню -->
 <nav class="nav-bar">
     <div class="nav-left">
-       <button class="hamburger" type="button" onclick="toggleMenu()">☰</button>
+        <button class="hamburger" type="button" onclick="toggleMenu()">☰</button>
         <a href="index.html" class="nav-logo">dp | design</a>
     </div>
     <div class="nav-menu">
@@ -22,13 +22,12 @@
     <div class="header-gradient"></div>
 </header>
 
-<!-- ✅ Преместваме JavaScript блока най-долу -->
+<!-- ✅ Скрипт -->
 <script>
-    // ✅ Дефиниране на toggleMenu в глобалния обхват
-    window.toggleMenu = function () {
+    function toggleMenu() {
         console.log("☰ Кликнато е върху бутона за меню!");
 
-        let Menu = document.querySelector(".nav-menu");
+        let menu = document.querySelector(".nav-menu");
         let overlay = document.querySelector(".menu-overlay");
 
         if (menu.classList.contains("open")) {
@@ -40,13 +39,11 @@
             overlay.classList.add("visible");
             console.log("✅ Менюто е отворено!");
         }
-    };
+    }
 
-    // ✅ Когато документът е напълно зареден
     document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Страницата е заредена и скриптът работи!");
 
-        // ✅ Динамично заглавие
         let titles = {
             "index.html": "DP Design",
             "personalized.html": "Персонализирани продукти",
@@ -64,7 +61,7 @@
         }
 
         // ✅ Подчертаване на активната страница
-        let MenuLinks = document.querySelectorAll(".nav-menu a");
+        let menuLinks = document.querySelectorAll(".nav-menu a");
         menuLinks.forEach(link => {
             let href = link.getAttribute("href").split("/").pop();
             if (currentPage === href) {
@@ -72,17 +69,12 @@
                 console.log("✅ Активната страница е: ", href);
             }
         });
-
-        console.log("🚀 Проверка на toggleMenu():", window.toggleMenu);
     });
 </script>
 
-
-
-
 <!-- ✅ CSS -->
 <style>
-    /* ✅ Основен стил на навигационния бар */
+    /* Основен стил на навигационния бар */
     .nav-bar {
         position: fixed;
         top: 0;
@@ -192,39 +184,6 @@
             width: 100%;
             text-align: left;
         }
-    }
-
-    /* ✅ Заглавие и фон */
-    .header-wrapper {
-        position: relative;
-        height: 220px;
-        background: url('images/header-background.jpg') no-repeat center center/cover;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-start;
-        padding: 20px;
-        text-align: left;
-        overflow: hidden;
-    }
-
-    .header-title {
-        font-size: 32px;
-        font-weight: bold;
-        color: #fce5cd;
-        position: absolute;
-        bottom: 10px;
-        left: 20px;
-        z-index: 2;
-    }
-
-    /* ✅ Фиксиран градиент */
-    .header-gradient {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100px;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
     }
 
     /* ✅ Фон за мобилното меню */
