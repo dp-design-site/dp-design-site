@@ -8,7 +8,7 @@ function toggleMenu() {
     let menuOverlay = document.getElementById("menuOverlay");
 
     if (!menu || !menuOverlay) {
-        console.warn("⚠️ Менюто или фонът не са налични!");
+        console.warn("⚠️ Менюто или фонът не са намерени! Прекратяване на toggleMenu.");
         return;
     }
 
@@ -46,7 +46,7 @@ function updatePageState() {
 
     let titles = {
         "index.html": "DP Design",
-        "": "DP Design",
+        "": "DP Design", // За root URL без 'index.html'
         "personalized.html": "Персонализирани продукти",
         "home_decor.html": "Дом и декорация",
         "prototyping.html": "3D Прототипиране",
@@ -60,7 +60,7 @@ function updatePageState() {
         headerTitle.textContent = titles[currentPage] || "DP Design";
         console.log("✅ Заглавието е сменено на: ", headerTitle.textContent);
     } else {
-        console.warn("⚠️ Не е намерен елемент .header-title!");
+        console.warn("⚠️ Не е намерен елемент .header-title! Заглавието няма да се промени.");
     }
 
     let menuLinks = document.querySelectorAll(".nav-menu a");
@@ -75,45 +75,37 @@ function updatePageState() {
         }
     });
 
-    // ❗ Винаги инициализираме менюто отново след обновяване
+    // ❗ Инициализираме менюто при смяна на страницата
     initMenu();
 }
 
-// ✅ Функция за зареждане на хедъра и футъра и изчакване да бъдат добавени в DOM
+// ✅ Чакаме хедъра да се зареди, преди да изпълним основния код
 function loadComponents() {
     console.log("🔄 Зареждане на динамични компоненти...");
 
     fetch('header.html')
         .then(response => response.text())
         .then(data => {
-            let headerContainer = document.getElementById('header');
-            if (headerContainer) {
-                headerContainer.innerHTML = data;
-                console.log("✅ Хедърът е зареден!");
+            document.getElementById('header').innerHTML = data;
 
-                // ❗ Зареждаме `script.js` след вмъкване на хедъра
-                let script = document.createElement("script");
-                script.src = "script.js";
-                document.body.appendChild(script);
-            } else {
-                console.error("❌ Не е намерен контейнер за хедъра!");
-            }
+            console.log("✅ Хедърът е зареден!");
+            
+            // Изчакваме малко, за да гарантираме, че всички елементи са добавени
+            setTimeout(() => {
+                updatePageState();
+                initMenu();
+            }, 100);
         });
 
     fetch('footer.html')
         .then(response => response.text())
         .then(data => {
-            let footerContainer = document.getElementById('footer');
-            if (footerContainer) {
-                footerContainer.innerHTML = data;
-                console.log("✅ Футърът е зареден!");
-            } else {
-                console.error("❌ Не е намерен контейнер за футъра!");
-            }
+            document.getElementById('footer').innerHTML = data;
+            console.log("✅ Футърът е зареден!");
         });
 }
 
-// ✅ Чакаме `header.html`, преди да изпълним основния код
+// ✅ Изпълняваме `loadComponents()` само ако има динамичен хедър
 document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("header")) {
         loadComponents();
