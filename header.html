@@ -1,7 +1,7 @@
 <!-- Навигационно меню -->
 <nav class="nav-bar">
     <div class="nav-left">
-        <button class="hamburger" type="button">☰</button>
+        <button class="hamburger" type="button" onclick="toggleMenu()">☰</button>
         <a href="index.html" class="nav-logo">dp | design</a>
     </div>
     <div class="nav-menu">
@@ -14,7 +14,7 @@
 </nav>
 
 <!-- Фон за мобилното меню -->
-<div class="menu-overlay"></div>
+<div class="menu-overlay" onclick="toggleMenu()"></div>
 
 <!-- Хедър с фоново изображение и динамично заглавие -->
 <header class="header-wrapper">
@@ -37,8 +37,8 @@
         let currentPage = window.location.pathname.split("/").pop();
         let headerTitle = document.querySelector(".header-title");
 
-        if (titles[currentPage] && headerTitle) {
-            headerTitle.textContent = titles[currentPage];
+        if (headerTitle) {
+            headerTitle.textContent = titles[currentPage] || "DP Design";
         }
 
         // ✅ Подчертаване на активната страница в менюто
@@ -51,27 +51,19 @@
         });
     });
 
-    // ✅ Менюто ще се отваря при hover (тествай дали се показва)
-    document.addEventListener("DOMContentLoaded", function () {
+    // ✅ Функция за отваряне/затваряне на менюто
+    function toggleMenu() {
         let menu = document.querySelector(".nav-menu");
         let overlay = document.querySelector(".menu-overlay");
 
-        document.querySelector(".hamburger").addEventListener("mouseover", function () {
+        if (menu.classList.contains("open")) {
+            menu.classList.remove("open");
+            overlay.classList.remove("visible");
+        } else {
             menu.classList.add("open");
             overlay.classList.add("visible");
-        });
-
-        // ✅ Затваря менюто при излизане с мишката
-        menu.addEventListener("mouseleave", function () {
-            menu.classList.remove("open");
-            overlay.classList.remove("visible");
-        });
-
-        overlay.addEventListener("mouseleave", function () {
-            menu.classList.remove("open");
-            overlay.classList.remove("visible");
-        });
-    });
+        }
+    }
 </script>
 
 <!-- CSS -->
@@ -131,7 +123,7 @@
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
     }
 
-    /* ✅ Хамбургер бутон (вляво от логото) */
+    /* ✅ Хамбургер бутон */
     .hamburger {
         display: block;
         font-size: 24px;
