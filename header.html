@@ -1,7 +1,7 @@
 <!-- Навигационно меню -->
 <nav class="nav-bar">
     <div class="nav-left">
-        <button class="hamburger" type="button" onclick="toggleMenu()">☰</button>
+       <button class="hamburger" type="button" onclick="toggleMenu()">☰</button>
         <a href="index.html" class="nav-logo">dp | design</a>
     </div>
     <div class="nav-menu">
@@ -11,6 +11,58 @@
         <a href="prototyping.html">3D прототипиране</a>
         <a href="contacts.html">Контакти</a>
     </div>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ Страницата е заредена и скриптът работи!");
+
+    // ✅ Динамично заглавие
+    let titles = {
+        "index.html": "DP Design",
+        "personalized.html": "Персонализирани продукти",
+        "home_decor.html": "Дом и декорация",
+        "prototyping.html": "3D Прототипиране",
+        "contacts.html": "Контакти"
+    };
+
+    let currentPage = window.location.pathname.split("/").pop();
+    let headerTitle = document.querySelector(".header-title");
+
+    if (headerTitle) {
+        headerTitle.textContent = titles[currentPage] || "DP Design";
+        console.log("ℹ️ Заглавието е сменено на: ", headerTitle.textContent);
+    }
+
+    // ✅ Подчертаване на активната страница
+    let menuLinks = document.querySelectorAll(".nav-menu a");
+    menuLinks.forEach(link => {
+        let href = link.getAttribute("href").split("/").pop();
+        if (currentPage === href) {
+            link.classList.add("active");
+            console.log("✅ Активната страница е: ", href);
+        }
+    });
+
+    // ✅ Функция за менюто (фиксирана!)
+    window.toggleMenu = function () {
+        console.log("☰ Кликнато е върху бутона за меню!");
+
+        let menu = document.querySelector(".nav-menu");
+        let overlay = document.querySelector(".menu-overlay");
+
+        if (menu.classList.contains("open")) {
+            menu.classList.remove("open");
+            overlay.classList.remove("visible");
+            console.log("❌ Менюто е скрито!");
+        } else {
+            menu.classList.add("open");
+            overlay.classList.add("visible");
+            console.log("✅ Менюто е отворено!");
+        }
+    };
+});
+</script>
+
 </nav>
 
 <!-- Фон за мобилното меню -->
@@ -228,4 +280,55 @@
     .menu-overlay.visible {
         display: block;
     }
+    /* ✅ Основни стилове */
+.nav-menu {
+    display: flex;
+    gap: 15px;
+    padding-right: 20px;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* ✅ Мобилно меню */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        width: 70%;
+        background: rgba(0, 0, 0, 0.9);
+        padding: 20px;
+        text-align: left;
+        z-index: 999;
+    }
+
+    .nav-menu.open {
+        display: flex;
+    }
+
+    .hamburger {
+        display: block;
+        cursor: pointer;
+    }
+
+    /* ✅ Фон на мобилното меню */
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        pointer-events: none;
+    }
+
+    .menu-overlay.visible {
+        opacity: 1;
+        pointer-events: all;
+    }
+}
+
 </style>
