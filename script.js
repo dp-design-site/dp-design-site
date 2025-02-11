@@ -8,7 +8,7 @@ function toggleMenu() {
     let menuOverlay = document.getElementById("menuOverlay");
 
     if (!menu || !menuOverlay) {
-        console.error("❌ Менюто или фонът не са намерени!");
+        console.warn("⚠️ Менюто или фонът не са намерени! Прекратяване на toggleMenu.");
         return;
     }
 
@@ -60,7 +60,7 @@ function updatePageState() {
         headerTitle.textContent = titles[currentPage] || "DP Design";
         console.log("✅ Заглавието е сменено на: ", headerTitle.textContent);
     } else {
-        console.warn("⚠️ Не е намерен елемент .header-title!");
+        console.warn("⚠️ Не е намерен елемент .header-title! Заглавието няма да се промени.");
     }
 
     let menuLinks = document.querySelectorAll(".nav-menu a");
@@ -75,8 +75,10 @@ function updatePageState() {
         }
     });
 
-    // ❗ Инициализираме менюто при смяна на страницата
-    initMenu();
+    // ❗ Инициализираме менюто при смяна на страницата, само ако е необходимо
+    if (document.getElementById("menuButton")) {
+        initMenu();
+    }
 }
 
 // ✅ Изпълняваме updatePageState и initMenu при зареждане и навигация
