@@ -73,6 +73,25 @@
         };
     });
 </script>
+<script>
+    window.toggleMenu = function () {
+        console.log("☰ Кликнато е върху бутона за меню!");
+        let menu = document.querySelector(".nav-menu");
+        let overlay = document.querySelector(".menu-overlay");
+
+        if (menu.classList.contains("open")) {
+            menu.classList.remove("open");
+            overlay.classList.remove("visible");
+            console.log("❌ Менюто е скрито!");
+        } else {
+            menu.classList.add("open");
+            overlay.classList.add("visible");
+            console.log("✅ Менюто е отворено!");
+        }
+    };
+</script>
+
+
 
 <!-- ✅ CSS -->
 <style>
