@@ -1,6 +1,6 @@
 console.log("🔥 script.js е зареден успешно!");
 
-// ✅ Глобално задаване на toggleMenu
+// ✅ Функция за управление на менюто
 function toggleMenu() {
     console.log("☰ Кликнато е върху бутона за меню!");
 
@@ -18,31 +18,27 @@ function toggleMenu() {
     console.log(menu.classList.contains("open") ? "✅ Менюто е отворено!" : "❌ Менюто е затворено!");
 }
 
-// ✅ Присвояване на функцията към window
-window.toggleMenu = toggleMenu;
-
+// ✅ Изпълняваме toggleMenu само ако има бутон
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ Страницата е заредена!");
-
     const menuButton = document.getElementById("menuButton");
     const menuOverlay = document.getElementById("menuOverlay");
 
     if (menuButton) {
         menuButton.addEventListener("click", toggleMenu);
+        console.log("✅ Бутонът за меню е свързан!");
     } else {
-        console.error("❌ Бутонът за меню не е намерен!");
+        console.warn("⚠️ Бутонът за меню не е намерен!");
     }
 
     if (menuOverlay) {
         menuOverlay.addEventListener("click", toggleMenu);
+        console.log("✅ Фонът на менюто е свързан!");
     } else {
-        console.error("❌ Фонът на менюто не е намерен!");
+        console.warn("⚠️ Фонът на менюто не е намерен!");
     }
-
-    console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
 });
 
-// ✅ Динамично заглавие
+// ✅ Функция за динамично заглавие и активна страница
 function updatePageState() {
     console.log("✅ Обновяване на заглавие и активна страница!");
 
@@ -62,7 +58,7 @@ function updatePageState() {
         headerTitle.textContent = titles[currentPage] || "DP Design";
         console.log("✅ Заглавието е сменено на: ", headerTitle.textContent);
     } else {
-        console.error("❌ Не е намерен елемент .header-title!");
+        console.warn("⚠️ Не е намерен елемент .header-title!");
     }
 
     let menuLinks = document.querySelectorAll(".nav-menu a");
@@ -78,26 +74,6 @@ function updatePageState() {
     });
 }
 
-// ✅ Изпълняваме функцията при зареждане на страницата
+// ✅ Изпълняваме updatePageState при зареждане и навигация
 document.addEventListener("DOMContentLoaded", updatePageState);
-
-// ✅ Изпълняваме я и при навигация (назад/напред бутони)
 window.addEventListener("popstate", updatePageState);
-
-
-
-// ✅ Активна страница в менюто
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ Активна страница - старт!");
-
-    let currentPage = window.location.pathname.split("/").pop(); // Взимаме текущия файл
-    let menuLinks = document.querySelectorAll(".nav-menu a"); // Взимаме всички линкове в менюто
-
-    menuLinks.forEach(link => {
-        let href = link.getAttribute("href").split("/").pop(); // Взимаме href на всеки линк
-        if (currentPage === href) {
-            link.classList.add("active"); // Добавяме клас .active към съвпадащата страница
-            console.log("✅ Активната страница е: ", href);
-        }
-    });
-});
