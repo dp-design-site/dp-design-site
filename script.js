@@ -1,11 +1,11 @@
 console.log("🔥 script.js е зареден успешно!");
 
-// ✅ Глобални променливи за хедъра и менюто
-let menu, menuOverlay, menuButton;
-
 // ✅ Функция за управление на менюто
 function toggleMenu() {
     console.log("☰ Кликнато е върху бутона за меню!");
+
+    let menu = document.getElementById("menu");
+    let menuOverlay = document.getElementById("menuOverlay");
 
     if (!menu || !menuOverlay) {
         console.warn("⚠️ Менюто или фонът не са налични!");
@@ -22,9 +22,8 @@ function toggleMenu() {
 function initMenu() {
     console.log("🚀 Инициализация на менюто!");
 
-    menu = document.getElementById("menu");
-    menuOverlay = document.getElementById("menuOverlay");
-    menuButton = document.getElementById("menuButton");
+    let menuButton = document.getElementById("menuButton");
+    let menuOverlay = document.getElementById("menuOverlay");
 
     if (menuButton) {
         menuButton.addEventListener("click", toggleMenu);
@@ -41,7 +40,7 @@ function initMenu() {
     }
 }
 
-// ✅ Функция за обновяване на заглавието и активната страница
+// ✅ Функция за динамично заглавие и активна страница
 function updatePageState() {
     console.log("✅ Обновяване на заглавие и активна страница!");
 
@@ -92,11 +91,10 @@ function loadComponents() {
                 headerContainer.innerHTML = data;
                 console.log("✅ Хедърът е зареден!");
 
-                // ❗ Изчакваме малко, за да гарантираме, че всички елементи са в DOM
-                setTimeout(() => {
-                    updatePageState();
-                    initMenu();
-                }, 200);
+                // ❗ Зареждаме `script.js` след вмъкване на хедъра
+                let script = document.createElement("script");
+                script.src = "script.js";
+                document.body.appendChild(script);
             } else {
                 console.error("❌ Не е намерен контейнер за хедъра!");
             }
@@ -115,7 +113,7 @@ function loadComponents() {
         });
 }
 
-// ✅ Изчакваме `header.html`, преди да изпълним основния код
+// ✅ Чакаме `header.html`, преди да изпълним основния код
 document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("header")) {
         loadComponents();
