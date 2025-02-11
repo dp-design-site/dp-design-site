@@ -79,17 +79,41 @@ function updatePageState() {
     initMenu();
 }
 
-// ✅ Изпълняваме updatePageState и initMenu при зареждане и навигация
-document.addEventListener("DOMContentLoaded", function () {
-    updatePageState();
-    initMenu();
+// ✅ Чакаме хедъра да се зареди, преди да изпълним основния код
+function loadComponents() {
+    console.log("🔄 Зареждане на динамични компоненти...");
 
-    // ❗ Слушател за кликове върху линковете в менюто, за да се обновява заглавието
-    let menuLinks = document.querySelectorAll(".nav-menu a");
-    menuLinks.forEach(link => {
-        link.addEventListener("click", function () {
-            setTimeout(updatePageState, 100); // Принудително обновяване след клик
+    fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header').innerHTML = data;
+
+            console.log("✅ Хедърът е зареден!");
+            
+            // Изчакваме малко, за да гарантираме, че всички елементи са добавени
+            setTimeout(() => {
+                updatePageState();
+                initMenu();
+            }, 100);
         });
-    });
+
+    fetch('footer.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+            console.log("✅ Футърът е зареден!");
+        });
+}
+
+// ✅ Изпълняваме `loadComponents()` само ако има динамичен хедър
+document.addEventListener("DOMContentLoaded", function () {
+    if (document.getElementById("header")) {
+        loadComponents();
+    } else {
+        console.log("⚠️ Няма динамичен хедър, изпълняваме updatePageState и initMenu директно.");
+        updatePageState();
+        initMenu();
+    }
 });
+
 window.addEventListener("popstate", updatePageState);
