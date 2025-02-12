@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Категория</title>
     <script>
-        // Функция за вмъкване на хедъра и футъра динамично
         function loadComponents() {
             fetch('header.html')
                 .then(response => response.text())
@@ -18,7 +17,6 @@
                 .then(data => document.getElementById('footer').innerHTML = data);
         }
 
-        // Функция за маркиране на активната страница
         function highlightActivePage() {
             const links = document.querySelectorAll(".nav-menu a");
             links.forEach(link => {
@@ -36,59 +34,142 @@
             margin: 0;
             padding: 0;
             text-align: center;
-            overflow-x: hidden; /* Премахва страничния скрол */
+            overflow-x: hidden;
         }
 
-        /* Активна страница в менюто */
         .nav-menu a.active {
             font-size: 16px;
             font-weight: bold;
             color: #ffcc99;
         }
 
-            .category-header {
-        background: url('images/header-background.jpg') no-repeat center center/cover;
-        height: 260px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        position: relative;
-        box-shadow: inset 0 -50px 50px rgba(18, 18, 18, 1);
-        margin-top: 0px;
-    }
+        .category-header {
+            background: url('images/header-background.jpg') no-repeat center center/cover;
+            height: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            box-shadow: inset 0 -50px 50px rgba(18, 18, 18, 1);
+            margin-top: 0px;
+        }
 
+        .products-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .product {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .product img {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+        }
+
+        .slider {
+            position: relative;
+            overflow: hidden;
+            max-width: 250px;
+            margin: auto;
+        }
+
+        .slider img {
+            width: 100%;
+            display: none;
+        }
+
+        .slider img.active {
+            display: block;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .slider-btn.left {
+            left: 0;
+        }
+
+        .slider-btn.right {
+            right: 0;
+        }
     </style>
 </head>
 <body onload="loadComponents()">
-    <!-- Динамично вмъкнат хедър -->
     <div id="header"></div>
-       
-    </header>
-    
+
     <div class="content">
-        <p>Създаваме уют и персонализация за вашия дом с нашите уникални 3D проекти. 
-</p>
+        <p>Създаваме уют и персонализация за вашия дом с нашите уникални 3D проекти.</p>
     </div>
 
     <div class="products-wrapper">
         <div class="product">
-            <img src="images/DP-148x210.jpg" alt="Продукт 1">
+            <div class="slider">
+                <img src="images/DP-148x210.jpg" class="active" alt="Продукт 1">
+                <img src="images/DP-148x210-2.jpg" alt="Продукт 1 алтернативна">
+                <button class="slider-btn left" onclick="prevSlide(this)">&#10094;</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">&#10095;</button>
+            </div>
             <h2>Продукт 1</h2>
             <p>Кратко описание на продукта.</p>
             <button>Виж повече</button>
         </div>
+
         <div class="product">
-            <img src="images/DP-148x210.jpg" alt="Продукт 2">
+            <div class="slider">
+                <img src="images/DP-148x210.jpg" class="active" alt="Продукт 2">
+                <img src="images/DP-148x210-2.jpg" alt="Продукт 2 алтернативна">
+                <button class="slider-btn left" onclick="prevSlide(this)">&#10094;</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">&#10095;</button>
+            </div>
             <h2>Продукт 2</h2>
             <p>Кратко описание на продукта.</p>
             <button>Виж повече</button>
         </div>
     </div>
 
-    <!-- Динамично вмъкнат футър -->
     <div id="footer"></div>
-    <script src="script.js" defer></script>
+
+    <script>
+        function nextSlide(button) {
+            let slider = button.parentElement;
+            let images = slider.querySelectorAll("img");
+            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
+            images[index].classList.remove("active");
+            images[(index + 1) % images.length].classList.add("active");
+        }
+
+        function prevSlide(button) {
+            let slider = button.parentElement;
+            let images = slider.querySelectorAll("img");
+            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
+            images[index].classList.remove("active");
+            images[(index - 1 + images.length) % images.length].classList.add("active");
+        }
+    </script>
 </body>
 </html>
