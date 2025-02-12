@@ -42,23 +42,37 @@
 
             let productData = {
                 id: Date.now(),
-                name: document.getElementById("productName").value,
-                description: document.getElementById("productDescription").value,
-                price: document.getElementById("productPrice").value,
-                oldPrice: document.getElementById("productOldPrice").value || "",
-                image: document.getElementById("productImage").value
+                name: document.getElementById("productName").value.trim(),
+                description: document.getElementById("productDescription").value.trim(),
+                price: document.getElementById("productPrice").value.trim(),
+                oldPrice: document.getElementById("productOldPrice").value.trim() || "",
+                image: document.getElementById("productImage").value.trim()
             };
 
-            fetch("https://script.google.com/macros/s/AKfycbzlr6i2H1ZTm9wk_4lFl-KAK7-6qy3XStIy9OvPpOJlL7ozwjJf6gaeW6oy3pJUPfHG/exec", {
+            console.log("📤 Изпращаме данни:", productData);
 
+            fetch("https://script.google.com/macros/s/AKfycbzlr6i2H1ZTm9wk_4lFl-KAK7-6qy3XStIy9OvPpOJlL7ozwjJf6gaeW6oy3pJUPfHG/exec", {
                 method: "POST",
                 body: JSON.stringify(productData),
                 headers: { "Content-Type": "application/json" }
             })
-            .then(response => response.text())
+            .then(response => response.text()) 
             .then(data => {
-                document.getElementById("statusMessage").textContent = "✅ Продуктът е добавен успешно!";
-                document.getElementById("productForm").reset();
+                console.log("✅ Отговор от API:", data);
+
+                let responseData;
+                try {
+                    responseData = JSON.parse(data);
+                } catch (e) {
+                    throw new Error("❌ Грешка при парсване на JSON отговора: " + data);
+                }
+
+                if (responseData.status === "success") {
+                    document.getElementById("statusMessage").textContent = "✅ Продуктът е добавен успешно!";
+                    document.getElementById("productForm").reset();
+                } else {
+                    throw new Error("❌ Грешка от API: " + responseData.message);
+                }
             })
             .catch(error => {
                 document.getElementById("statusMessage").textContent = "❌ Грешка при добавяне!";
