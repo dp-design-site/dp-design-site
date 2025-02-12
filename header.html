@@ -134,41 +134,52 @@
     }
 
     /* ✅ Стилизация на мобилното меню */
-    @media (max-width: 768px) {
-        .nav-menu {
-            display: none;
-            flex-direction: column;
-            position: absolute;
-            top: 50px;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            padding: 20px;
-            text-align: left;
-            z-index: 999;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .nav-menu.open {
-            display: flex;
-        }
-
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 998;
-            display: none;
-        }
-
-        .menu-overlay.visible {
-            display: block;
-        }
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: fixed; /* За да покрива цялата височина */
+        top: 0;
+        left: 0;
+        width: 66%; /* 2/3 от екрана */
+        height: 100vh; /* Цялата височина */
+        background: rgba(0, 0, 0, 0.6); /* Черен фон с 40% прозрачност */
+        padding: 20px;
+        text-align: left;
+        z-index: 999;
     }
+
+    .nav-menu.open {
+        display: flex;
+    }
+
+    .nav-menu a {
+        display: block;
+        padding: 20px;
+        font-size: 18px;
+        width: 100%;
+        text-align: left;
+        color: #fce5cd;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Лека граница между елементите */
+    }
+
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4); /* Полупрозрачен фон на останалата част */
+        z-index: 998;
+        display: none;
+    }
+
+    .menu-overlay.visible {
+        display: block;
+    }
+}
+
 
     /* ✅ Хедър с фон */
     .header-wrapper {
