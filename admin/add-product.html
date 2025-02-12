@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавяне на продукт</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        input, textarea { width: 100%; padding: 8px; margin: 8px 0; }
+        button { background: #28a745; color: white; padding: 10px; border: none; cursor: pointer; }
+        button:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+    <h2>Добавяне на нов продукт</h2>
+
+    <form id="productForm">
+        <label>Име на продукта:</label>
+        <input type="text" id="productName" required>
+
+        <label>Описание:</label>
+        <textarea id="productDescription" required></textarea>
+
+        <label>Цена:</label>
+        <input type="number" id="productPrice" required>
+
+        <label>Стара цена (ако има намаление):</label>
+        <input type="number" id="productOldPrice">
+
+        <label>Снимка (URL линк):</label>
+        <input type="text" id="productImage" required>
+
+        <button type="submit">Добави продукт</button>
+    </form>
+
+    <p id="statusMessage"></p>
+
+    <script>
+        document.getElementById("productForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let productData = {
+                id: Date.now(),
+                name: document.getElementById("productName").value,
+                description: document.getElementById("productDescription").value,
+                price: document.getElementById("productPrice").value,
+                oldPrice: document.getElementById("productOldPrice").value || "",
+                image: document.getElementById("productImage").value
+            };
+
+            fetch("https://script.google.com/macros/s/AKfycbxGKrMR3noD7fITDj0pM9BBLBA-qno84XXfgl7jCyYQb3sdYe-lFNVKCD0K0WuUGWD1/exec", {
+                method: "POST",
+                body: JSON.stringify(productData),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("statusMessage").textContent = "✅ Продуктът е добавен успешно!";
+                document.getElementById("productForm").reset();
+            })
+            .catch(error => {
+                document.getElementById("statusMessage").textContent = "❌ Грешка при добавяне!";
+                console.error("❌ Грешка:", error);
+            });
+        });
+    </script>
+
+</body>
+</html>
