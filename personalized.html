@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Категория</title>
-   
+    
+    <title>Категория | DP Design</title> <!-- 🔹 Добавяме правилното заглавие тук -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (document.title === "" || document.title === "Заглавие") {
+                document.title = "Категория | DP Design";
+            }
+        });
+    </script>
+    
     <style>
         body {
             background-color: #121212;
@@ -150,27 +159,24 @@
             images[(index - 1 + images.length) % images.length].classList.add("active");
         }
     </script>
+
      <script>
-        function loadComponents() {
+      function loadComponents() {
             fetch('header.html')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('header').innerHTML = data;
-                    highlightActivePage();
                 });
+
             fetch('footer.html')
                 .then(response => response.text())
-                .then(data => document.getElementById('footer').innerHTML = data);
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
         }
 
-        function highlightActivePage() {
-            const links = document.querySelectorAll(".nav-menu a");
-            links.forEach(link => {
-                if (link.href === window.location.href) {
-                    link.classList.add("active");
-                }
-            });
-        }
+        loadComponents();
     </script>
+    <script src="script.js" defer></script>
 </body>
 </html>
