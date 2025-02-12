@@ -5,26 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Категория</title>
     <script>
-        function loadComponents() {
-            fetch('header.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('header').innerHTML = data;
-                    highlightActivePage();
-                });
-            fetch('footer.html')
-                .then(response => response.text())
-                .then(data => document.getElementById('footer').innerHTML = data);
-        }
+       function loadComponents() {
+    console.log("🔄 Зареждаме хедър и футър...");
 
-        function highlightActivePage() {
-            const links = document.querySelectorAll(".nav-menu a");
-            links.forEach(link => {
-                if (link.href === window.location.href) {
-                    link.classList.add("active");
-                }
-            });
-        }
+    fetch('header.html?v=' + new Date().getTime()) // Прескачаме кеша
+        .then(response => {
+            if (!response.ok) throw new Error("❌ Грешка при зареждане на header.html");
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('header').innerHTML = data;
+            highlightActivePage();
+        })
+        .catch(error => {
+            console.error(error);
+            document.getElementById('header').innerHTML = "<p style='text-align:center;'>⚠️ Менюто не можа да се зареди.</p>";
+        });
+
+    fetch('footer.html?v=' + new Date().getTime()) // Прескачаме кеша
+        .then(response => {
+            if (!response.ok) throw new Error("❌ Грешка при зареждане на footer.html");
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+        })
+        .catch(error => {
+            console.error(error);
+            document.getElementById('footer').innerHTML = "<p style='text-align:center;'>⚠️ Футърът не можа да се зареди.</p>";
+        });
+}
+
     </script>
     <style>
         body {
