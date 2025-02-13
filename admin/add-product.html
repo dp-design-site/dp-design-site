@@ -49,15 +49,15 @@
         image: document.getElementById("productImage").value
     };
 
-    fetch("https://script.google.com/macros/s/AKfycbwVk08fsl5Q0Wl0m5UoPX8XKWSiOhzlvyuhOwsXfe4Y-YGruC_Ss3fSx6cgumLRrutj/exec", {
+    fetch("https://cors-proxy-5e2jm6hlj-danyps-projects.vercel.app/proxy", {
         method: "POST",
-        mode: "cors",  // 🔹 Добавя CORS режим
+        mode: "cors",  
         headers: { 
             "Content-Type": "application/json"
         },
         body: JSON.stringify(productData)
     })
-    .then(response => response.json())  // 🔹 Извличаме JSON от отговора
+    .then(response => response.json())
     .then(data => {
         console.log("✅ Отговор от API:", data);
         document.getElementById("statusMessage").textContent = "✅ Продуктът е добавен успешно!";
