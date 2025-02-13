@@ -15,6 +15,7 @@
                 <img src="images/whatsapp-icon.png" alt="WhatsApp">
             </a>
         </div>
+        <button id="music-toggle" class="music-button">🎵</button>
     </div>
 </footer>
 
@@ -74,4 +75,19 @@ footer {
 
 </style>
 
+<script>
+const music = new Audio('https://dp-design-site.github.io/dp-design-site/forest-spring.mp3');
+let isPlaying = false;
+const musicButton = document.getElementById('music-toggle');
+musicButton.addEventListener('click', () => {
+    if (isPlaying) {
+        music.pause();
+        musicButton.textContent = '🎵';
+    } else {
+        music.play().catch(e => console.error('Грешка при пускане на музиката:', e));
+        musicButton.textContent = '🚫🎵';
+    }
+    isPlaying = !isPlaying;
+});
+</script>
 
