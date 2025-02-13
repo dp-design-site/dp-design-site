@@ -17,7 +17,7 @@
         </div>
         <button id="music-toggle" class="music-button" aria-label="Toggle background music">🎵</button>
     </div>
-   <button id="music-toggle" class="music-button">🎵</button>
+   <button id="music-toggle" class="music-button" type="button">🎵</button>
 </footer>
 
 <style>
@@ -75,22 +75,28 @@ footer {
 </style>
 
 <script>
-const music = new Audio('https://dp-design-site.github.io/dp-design-site/forest-spring.mp3');
-let isPlaying = false;
+document.addEventListener('DOMContentLoaded', function() {
+    const music = document.createElement('audio');
+    music.src = 'https://dp-design-site.github.io/dp-design-site/forest-spring.mp3';
+    music.loop = true;
+    music.muted = true; // Заглушен при зареждане
 
-const musicButton = document.getElementById('music-toggle');
+    let isPlaying = false;
+    const musicButton = document.getElementById('music-toggle');
 
-musicButton.addEventListener('click', () => {
-    if (!isPlaying) {
-        music.play().then(() => {
+    musicButton.addEventListener('click', function() {
+        if (isPlaying) {
+            music.pause();
+            musicButton.textContent = '🎵';
+        } else {
+            music.muted = false; // Премахване на mute при клик
+            music.play().catch(e => console.error('Грешка при пускане:', e));
             musicButton.textContent = '🚫🎵';
-            isPlaying = true;
-        }).catch(e => console.error('Грешка:', e));
-    } else {
-        music.pause();
-        musicButton.textContent = '🎵';
-        isPlaying = false;
-    }
+        }
+        isPlaying = !isPlaying;
+    });
+
+    document.body.appendChild(music);
 });
 </script>
 
