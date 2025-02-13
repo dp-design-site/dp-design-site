@@ -220,27 +220,6 @@
     <!-- Динамичен футър -->
     <div id="footer"></div>
     
-     <!-- Добавяме фоновата музика -->
-     <button id="music-btn">🎵</button>
-
-    <audio id="bg-music" loop>
-        <source src="forest-spring.mp3" type="audio/mpeg">
-    </audio>
-
-    <script>
-        const musicBtn = document.getElementById('music-btn');
-        const bgMusic = document.getElementById('bg-music');
-
-        musicBtn.addEventListener('click', () => {
-            if (bgMusic.paused) {
-                bgMusic.play().catch(err => console.error('Неуспешно пускане на музика', err));
-                musicBtn.textContent = '🔇';
-            } else {
-                bgMusic.pause();
-                musicBtn.textContent = '🎵';
-            }
-        });
-    </script>
 
     <!-- Скриптове за вмъкване на хедър и футър -->
     <script>
