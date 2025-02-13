@@ -34,6 +34,14 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        /* Добавяме CSS за ефект при клик */
+        button, a, input, textarea {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:active, a:active, input:focus, textarea:focus {
+            transform: scale(0.98);
+            box-shadow: 0 0 8px rgba(255, 204, 153, 0.6);
+        }
 
         /* Контейнер за категориите */
         .categories-wrapper {
@@ -193,23 +201,27 @@
     <!-- Динамичен футър -->
     <div id="footer"></div>
 
+     <!-- Добавяме фоновата музика -->
     <audio id="bg-music" loop>
-        <source src="audio/nature-sounds.mp3" type="audio/mpeg">
+        <source src="forest-spring.mp3" type="audio/mpeg">
     </audio>
-    <button id="music-toggle" style="position: fixed; bottom: 20px; right: 20px;">🎵</button>
+    <button id="music-toggle" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; background: #ffcc99; border-radius: 50%; padding: 10px; border: none; cursor: pointer;">🔊</button>
 
     <script>
-        document.getElementById('music-toggle').addEventListener('click', function() {
-            const music = document.getElementById('bg-music');
-            if (music.paused) {
-                music.play();
-                this.textContent = '🔇';
-            } else {
+        const music = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('music-toggle');
+        let isPlaying = false;
+
+        musicToggle.addEventListener('click', () => {
+            if (isPlaying) {
                 music.pause();
-                this.textContent = '🎵';
+                musicToggle.textContent = '🔇';
+            } else {
+                music.play();
+                musicToggle.textContent = '🔊';
             }
+            isPlaying = !isPlaying;
         });
-        loadComponents();
     </script>
 
     <!-- Скриптове за вмъкване на хедър и футър -->
