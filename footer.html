@@ -17,6 +17,30 @@
             </a>
         </div>
     </div>
+    <!-- Добавяне на бутон за музика и функционалност във футера -->
+<audio id="bg-music" src="https://dp-design-site.github.io/dp-design-site/forest-spring.mp3" loop></audio>
+<button id="music-btn" class="music-toggle">🎵</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const music = document.getElementById('bg-music');
+    const musicBtn = document.getElementById('music-btn');
+
+    let isPlaying = false;
+
+    musicBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        music.pause();
+        musicBtn.textContent = '🎵';
+      } else {
+        music.play().catch(e => console.error('Неуспешно пускане на музика', e));
+        musicBtn.textContent = '🚫🎵';
+      }
+      isPlaying = !isPlaying;
+    });
+  });
+</script>
+
 </footer>
 
 
