@@ -1,4 +1,3 @@
-
 <!-- footer.html -->
 <footer>
     <div class="footer-content">
@@ -16,90 +15,50 @@
                 <img src="images/whatsapp-icon.png" alt="WhatsApp">
             </a>
         </div>
+        <button id="music-toggle" class="music-button">🎵</button>
     </div>
-    <!-- Добавяне на бутон за музика и функционалност във футера -->
-<audio id="bg-music" src="https://dp-design-site.github.io/dp-design-site/forest-spring.mp3" loop></audio>
-<button id="music-btn" class="music-toggle">🎵</button>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const music = document.getElementById('bg-music');
-    const musicBtn = document.getElementById('music-btn');
-
-    let isPlaying = false;
-
-    musicBtn.addEventListener('click', () => {
-      if (isPlaying) {
-        music.pause();
-        musicBtn.textContent = '🎵';
-      } else {
-        music.play().catch(e => console.error('Неуспешно пускане на музика', e));
-        musicBtn.textContent = '🚫🎵';
-      }
-      isPlaying = !isPlaying;
-    });
-  });
-</script>
-
 </footer>
-
 
 <style>
    footer {
-    background: rgba(0, 0, 0, 0.1); /* По-прозрачен бекграунд */
+    background: rgba(0, 0, 0, 0.1);
     color: #fce5cd;
     justify-content: space-between;
     padding: 20px;
     margin-top: 50px;
     text-align: center;
 }
-
-    .footer-content a {
-    color: #fce5cd !important;
-    text-decoration: none;
-    display: inline-block;
-    margin-right: 20px; /* Разстояние между елементите */
-    transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+.music-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fce5cd;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
 }
-
-.footer-content a:last-child {
-    margin-right: 0; /* За да няма излишно разстояние след последния елемент */
-}
-
-.footer-content a:hover {
-    transform: scale(1.1);
-    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
-}
-
-
-    
-    .social-icons {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 10px;
-    }
-
-    .social-icons img:hover {
-        transform: scale(1.2);
-    }
-
-    .social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 10px;
-}
-
-.social-icons img {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    display: block;
-}
-
-.social-icons img:hover {
+.music-button:hover {
     transform: scale(1.2);
+    background-color: rgba(255, 204, 153, 0.2);
 }
-
 </style>
+
+<script>
+const music = new Audio('https://dp-design-site.github.io/dp-design-site/forest-spring.mp3');
+let isPlaying = false;
+const musicButton = document.getElementById('music-toggle');
+musicButton.addEventListener('click', () => {
+    if (isPlaying) {
+        music.pause();
+        musicButton.textContent = '🎵';
+    } else {
+        music.play().catch(e => console.error('Грешка при пускане на музиката:', e));
+        musicButton.textContent = '🚫🎵';
+    }
+    isPlaying = !isPlaying;
+});
+</script>
