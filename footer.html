@@ -19,8 +19,6 @@
     </div>
 </footer>
 
-<audio id="bg-music" src="https://dp-design-site.github.io/dp-design-site/forest-spring.mp3" loop hidden></audio>
-
 <style>
 footer {
     background: rgba(0, 0, 0, 0.1);
@@ -75,24 +73,24 @@ footer {
 }
 </style>
 
+</style>
+
+<audio id="bg-music" src="https://dp-design-site.github.io/dp-design-site/forest-spring.mp3" loop></audio>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const music = document.getElementById('bg-music');
     const musicButton = document.getElementById('music-toggle');
-    let isPlaying = false;
 
     musicButton.addEventListener('click', function() {
-        if (isPlaying) {
-            music.pause();
-            musicButton.textContent = '🎵';
-        } else {
+        if (music.paused) {
             music.play().catch(e => console.error('Грешка при пускане на музиката:', e));
             musicButton.textContent = '🚫🎵';
+        } else {
+            music.pause();
+            musicButton.textContent = '🎵';
         }
-        isPlaying = !isPlaying;
     });
 });
 </script>
-
 
 
