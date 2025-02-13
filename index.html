@@ -24,6 +24,16 @@
             text-align: center;
             overflow-x: hidden; /* Скриване на хоризонталния скрол */
         }
+        .content p {
+            font-size: 24px;
+            margin: 20px 0;
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
         /* Контейнер за категориите */
         .categories-wrapper {
@@ -144,6 +154,10 @@
     <!-- Динамичен хедър -->
     <div id="header"></div>
 
+     <div class="content">
+        <p>Персонализирани 3D решения – от идеи до реалност: Принтиране, декорация, подаръци и прототипиране</p>
+    </div>
+
     <!-- Основни категории -->
     <div class="categories-wrapper">
         <div class="category-container">
@@ -178,6 +192,25 @@
 
     <!-- Динамичен футър -->
     <div id="footer"></div>
+
+    <audio id="bg-music" loop>
+        <source src="audio/nature-sounds.mp3" type="audio/mpeg">
+    </audio>
+    <button id="music-toggle" style="position: fixed; bottom: 20px; right: 20px;">🎵</button>
+
+    <script>
+        document.getElementById('music-toggle').addEventListener('click', function() {
+            const music = document.getElementById('bg-music');
+            if (music.paused) {
+                music.play();
+                this.textContent = '🔇';
+            } else {
+                music.pause();
+                this.textContent = '🎵';
+            }
+        });
+        loadComponents();
+    </script>
 
     <!-- Скриптове за вмъкване на хедър и футър -->
     <script>
