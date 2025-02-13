@@ -1,3 +1,4 @@
+
 <!-- footer.html -->
 <footer>
     <div class="footer-content">
@@ -19,8 +20,65 @@
     </div>
 </footer>
 
+
 <style>
    footer {
+    background: rgba(0, 0, 0, 0.1); /* По-прозрачен бекграунд */
+    color: #fce5cd;
+    justify-content: space-between;
+    padding: 20px;
+    margin-top: 50px;
+    text-align: center;
+}
+
+    .footer-content a {
+    color: #fce5cd !important;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 20px; /* Разстояние между елементите */
+    transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+.footer-content a:last-child {
+    margin-right: 0; /* За да няма излишно разстояние след последния елемент */
+}
+
+.footer-content a:hover {
+    transform: scale(1.1);
+    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
+}
+
+
+    
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .social-icons img:hover {
+        transform: scale(1.2);
+    }
+
+    .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.social-icons img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    display: block;
+}
+
+.social-icons img:hover {
+    transform: scale(1.2);
+}
+     footer {
     background: rgba(0, 0, 0, 0.1);
     color: #fce5cd;
     justify-content: space-between;
@@ -45,8 +103,8 @@
     transform: scale(1.2);
     background-color: rgba(255, 204, 153, 0.2);
 }
-</style>
 
+</style>
 <script>
 const music = new Audio('https://dp-design-site.github.io/dp-design-site/forest-spring.mp3');
 let isPlaying = false;
