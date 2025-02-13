@@ -73,26 +73,5 @@ footer {
 }
 </style>
 
-<script>
-window.onload = function() {
-    const music = new Audio('https://dp-design-site.github.io/dp-design-site/forest-spring.mp3');
-    let isPlaying = false;
-    const musicButton = document.getElementById('music-toggle');
-
-    if (musicButton) {
-        musicButton.addEventListener('click', function() {
-            if (isPlaying) {
-                music.pause();
-                musicButton.textContent = '🎵';
-            } else {
-                music.play().catch(e => console.error('Грешка при пускане на музиката:', e));
-                musicButton.textContent = '🚫🎵';
-            }
-            isPlaying = !isPlaying;
-        });
-    } else {
-        console.error('Бутонът за музика не е намерен');
-    }
-};
-</script>
+<audio src="https://dp-design-site.github.io/dp-design-site/forest-spring.mp3" autoplay loop></audio>
 
