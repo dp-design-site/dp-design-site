@@ -5,9 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Контакти | DP Design</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #fce5cd;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .contact-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .contact-info p, .contact-info a {
+            color: #ffcc99;
+            font-size: 18px;
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #ffcc99;
+            color: #121212;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .faq-container {
+            margin-top: 20px;
+        }
+
+        .faq-question {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            font-size: 18px;
+            color: #fce5cd;
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <!-- Динамично вмъкнат хедър -->
     <div id="header"></div>
 
     <div class="contact-container">
@@ -47,16 +112,13 @@
         </div>
     </div>
 
-    <!-- Google Карта (ако е приложимо) -->
     <div class="map-container">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18..." allowfullscreen></iframe>
     </div>
 
-    <!-- Динамично вмъкнат футър -->
     <div id="footer"></div>
     
     <script>
-        // Зареждане на хедър и футър
         function loadComponents() {
             fetch('header.html')
                 .then(response => response.text())
@@ -68,7 +130,6 @@
         }
         loadComponents();
 
-        // Функция за отваряне/затваряне на FAQ
         document.querySelectorAll('.faq-question').forEach(button => {
             button.addEventListener('click', () => {
                 const answer = button.nextElementSibling;
