@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакти | DP Design</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Динамично вмъкнат хедър -->
+    <div id="header"></div>
+
+    <div class="contact-container">
+        <h1>Свържете се с нас</h1>
+        
+        <div class="contact-info">
+            <p>📞 Телефон: <a href="tel:+359123456789">+359 123 456 789</a></p>
+            <p>📧 Имейл: <a href="mailto:info@dpdesign.bg">info@dpdesign.bg</a></p>
+            <p>📍 Адрес: София, България</p>
+            <p>🌐 Социални мрежи: <a href="#">Facebook</a> | <a href="#">Instagram</a></p>
+        </div>
+
+        <h2>Изпратете ни съобщение</h2>
+        <form id="contact-form">
+            <label for="name">Име:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Имейл:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="message">Съобщение:</label>
+            <textarea id="message" name="message" required></textarea>
+            
+            <button type="submit">Изпрати</button>
+        </form>
+
+        <h2>Често задавани въпроси</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <button class="faq-question">📦 Как се доставят поръчките?</button>
+                <div class="faq-answer">Използваме куриерски услуги като Speedy и Еконт.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">⏳ Колко време отнема изработката?</button>
+                <div class="faq-answer">Обикновено отнема 3-5 работни дни.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Карта (ако е приложимо) -->
+    <div class="map-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18..." allowfullscreen></iframe>
+    </div>
+
+    <!-- Динамично вмъкнат футър -->
+    <div id="footer"></div>
+    
+    <script>
+        // Зареждане на хедър и футър
+        function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => document.getElementById('header').innerHTML = data);
+
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => document.getElementById('footer').innerHTML = data);
+        }
+        loadComponents();
+
+        // Функция за отваряне/затваряне на FAQ
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+            });
+        });
+    </script>
+</body>
+</html>
