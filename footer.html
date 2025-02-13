@@ -3,7 +3,7 @@
     <div class="footer-content">
         <span>София, България</span>
         <a href="tel:+359898747472">📞 +359898747472</a>
-        <a href="mailto:danypavlov@gmail.com">✉ danypavlov@gmail.com</a>
+        <a href="mailto:danypavlov@gmail.com">✉ sales.dpdesign@gmail.com</a>
         <div class="social-icons">
             <a href="https://www.facebook.com/" target="_blank">
                 <img src="images/facebook-icon.png" alt="Facebook">
@@ -15,7 +15,6 @@
                 <img src="images/whatsapp-icon.png" alt="WhatsApp">
             </a>
         </div>
-        <button id="music-toggle" class="music-button" type="button">🎵</button>
     </div>
 </footer>
 
@@ -74,23 +73,5 @@ footer {
 </style>
 
 </style>
-
-<audio id="bg-music" src="https://dp-design-site.github.io/dp-design-site/forest-spring.mp3" loop></audio>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const music = document.getElementById('bg-music');
-    const musicButton = document.getElementById('music-toggle');
-
-    musicButton.addEventListener('click', function() {
-        if (music.paused) {
-            music.play().catch(e => console.error('Грешка при пускане на музиката:', e));
-            musicButton.textContent = '🚫🎵';
-        } else {
-            music.pause();
-            musicButton.textContent = '🎵';
-        }
-    });
-});
-</script>
 
 
