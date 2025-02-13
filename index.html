@@ -221,25 +221,24 @@
     <div id="footer"></div>
     
      <!-- Добавяме фоновата музика -->
-     <button id="music-button">🎵</button>
+     <button id="music-btn">🎵</button>
+
     <audio id="bg-music" loop>
         <source src="forest-spring.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        const musicButton = document.getElementById('music-button');
-        const audio = document.getElementById('bg-music');
-        let isPlaying = false;
+        const musicBtn = document.getElementById('music-btn');
+        const bgMusic = document.getElementById('bg-music');
 
-        musicButton.addEventListener('click', () => {
-            if (isPlaying) {
-                audio.pause();
-                musicButton.textContent = '🎵';
+        musicBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play().catch(err => console.error('Неуспешно пускане на музика', err));
+                musicBtn.textContent = '🔇';
             } else {
-                audio.play().catch(err => console.error("Неуспешно пускане на музика", err));
-                musicButton.textContent = '🔇';
+                bgMusic.pause();
+                musicBtn.textContent = '🎵';
             }
-            isPlaying = !isPlaying;
         });
     </script>
 
