@@ -42,6 +42,25 @@
             transform: scale(0.98);
             box-shadow: 0 0 8px rgba(255, 204, 153, 0.6);
         }
+         /* Стилизиране на бутон за музика */
+        #music-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 204, 153, 0.9);
+            color: #121212;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        #music-button:hover {
+            transform: scale(1.1);
+        }
 
         /* Контейнер за категориите */
         .categories-wrapper {
@@ -202,23 +221,23 @@
     <div id="footer"></div>
 
      <!-- Добавяме фоновата музика -->
+     <button id="music-button">🎵</button>
     <audio id="bg-music" loop>
         <source src="forest-spring.mp3" type="audio/mpeg">
     </audio>
-    <button id="music-toggle" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; background: #ffcc99; border-radius: 50%; padding: 10px; border: none; cursor: pointer;">🔊</button>
 
     <script>
-        const music = document.getElementById('bg-music');
-        const musicToggle = document.getElementById('music-toggle');
+        const musicButton = document.getElementById('music-button');
+        const audio = document.getElementById('bg-music');
         let isPlaying = false;
 
-        musicToggle.addEventListener('click', () => {
+        musicButton.addEventListener('click', () => {
             if (isPlaying) {
-                music.pause();
-                musicToggle.textContent = '🔇';
+                audio.pause();
+                musicButton.textContent = '🎵';
             } else {
-                music.play();
-                musicToggle.textContent = '🔊';
+                audio.play().catch(err => console.error("Неуспешно пускане на музика", err));
+                musicButton.textContent = '🔇';
             }
             isPlaying = !isPlaying;
         });
