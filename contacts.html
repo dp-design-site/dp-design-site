@@ -53,6 +53,10 @@
             margin-top: 20px;
         }
 
+        .faq-item {
+            margin-bottom: 10px;
+        }
+
         .faq-question {
             background: rgba(255, 255, 255, 0.1);
             padding: 10px;
@@ -63,6 +67,19 @@
             text-align: left;
             font-size: 18px;
             color: #fce5cd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .faq-question::after {
+            content: '\25BC'; /* Стрелка надолу */
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .faq-question.active::after {
+            transform: rotate(180deg); /* Завъртане на стрелката при отваряне */
         }
 
         .faq-answer {
@@ -133,7 +150,13 @@
         document.querySelectorAll('.faq-question').forEach(button => {
             button.addEventListener('click', () => {
                 const answer = button.nextElementSibling;
-                answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+                const isActive = button.classList.contains('active');
+                document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+                document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+                if (!isActive) {
+                    answer.style.display = 'block';
+                    button.classList.add('active');
+                }
             });
         });
     </script>
