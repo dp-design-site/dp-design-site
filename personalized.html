@@ -19,6 +19,8 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
         }
         .product {
             background: rgba(255, 255, 255, 0.1);
@@ -30,68 +32,94 @@
         .product img {
             width: 100%;
             max-width: 250px;
+            height: auto;
             border-radius: 10px;
         }
         .product:hover {
             transform: scale(1.05);
         }
-        .price {
-            font-size: 20px;
-            font-weight: bold;
+        .product h2, .product p, .product button {
             margin: 10px 0;
+        }
+        .price {
+            font-size: 18px;
+            font-weight: bold;
         }
         .old-price {
             text-decoration: line-through;
-            color: #e60000;
-            margin: 5px 0;
+            color: red;
         }
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-top: 10px;
-        }
-        .buttons button, .buttons a {
+        .buy-btn {
             background-color: #ffcc00;
             color: #000;
-            padding: 10px;
+            padding: 12px 20px;
+            font-size: 18px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
+        }
+        .more-btn {
+            background-color: #fce5cd;
+            color: #000;
+            padding: 10px 18px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .slider img {
+            width: 100%;
+            display: none;
+        }
+        .slider img.active {
+            display: block;
         }
     </style>
 </head>
 <body onload="loadComponents()">
     <div id="header"></div>
+
     <div class="products-wrapper">
         <div class="product">
-            <img src="images/DP-148x210.jpg" alt="Закачалка за ключове">
+            <div class="slider">
+                <img src="images/DP-148x210.jpg" class="active" alt="Закачалка за ключове">
+                <img src="images/key-holder-2.jpg" alt="Закачалка за ключове алтернативна">
+                <button class="slider-btn left" onclick="prevSlide(this)">◄</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">►</button>
+            </div>
             <h2>Закачалка за ключове</h2>
             <p class="old-price">70 лв.</p>
             <p class="price">60 лв.</p>
-            <div class="buttons">
-                <button>Купи</button>
-                <a href="product-template.html">Виж още</a>
-            </div>
+            <button class="buy-btn">Купи</button>
+            <button class="more-btn" onclick="window.location.href='product-template.html'">Виж още</button>
         </div>
     </div>
+
     <div id="footer"></div>
+
     <script>
+        function nextSlide(button) {
+            let slider = button.parentElement;
+            let images = slider.querySelectorAll("img");
+            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
+            images[index].classList.remove("active");
+            images[(index + 1) % images.length].classList.add("active");
+        }
+        function prevSlide(button) {
+            let slider = button.parentElement;
+            let images = slider.querySelectorAll("img");
+            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
+            images[index].classList.remove("active");
+            images[(index - 1 + images.length) % images.length].classList.add("active");
+        }
         function loadComponents() {
             fetch('header.html')
                 .then(response => response.text())
-                .then(data => {
-                    document.getElementById('header').innerHTML = data;
-                });
+                .then(data => { document.getElementById('header').innerHTML = data; });
             fetch('footer.html')
                 .then(response => response.text())
-                .then(data => {
-                    document.getElementById('footer').innerHTML = data;
-                });
+                .then(data => { document.getElementById('footer').innerHTML = data; });
         }
-        loadComponents();
     </script>
 </body>
 </html>
