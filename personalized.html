@@ -5,86 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Продукт | DP Design</title>
     <style>
-        body {
-            background-color: #121212;
-            color: #fce5cd;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            overflow-x: hidden;
-        }
-        .products-wrapper {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            justify-content: center;
-            max-width: 1200px;
-            margin: auto;
-        }
-        .product img {
-            width: 100%;
-            max-width: 250px;
-            height: auto;
-            border-radius: 10px;
-            display: block;
-            margin: 0 auto;
-        }
-        .button-see-more, .button-buy {
-            background-color: #fce5cd;
-            color: #000;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            display: inline-block;
-            text-decoration: none;
-        }
-        .button-buy {
-            background-color: #ffd700;
-            font-size: 18px;
-            font-weight: bold;
-        }
+        body { background-color: #121212; color: #fce5cd; font-family: Arial, sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        .product-container { display: flex; flex-direction: column; padding: 20px; gap: 20px; align-items: center; }
+        .product-image { position: relative; width: 30%; text-align: center; }
+        .product-image img { width: 100%; border-radius: 10px; }
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; cursor: pointer; opacity: 0.5; }
+        .slider-btn.left { left: 0; }
+        .slider-btn.right { right: 0; }
+        .thumbnails { display: flex; gap: 10px; margin-top: 10px; justify-content: center; }
+        .thumbnails img { width: 60px; cursor: pointer; border-radius: 5px; }
+        .product-details { max-width: 600px; text-align: left; }
+        .price-container p { margin: 5px 0; }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            if (document.title === "" || document.title === "Заглавие") {
-                document.title = "Продукт | DP Design";
-            }
-        });
-    </script>
 </head>
 <body onload="loadComponents()">
     <div id="header"></div>
 
-    <div class="products-wrapper">
-        <div class="product">
-            <img src="images/DP-148x210.jpg" alt="Продукт">
-            <img src="images/DP-148x210-2.jpg" alt="Продукт">
-            <h2>Име на продукта</h2>
-            <p>Описание на продукта</p>
+    <div class="product-container">
+        <div class="product-image">
+            <span class="promo-badge">ПРОМО</span>
+            <div class="slider">
+                <img src="images/DP-148x210.jpg" class="active" alt="Продукт">
+                <img src="images/DP-148x210-2.jpg" alt="Продукт алтернативен">
+                <button class="slider-btn left" onclick="prevSlide(this)">←</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">→</button>
+            </div>
+            <div class="thumbnails">
+                <img src="images/DP-148x210.jpg" onclick="showImage(0)" alt="Продукт">
+                <img src="images/DP-148x210-2.jpg" onclick="showImage(1)" alt="Продукт алтернативен">
+            </div>
+        </div>
+        <div class="product-details">
+            <h1>Име на продукта</h1>
+            <p>Описание на продукта.</p>
             <div class="price-container">
                 <p><del>70 лв.</del></p>
                 <p>60 лв.</p>
             </div>
-            <a href="#" class="button-buy">ПОРЪЧАЙ СЕГА!</a>
-            <a href="product-template.html" class="button-see-more">Виж повече</a>
+            <button class="button-buy">Купи</button>
+            <a href="#" class="button-see-more">Виж повече</a>
         </div>
     </div>
 
     <div id="footer"></div>
 
     <script>
-        function loadComponents() {
-            fetch('header.html')
-                .then(response => response.text())
-                .then(data => { document.getElementById('header').innerHTML = data; });
-
-            fetch('footer.html')
-                .then(response => response.text())
-                .then(data => { document.getElementById('footer').innerHTML = data; });
+      function loadComponents() {
+            fetch('header.html').then(response => response.text()).then(data => document.getElementById('header').innerHTML = data);
+            fetch('footer.html').then(response => response.text()).then(data => document.getElementById('footer').innerHTML = data);
         }
         loadComponents();
+
+        function nextSlide(btn) { let slider = btn.parentElement; let imgs = slider.querySelectorAll('img'); let index = Array.from(imgs).findIndex(img => img.classList.contains('active')); imgs[index].classList.remove('active'); imgs[(index+1)%imgs.length].classList.add('active'); }
+        function prevSlide(btn) { let slider = btn.parentElement; let imgs = slider.querySelectorAll('img'); let index = Array.from(imgs).findIndex(img => img.classList.contains('active')); imgs[index].classList.remove('active'); imgs[(index-1+imgs.length)%imgs.length].classList.add('active'); }
+        function showImage(index) { let imgs = document.querySelectorAll('.slider img'); imgs.forEach(img => img.classList.remove('active')); imgs[index].classList.add('active'); }
     </script>
 </body>
 </html>
