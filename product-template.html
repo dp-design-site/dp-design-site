@@ -16,21 +16,22 @@
         }
         .product-container {
             display: flex;
-            align: center;
-            flex-direction: column;
+            flex-direction: row;
             padding: 20px;
             gap: 20px;
             align-items: center;
+            justify-content: center;
         }
         .product-image {
             position: relative;
-            align: center;
-            width: 30%;
-            text-align: center;
+            flex: 0 0 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .product-image img {
-            align: center;
             width: 100%;
+            max-width: 300px;
             border-radius: 10px;
         }
         .thumbnails {
@@ -49,8 +50,9 @@
             transform: scale(1.1);
         }
         .product-details {
-            max-width: 600px;
+            flex: 1;
             text-align: left;
+            max-width: 600px;
         }
         .promo-badge {
             position: absolute;
@@ -62,12 +64,14 @@
             font-weight: bold;
             border-radius: 5px;
         }
-        @media (min-width: 601px) {
+        @media (max-width: 600px) {
             .product-container {
-                flex-direction: row;
+                flex-direction: column;
+                align-items: center;
             }
             .product-image {
-                width: 30%;
+                flex: 1;
+                width: 60%;
             }
         }
     </style>
@@ -97,16 +101,22 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
     <script>
-      lightbox.option({
-        'resizeDuration': 200,
-        'wrapAround': true,
-        'fadeDuration': 300,
-        'imageFadeDuration': 300,
-        'disableScrolling': false,
-        'showImageNumberLabel': false,
-        'alwaysShowNavOnTouchDevices': true,
-        'albumLabel': "Изображение %1 от %2",
-        'positionFromTop': 100
+      document.addEventListener("DOMContentLoaded", function() {
+          if (typeof lightbox !== 'undefined') {
+              lightbox.option({
+                  'resizeDuration': 200,
+                  'wrapAround': true,
+                  'fadeDuration': 300,
+                  'imageFadeDuration': 300,
+                  'disableScrolling': false,
+                  'showImageNumberLabel': false,
+                  'alwaysShowNavOnTouchDevices': true,
+                  'albumLabel': "Изображение %1 от %2",
+                  'positionFromTop': 100
+              });
+          } else {
+              console.error("Lightbox не е дефиниран.");
+          }
       });
       function loadComponents() {
             fetch('header.html')
