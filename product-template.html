@@ -43,7 +43,7 @@
 
     <div class="product-container">
         <div class="product-image">
-            <img src="../images/DP-148x210.jpg" alt="Продуктово изображение">
+            <img src="images/DP-148x210.jpg" alt="Продуктово изображение">
         </div>
         <div class="product-details">
             <h1>Име на продукта</h1>
@@ -58,13 +58,13 @@
 
     <script>
       function loadComponents() {
-            fetch('../header.html')
+            fetch('header.html')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('header').innerHTML = data;
                 });
 
-            fetch('../footer.html')
+            fetch('footer.html')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('footer').innerHTML = data;
