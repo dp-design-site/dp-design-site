@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Категория | DP Design</title> <!-- 🔹 Добавяме правилното заглавие тук -->
-
+    <title>Категория | DP Design</title>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (document.title === "" || document.title === "Заглавие") {
@@ -13,7 +11,6 @@
             }
         });
     </script>
-    
     <style>
         body {
             background-color: #121212;
@@ -55,11 +52,18 @@
         }
 
         .products-wrapper {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
             padding: 20px;
             justify-content: center;
+        }
+
+        @media (max-width: 600px) {
+            .products-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
         }
 
         .product {
@@ -138,7 +142,7 @@
         </div>
     </div>
 
-     <div class="products-wrapper">
+    <div class="products-wrapper">
         <div class="product">
             <div class="slider">
                 <img src="images/DP-148x210.jpg" class="active" alt="Продукт 1">
@@ -151,7 +155,8 @@
             <a href="templates/product-template.html" class="button">Виж повече</a>
         </div>
     </div>
-     <div class="products-wrapper">
+
+    <div class="products-wrapper">
         <div class="product">
             <div class="slider">
                 <img src="images/DP-148x210.jpg" class="active" alt="Продукт 1">
@@ -169,7 +174,6 @@
 
     <script src="scripts/slider.js"></script>
     <script src="scripts/components.js"></script>
-
     <script>
         function nextSlide(button) {
             let slider = button.parentElement;
@@ -188,7 +192,7 @@
         }
     </script>
 
-     <script>
+    <script>
       function loadComponents() {
             fetch('header.html')
                 .then(response => response.text())
