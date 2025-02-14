@@ -34,7 +34,6 @@
             overflow: hidden;
             max-width: 250px;
             margin: auto;
-            touch-action: pan-y;
         }
         .slider img {
             width: 100%;
@@ -67,7 +66,7 @@
             transition: transform 0.3s;
         }
         .button-buy {
-            font-size: 18px;
+            font-size: 24px;
             font-weight: bold;
         }
         .button-see-more:hover, .button-buy:hover {
@@ -76,58 +75,20 @@
         .price-container p {
             margin: 5px 0;
         }
+        .price-container p del {
+            color: red;
+        }
+        .price-container p:last-child {
+            font-weight: bold;
+            font-size: 130%;
+        }
     </style>
 </head>
 <body onload="loadComponents()">
     <div id="header"></div>
 
     <div class="products-wrapper">
-        <div class="product">
-            <div class="slider" ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)">
-                <img src="images/DP-148x210.jpg" class="active" alt="Продукт">
-                <img src="images/DP-148x210-2.jpg" alt="Продукт алтернативен">
-                <button class="slider-btn left" onclick="prevSlide(this)">←</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">→</button>
-            </div>
-            <h2>Продукт</h2>
-            <p>Описание на продукта</p>
-            <div class="price-container">
-                <p><del>70 лв.</del></p>
-                <p>60 лв.</p>
-            </div>
-            <a href="#" class="button-buy">ПОРЪЧАЙ СЕГА!</a>
-            <a href="product-template.html" class="button-see-more">Виж повече</a>
-        </div>
-        <div class="product">
-            <div class="slider">
-                <img src="images/DP-148x210.jpg" class="active" alt="Продукт">
-                <button class="slider-btn left" onclick="prevSlide(this)">←</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">→</button>
-            </div>
-            <h2>Продукт 2</h2>
-            <p>Описание на продукта 2</p>
-            <div class="price-container">
-                <p><del>80 лв.</del></p>
-                <p>70 лв.</p>
-            </div>
-            <a href="#" class="button-buy">ПОРЪЧАЙ СЕГА!</a>
-            <a href="product-template.html" class="button-see-more">Виж повече</a>
-        </div>
-        <div class="product">
-            <div class="slider">
-                <img src="images/DP-148x210.jpg" class="active" alt="Продукт">
-                <button class="slider-btn left" onclick="prevSlide(this)">←</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">→</button>
-            </div>
-            <h2>Продукт 3</h2>
-            <p>Описание на продукта 3</p>
-            <div class="price-container">
-                <p><del>90 лв.</del></p>
-                <p>80 лв.</p>
-            </div>
-            <a href="#" class="button-buy">ПОРЪЧАЙ СЕГА!</a>
-            <a href="product-template.html" class="button-see-more">Виж повече</a>
-        </div>
+        <!-- Продукти тук -->
     </div>
 
     <div id="footer"></div>
@@ -147,20 +108,6 @@
                 });
         }
         loadComponents();
-
-        let xDown = null;
-        function handleTouchStart(evt) {
-            const firstTouch = evt.touches[0];
-            xDown = firstTouch.clientX;
-        }
-        function handleTouchMove(evt) {
-            if (!xDown) return;
-            let xUp = evt.touches[0].clientX;
-            let xDiff = xDown - xUp;
-            if (xDiff > 0) nextSlide(evt.target);
-            else prevSlide(evt.target);
-            xDown = null;
-        }
     </script>
 </body>
 </html>
