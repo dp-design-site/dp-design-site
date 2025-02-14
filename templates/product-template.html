@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Продукт | DP Design</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Име на продукта | DP Design</title>
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body onload="loadComponents()">
     <div id="header"></div>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>Име на продукта</h1>
         <div class="product-gallery">
-            <img src="images/product-placeholder.jpg" alt="Продуктово изображение">
+            <img src="../images/product-placeholder.jpg" alt="Продуктово изображение">
         </div>
         <p>Описание на продукта.</p>
         <p>Цена: <span>100 лв.</span></p>
@@ -22,11 +22,11 @@
         <h2>Подобни продукти</h2>
         <div class="similar-products">
             <div class="product">
-                <img src="images/DP-148x210.jpg" alt="Продукт 2">
+                <img src="../images/DP-148x210.jpg" alt="Продукт 2">
                 <p>Продукт 2</p>
             </div>
             <div class="product">
-                <img src="images/DP-148x210-2.jpg" alt="Продукт 3">
+                <img src="../images/DP-148x210-2.jpg" alt="Продукт 3">
                 <p>Продукт 3</p>
             </div>
         </div>
@@ -36,8 +36,13 @@
 
     <script>
         function loadComponents() {
-            fetch('../header.html').then(response => response.text()).then(data => document.getElementById('header').innerHTML = data);
-            fetch('../footer.html').then(response => response.text()).then(data => document.getElementById('footer').innerHTML = data);
+            fetch('../header.html')
+                .then(response => response.text())
+                .then(data => document.getElementById('header').innerHTML = data);
+
+            fetch('../footer.html')
+                .then(response => response.text())
+                .then(data => document.getElementById('footer').innerHTML = data);
         }
     </script>
 </body>
