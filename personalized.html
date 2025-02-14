@@ -19,8 +19,9 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
+            justify-content: center;
+            max-width: 1200px;
+            margin: auto;
         }
         .product {
             background: rgba(255, 255, 255, 0.1);
@@ -34,45 +35,52 @@
             max-width: 250px;
             height: auto;
             border-radius: 10px;
+            display: block;
+            margin: 0 auto;
         }
         .product:hover {
             transform: scale(1.05);
         }
-        .product h2, .product p, .product button {
-            margin: 10px 0;
-        }
-        .price {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .old-price {
-            text-decoration: line-through;
-            color: red;
-        }
-        .buy-btn {
-            background-color: #ffcc00;
-            color: #000;
-            padding: 12px 20px;
-            font-size: 18px;
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
             border: none;
-            border-radius: 5px;
+            padding: 10px;
             cursor: pointer;
+            opacity: 0.5;
         }
-        .more-btn {
-            background-color: #fce5cd;
-            color: #000;
-            padding: 10px 18px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .slider img {
-            width: 100%;
-            display: none;
+        .slider {
+            position: relative;
+            overflow: hidden;
+            max-width: 250px;
+            margin: auto;
+            touch-action: pan-y;
         }
         .slider img.active {
             display: block;
+        }
+        .button-see-more {
+            background-color: #fce5cd;
+            color: #000;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .button-buy {
+            background-color: #ffd700;
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -81,44 +89,35 @@
 
     <div class="products-wrapper">
         <div class="product">
-            <div class="slider">
-                <img src="images/DP-148x210.jpg" class="active" alt="Закачалка за ключове">
-                <img src="images/key-holder-2.jpg" alt="Закачалка за ключове алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">◄</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">►</button>
+            <div class="slider" ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)">
+                <img src="images/DP-148x210.jpg" class="active" alt="Продукт">
+                <img src="images/DP-148x210-2.jpg" alt="Продукт алтернативен">
+                <button class="slider-btn left" onclick="prevSlide(this)">←</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">→</button>
             </div>
-            <h2>Закачалка за ключове</h2>
-            <p class="old-price">70 лв.</p>
-            <p class="price">60 лв.</p>
-            <button class="buy-btn">Купи</button>
-            <button class="more-btn" onclick="window.location.href='product-template.html'">Виж още</button>
+            <h2>Продукт</h2>
+            <p>Описание на продукта</p>
+            <p><del>70 лв.</del> 60 лв.</p>
+            <a href="#" class="button-buy">ПОРЪЧАЙ СЕГА!</a>
+            <a href="product-template.html" class="button-see-more">Виж повече</a>
         </div>
     </div>
 
     <div id="footer"></div>
 
     <script>
-        function nextSlide(button) {
-            let slider = button.parentElement;
-            let images = slider.querySelectorAll("img");
-            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
-            images[index].classList.remove("active");
-            images[(index + 1) % images.length].classList.add("active");
+        let xDown = null;
+        function handleTouchStart(evt) {
+            const firstTouch = evt.touches[0];
+            xDown = firstTouch.clientX;
         }
-        function prevSlide(button) {
-            let slider = button.parentElement;
-            let images = slider.querySelectorAll("img");
-            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
-            images[index].classList.remove("active");
-            images[(index - 1 + images.length) % images.length].classList.add("active");
-        }
-        function loadComponents() {
-            fetch('header.html')
-                .then(response => response.text())
-                .then(data => { document.getElementById('header').innerHTML = data; });
-            fetch('footer.html')
-                .then(response => response.text())
-                .then(data => { document.getElementById('footer').innerHTML = data; });
+        function handleTouchMove(evt) {
+            if (!xDown) return;
+            let xUp = evt.touches[0].clientX;
+            let xDiff = xDown - xUp;
+            if (xDiff > 0) nextSlide(evt.target);
+            else prevSlide(evt.target);
+            xDown = null;
         }
     </script>
 </body>
