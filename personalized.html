@@ -129,28 +129,19 @@
             <div class="slider">
                 <img src="images/DP-148x210.jpg" class="active" alt="Продукт 1">
                 <img src="images/DP-148x210-2.jpg" alt="Продукт 1 алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">&#10094;</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">&#10095;</button>
+                <button class="slider-btn left" onclick="prevSlide(this)">←</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">→</button>
             </div>
             <h2>Продукт 1</h2>
             <p>Кратко описание на продукта.</p>
-            <button>Виж повече</button>
-        </div>
-
-        <div class="product">
-            <div class="slider">
-                <img src="images/DP-148x210.jpg" class="active" alt="Продукт 2">
-                <img src="images/DP-148x210-2.jpg" alt="Продукт 2 алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">&#10094;</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">&#10095;</button>
-            </div>
-            <h2>Продукт 2</h2>
-            <p>Кратко описание на продукта.</p>
-            <button>Виж повече</button>
+            <a href="templates/product-template.html" class="button">Виж повече</a>
         </div>
     </div>
 
     <div id="footer"></div>
+
+    <script src="scripts/slider.js"></script>
+    <script src="scripts/components.js"></script>
 
     <script>
         function nextSlide(button) {
