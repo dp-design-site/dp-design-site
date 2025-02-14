@@ -1,43 +1,29 @@
+<!-- Включване на хедър и футър чрез JavaScript -->
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Продукт - DP Design</title>
-  <link rel="stylesheet" href="../css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Име на продукта</title>
+    <link rel="stylesheet" href="../styles/style.css">
 </head>
 <body>
-  <!-- Хедър -->
-  <header>
-    <h1>dp | design</h1>
-    <nav>
-      <ul>
-        <li><a href="../index.html">Начало</a></li>
-        <li><a href="../categories.html">Категории</a></li>
-        <li><a href="../contact.html">Контакти</a></li>
-      </ul>
-    </nav>
-  </header>
+    <div id="header"></div>
 
-  <!-- Основно съдържание -->
-  <main>
-    <h2>Име на продукта</h2>
-    <img src="../images/product-placeholder.png" alt="Продуктово изображение">
-    <p>Описание на продукта.</p>
-    <p>Цена: <span>-- лв.</span></p>
-    <p>Стара цена: <span>-- лв.</span></p>
-    <button>Поръчай</button>
+    <main>
+        <h1>Име на продукта</h1>
+        <img src="../images/product-placeholder.png" alt="Продуктово изображение">
+        <p>Описание на продукта.</p>
+        <p>Цена: <span>-- лв.</span></p>
+        <p>Стара цена: <span>-- лв.</span></p>
+        <button>Поръчай</button>
 
-    <section>
-      <h3>Подобни продукти</h3>
-      <p>Тук ще се покажат подобни продукти.</p>
-    </section>
-  </main>
+        <h2>Подобни продукти</h2>
+        <!-- Място за подобни продукти -->
+    </main>
 
-  <!-- Футър -->
-  <footer>
-    <p>© 2025 DP Design | София, България</p>
-    <p>Тел: <a href="tel:+359123456789">+359 123 456 789</a> | Имейл: <a href="mailto:info@dpdesign.bg">info@dpdesign.bg</a></p>
-  </footer>
+    <div id="footer"></div>
+
+    <script src="../scripts/header-footer.js"></script>
 </body>
 </html>
