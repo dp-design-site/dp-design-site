@@ -20,9 +20,23 @@
             padding: 20px;
             gap: 20px;
         }
+        .product-image {
+            position: relative;
+        }
         .product-image img {
-            width: 100%;
+            width: 70%;
             border-radius: 10px;
+        }
+        .promo-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: red;
+            color: white;
+            padding: 5px 10px;
+            font-weight: bold;
+            border-radius: 5px;
+            z-index: 1;
         }
         .thumbnails {
             display: flex;
@@ -46,6 +60,9 @@
             .product-container {
                 flex-direction: column;
             }
+            .product-image img {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -54,6 +71,7 @@
 
     <div class="product-container">
         <div class="product-image">
+            <span class="promo-badge">ПРОМО</span>
             <a href="images/DP-148x210.jpg" data-lightbox="product-gallery"><img src="images/DP-148x210.jpg" alt="Продуктово изображение"></a>
             <div class="thumbnails">
                 <a href="images/DP-148x210-2.jpg" data-lightbox="product-gallery"><img src="images/DP-148x210-2.jpg" alt="Продуктова миниатюра 1"></a>
