@@ -1,35 +1,44 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DP Design - Продуктова страница</title>
-  <link rel="stylesheet" href="../styles/style.css">
-  <script src="../scripts/header-footer.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продукт | DP Design</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <header-component></header-component>
+<body onload="loadComponents()">
+    <div id="header"></div>
 
-  <main>
-    <h1 id="product-name">Име на продукта</h1>
-    <img id="product-image" src="../images/placeholder.png" alt="Продуктово изображение">
-    <p id="product-description">Описание на продукта.</p>
-    <p id="product-price">Цена:</p>
-    <p id="product-old-price">Стара цена:</p>
-    <button>Поръчай</button>
+    <div class="content">
+        <h1>Име на продукта</h1>
+        <div class="product-gallery">
+            <img src="images/product-placeholder.jpg" alt="Продуктово изображение">
+        </div>
+        <p>Описание на продукта.</p>
+        <p>Цена: <span>100 лв.</span></p>
+        <p>Стара цена: <del>120 лв.</del></p>
+        <button class="order-btn">Поръчай</button>
 
-    <h2>Подобни продукти</h2>
-  </main>
+        <h2>Подобни продукти</h2>
+        <div class="similar-products">
+            <div class="product">
+                <img src="images/DP-148x210.jpg" alt="Продукт 2">
+                <p>Продукт 2</p>
+            </div>
+            <div class="product">
+                <img src="images/DP-148x210-2.jpg" alt="Продукт 3">
+                <p>Продукт 3</p>
+            </div>
+        </div>
+    </div>
 
-  <footer-component></footer-component>
+    <div id="footer"></div>
 
-  <script>
-    // Задаване на стойности ръчно за тестване
-    document.getElementById('product-name').textContent = '3D Принтирана стойка за телефон';
-    document.getElementById('product-image').src = '../images/phone-stand.png';
-    document.getElementById('product-description').textContent = 'Удобна и стилна стойка за вашия телефон, 3D принтирана.';
-    document.getElementById('product-price').textContent = 'Цена: 25 лв.';
-    document.getElementById('product-old-price').textContent = 'Стара цена: 30 лв.';
-  </script>
+    <script>
+        function loadComponents() {
+            fetch('header.html').then(response => response.text()).then(data => document.getElementById('header').innerHTML = data);
+            fetch('footer.html').then(response => response.text()).then(data => document.getElementById('footer').innerHTML = data);
+        }
+    </script>
 </body>
 </html>
