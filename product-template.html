@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Продукт | DP Design</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
     <style>
         body {
             background-color: #121212;
@@ -13,19 +14,29 @@
             padding: 0;
             overflow-x: hidden;
         }
-    
         .product-container {
             display: flex;
             flex-direction: row;
             padding: 20px;
             gap: 20px;
         }
-        .product-image {
-            flex: 1;
-        }
         .product-image img {
             width: 100%;
             border-radius: 10px;
+        }
+        .thumbnails {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .thumbnails img {
+            width: 60px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        .thumbnails img:hover {
+            transform: scale(1.1);
         }
         .product-details {
             flex: 1;
@@ -43,7 +54,11 @@
 
     <div class="product-container">
         <div class="product-image">
-            <img src="images/DP-148x210.jpg" alt="Продуктово изображение">
+            <a href="images/DP-148x210.jpg" data-lightbox="product-gallery"><img src="images/DP-148x210.jpg" alt="Продуктово изображение"></a>
+            <div class="thumbnails">
+                <a href="images/DP-148x210-2.jpg" data-lightbox="product-gallery"><img src="images/DP-148x210-2.jpg" alt="Продуктова миниатюра 1"></a>
+                <a href="images/DP-148x210-3.jpg" data-lightbox="product-gallery"><img src="images/DP-148x210-3.jpg" alt="Продуктова миниатюра 2"></a>
+            </div>
         </div>
         <div class="product-details">
             <h1>Име на продукта</h1>
@@ -56,6 +71,7 @@
 
     <div id="footer"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
     <script>
       function loadComponents() {
             fetch('header.html')
