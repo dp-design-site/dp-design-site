@@ -3,17 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Персонализирани продукти | DP Design</title>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            if (document.title === "" || document.title === "Заглавие") {
-                document.title = "Персонализирани продукти | DP Design";
-            }
-        });
-    </script>
-    
     <style>
         body {
             background-color: #121212;
@@ -24,31 +14,12 @@
             text-align: center;
             overflow-x: hidden;
         }
-         .content p {
-            font-size: 24px;
-            margin: 20px 0;
-            opacity: 0;
-            animation: fadeIn 2s ease-in-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .nav-menu a.active {
-            font-size: 16px;
-            font-weight: bold;
-            color: #ffcc99;
-        }
-
         .products-wrapper {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             padding: 20px;
-            justify-content: center;
         }
-
         .product {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -56,119 +27,57 @@
             text-align: center;
             transition: transform 0.3s;
         }
-
         .product img {
             width: 100%;
             max-width: 250px;
-            height: auto;
             border-radius: 10px;
         }
-
         .product:hover {
             transform: scale(1.05);
         }
-
-        .slider {
-            position: relative;
-            overflow: hidden;
-            max-width: 250px;
-            margin: auto;
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
         }
-
-        .slider img {
-            width: 100%;
-            display: none;
+        .old-price {
+            text-decoration: line-through;
+            color: #e60000;
+            margin: 5px 0;
         }
-
-        .slider img.active {
-            display: block;
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 10px;
         }
-
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
+        .buttons button, .buttons a {
+            background-color: #ffcc00;
+            color: #000;
             padding: 10px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-        }
-
-        .slider-btn.left {
-            left: 0;
-        }
-
-        .slider-btn.right {
-            right: 0;
+            text-decoration: none;
+            font-weight: bold;
         }
     </style>
 </head>
 <body onload="loadComponents()">
     <div id="header"></div>
-
-    <div class="content">
-        <p>Създаваме уют и персонализация за вашия дом с нашите уникални 3D проекти.</p>
-    </div>
-
     <div class="products-wrapper">
         <div class="product">
-            <div class="slider">
-                <img src="images/DP-148x210.jpg" class="active" alt="Закачалка за ключове">
-                <img src="images/key-holder-2.jpg" alt="Закачалка за ключове алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">&#10094;</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">&#10095;</button>
-            </div>
+            <img src="images/DP-148x210.jpg" alt="Закачалка за ключове">
             <h2>Закачалка за ключове</h2>
-            <p>Стилна 3D принтирана закачалка за ключове.</p>
-            <button>Виж повече</button>
-        </div>
-
-        <div class="product">
-            <div class="slider">
-                <img src="images/DP-148x210.jpg" class="active" alt="Органайзер за кабели">
-                <img src="images/cable-organizer-2.jpg" alt="Органайзер за кабели алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">&#10094;</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">&#10095;</button>
+            <p class="old-price">70 лв.</p>
+            <p class="price">60 лв.</p>
+            <div class="buttons">
+                <button>Купи</button>
+                <a href="product-template.html">Виж още</a>
             </div>
-            <h2>Органайзер за кабели</h2>
-            <p>Функционален органайзер за подреждане на кабели.</p>
-            <button>Виж повече</button>
-        </div>
-
-        <div class="product">
-            <div class="slider">
-                <img src="images/DP-148x210.jpg" class="active" alt="Органайзер за кабели">
-                <img src="images/cable-organizer-2.jpg" alt="Органайзер за кабели алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">&#10094;</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">&#10095;</button>
-            </div>
-            <h2>Органайзер за кабели</h2>
-            <p>Функционален органайзер за подреждане на кабели.</p>
-            <button>Виж повече</button>
         </div>
     </div>
-
     <div id="footer"></div>
-
-    <script>
-        function nextSlide(button) {
-            let slider = button.parentElement;
-            let images = slider.querySelectorAll("img");
-            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
-            images[index].classList.remove("active");
-            images[(index + 1) % images.length].classList.add("active");
-        }
-
-        function prevSlide(button) {
-            let slider = button.parentElement;
-            let images = slider.querySelectorAll("img");
-            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
-            images[index].classList.remove("active");
-            images[(index - 1 + images.length) % images.length].classList.add("active");
-        }
-    </script>
-
     <script>
         function loadComponents() {
             fetch('header.html')
@@ -176,16 +85,13 @@
                 .then(data => {
                     document.getElementById('header').innerHTML = data;
                 });
-
             fetch('footer.html')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('footer').innerHTML = data;
                 });
         }
-
         loadComponents();
     </script>
-    <script src="script.js" defer></script>
 </body>
 </html>
