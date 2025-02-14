@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DP Design | Продукт</title>
-  <link rel="stylesheet" href="/css/styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Продукт - DP Design</title>
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
+  <!-- Хедър -->
   <header>
-    <h1 id="product-title">Име на продукта</h1>
+    <h1>dp | design</h1>
+    <nav>
+      <ul>
+        <li><a href="../index.html">Начало</a></li>
+        <li><a href="../categories.html">Категории</a></li>
+        <li><a href="../contact.html">Контакти</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <section id="gallery">
-    <img id="main-image" src="" alt="Продуктово изображение" />
-    <div id="thumbnails"></div>
-  </section>
+  <!-- Основно съдържание -->
+  <main>
+    <h2>Име на продукта</h2>
+    <img src="../images/product-placeholder.png" alt="Продуктово изображение">
+    <p>Описание на продукта.</p>
+    <p>Цена: <span>-- лв.</span></p>
+    <p>Стара цена: <span>-- лв.</span></p>
+    <button>Поръчай</button>
 
-  <section id="product-info">
-    <p id="product-description">Описание на продукта.</p>
-    <p id="product-price">Цена: <span></span></p>
-    <p id="product-old-price">Стара цена: <span></span></p>
-    <table id="product-specs"></table>
-    <button id="order-button">Поръчай</button>
-  </section>
+    <section>
+      <h3>Подобни продукти</h3>
+      <p>Тук ще се покажат подобни продукти.</p>
+    </section>
+  </main>
 
-  <section id="related-products">
-    <h2>Подобни продукти</h2>
-    <div id="related-items"></div>
-  </section>
-
-  <script src="/js/product.js"></script>
+  <!-- Футър -->
+  <footer>
+    <p>© 2025 DP Design | София, България</p>
+    <p>Тел: <a href="tel:+359123456789">+359 123 456 789</a> | Имейл: <a href="mailto:info@dpdesign.bg">info@dpdesign.bg</a></p>
+  </footer>
 </body>
 </html>
