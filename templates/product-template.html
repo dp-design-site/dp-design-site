@@ -3,17 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Име на продукта | DP Design</title> <!-- 🔹 Добавяме правилното заглавие тук -->
-    <link rel="stylesheet" href="../style.css">
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            if (document.title === "" || document.title === "Заглавие") {
-                document.title = "Категория | DP Design";
-            }
-        });
-    </script>
-    
+    <title>Продукт | DP Design</title>
     <style>
         body {
             background-color: #121212;
@@ -21,171 +11,65 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            text-align: center;
             overflow-x: hidden;
         }
-        .content p {
-            font-size: 24px;
-            margin: 20px 0;
-            opacity: 0;
-            animation: fadeIn 2s ease-in-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .nav-menu a.active {
-            font-size: 16px;
-            font-weight: bold;
-            color: #ffcc99;
-        }
-
-        .category-header {
-            background: url('../images/header-background.jpg') no-repeat center center/cover;
-            height: 260px;
+        .product-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            box-shadow: inset 0 -50px 50px rgba(18, 18, 18, 1);
-            margin-top: 0px;
-        }
-
-        .products-wrapper {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            flex-direction: row;
             padding: 20px;
-            justify-content: center;
+            gap: 20px;
         }
-
-        .product {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            transition: transform 0.3s;
+        .product-image {
+            flex: 1;
         }
-
-        .product img {
+        .product-image img {
             width: 100%;
-            max-width: 250px;
-            height: auto;
             border-radius: 10px;
         }
-
-        .product:hover {
-            transform: scale(1.05);
+        .product-details {
+            flex: 1;
+            text-align: left;
         }
-
-        .slider {
-            position: relative;
-            overflow: hidden;
-            max-width: 250px;
-            margin: auto;
-        }
-
-        .slider img {
-            width: 100%;
-            display: none;
-        }
-
-        .slider img.active {
-            display: block;
-        }
-
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .slider-btn.left {
-            left: 0;
-        }
-
-        .slider-btn.right {
-            right: 0;
+        @media (max-width: 600px) {
+            .product-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body onload="loadComponents()">
     <div id="header"></div>
 
-   <div class="content">
-        <h1>Име на продукта</h1>
-        <div class="product-gallery">
-            <img src="../images/DP-148x210.jpg" alt="Продуктово изображение">
+    <div class="product-container">
+        <div class="product-image">
+            <img src="images/product-placeholder.jpg" alt="Продуктово изображение">
         </div>
-        <p>Описание на продукта.</p>
-        <p>Цена: <span>100 лв.</span></p>
-        <p>Стара цена: <del>120 лв.</del></p>
-        <button class="order-btn">Поръчай</button>
-
-        <h2>Подобни продукти</h2>
-        <div class="similar-products">
-            <div class="product">
-                <img src="../images/DP-148x210.jpg" alt="Продукт 2">
-                <p>Продукт 2</p>
-            </div>
-            <div class="product">
-                <img src="../images/DP-148x210-2.jpg" alt="Продукт 3">
-                <p>Продукт 3</p>
-            </div>
+        <div class="product-details">
+            <h1>Име на продукта</h1>
+            <p>Описание на продукта.</p>
+            <p>Цена: <span>100 лв.</span></p>
+            <p>Стара цена: <del>120 лв.</del></p>
+            <button class="order-btn">Поръчай</button>
         </div>
     </div>
 
     <div id="footer"></div>
 
-    <script src="scripts/slider.js"></script>
-    <script src="scripts/components.js"></script>
-
     <script>
-        function nextSlide(button) {
-            let slider = button.parentElement;
-            let images = slider.querySelectorAll("img");
-            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
-            images[index].classList.remove("active");
-            images[(index + 1) % images.length].classList.add("active");
-        }
-
-        function prevSlide(button) {
-            let slider = button.parentElement;
-            let images = slider.querySelectorAll("img");
-            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
-            images[index].classList.remove("active");
-            images[(index - 1 + images.length) % images.length].classList.add("active");
-        }
-    </script>
-
-     <script>
       function loadComponents() {
-            fetch('../header.html')
+            fetch('header.html')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('header').innerHTML = data;
                 });
 
-            fetch('../footer.html')
+            fetch('footer.html')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('footer').innerHTML = data;
                 });
         }
-
         loadComponents();
     </script>
-    <script src="script.js" defer></script>
 </body>
 </html>
-
-
-
