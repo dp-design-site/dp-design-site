@@ -25,27 +25,18 @@
             position: relative;
             flex: 0 0 30%;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
         .product-image img {
-            width: 100%;
+            width: 95%;
             border-radius: 10px;
-        }
-        .promo-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: red;
-            color: white;
-            padding: 5px 10px;
-            font-weight: bold;
-            border-radius: 5px;
-            z-index: 1;
         }
         .thumbnails {
             display: flex;
             gap: 10px;
             margin-top: 10px;
+            justify-content: center;
         }
         .thumbnails img {
             width: 60px;
@@ -67,7 +58,6 @@
             }
             .product-image {
                 flex: 1;
-                justify-content: flex-start;
             }
         }
     </style>
@@ -99,7 +89,12 @@
     <script>
       lightbox.option({
         'resizeDuration': 200,
-        'wrapAround': true // ✅ Скрол със стрелките
+        'wrapAround': true,
+        'alwaysShowNavOnTouchDevices': true,
+        'fadeDuration': 300,
+        'imageFadeDuration': 300,
+        'disableScrolling': true, 
+        'showImageNumberLabel': false
       });
       function loadComponents() {
             fetch('header.html')
