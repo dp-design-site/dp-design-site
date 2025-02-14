@@ -14,7 +14,7 @@
             overflow-x: hidden;
         }
         .category-header {
-            background: url('../images/header-background.jpg') no-repeat center center/cover;
+            background: url('/images/header-background.jpg') no-repeat center center/cover;
             height: 260px;
             display: flex;
             flex-direction: column;
@@ -35,7 +35,7 @@
             flex: 1;
         }
         .product-image img {
-            width: 80%;
+            width: 100%;
             border-radius: 10px;
         }
         .product-details {
@@ -46,9 +46,6 @@
             .product-container {
                 flex-direction: column;
             }
-            .product-image img {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -57,7 +54,7 @@
 
     <div class="product-container">
         <div class="product-image">
-            <img src="../images/DP-148x210.jpg" alt="Продуктово изображение">
+            <img src="/images/DP-148x210.jpg" alt="Продуктово изображение">
         </div>
         <div class="product-details">
             <h1>Име на продукта</h1>
@@ -72,13 +69,13 @@
 
     <script>
       function loadComponents() {
-            fetch('../header.html')
+            fetch('/header.html')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('header').innerHTML = data;
                 });
 
-            fetch('../footer.html')
+            fetch('/footer.html')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('footer').innerHTML = data;
