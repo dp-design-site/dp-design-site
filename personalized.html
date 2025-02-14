@@ -59,8 +59,8 @@
             margin: auto;
             touch-action: pan-y;
         }
-        .slider img.active {
-            display: block;
+        .slider img:not(.active) {
+            display: none;
         }
         .button-see-more {
             background-color: #fce5cd;
@@ -82,6 +82,9 @@
             display: inline-block;
             text-decoration: none;
         }
+        .price-container p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body onload="loadComponents()">
@@ -97,7 +100,10 @@
             </div>
             <h2>Продукт</h2>
             <p>Описание на продукта</p>
-            <p><del>70 лв.</del> 60 лв.</p>
+            <div class="price-container">
+                <p><del>70 лв.</del></p>
+                <p>60 лв.</p>
+            </div>
             <a href="#" class="button-buy">ПОРЪЧАЙ СЕГА!</a>
             <a href="product-template.html" class="button-see-more">Виж повече</a>
         </div>
