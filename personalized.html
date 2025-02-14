@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Персонализирани продукти | DP Design</title>
+    <title>Продукт | DP Design</title>
     <style>
         body {
             background-color: #121212;
@@ -23,13 +23,6 @@
             max-width: 1200px;
             margin: auto;
         }
-        .product {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            transition: transform 0.3s;
-        }
         .product img {
             width: 100%;
             max-width: 250px;
@@ -38,31 +31,7 @@
             display: block;
             margin: 0 auto;
         }
-        .product:hover {
-            transform: scale(1.05);
-        }
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            opacity: 0.5;
-        }
-        .slider {
-            position: relative;
-            overflow: hidden;
-            max-width: 250px;
-            margin: auto;
-            touch-action: pan-y;
-        }
-        .slider img:not(.active) {
-            display: none;
-        }
-        .button-see-more {
+        .button-see-more, .button-buy {
             background-color: #fce5cd;
             color: #000;
             padding: 10px;
@@ -73,32 +42,25 @@
         }
         .button-buy {
             background-color: #ffd700;
-            color: #000;
             font-size: 18px;
             font-weight: bold;
-            padding: 12px;
-            margin-top: 10px;
-            border-radius: 5px;
-            display: inline-block;
-            text-decoration: none;
-        }
-        .price-container p {
-            margin: 5px 0;
         }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (document.title === "" || document.title === "Заглавие") {
+                document.title = "Продукт | DP Design";
+            }
+        });
+    </script>
 </head>
 <body onload="loadComponents()">
     <div id="header"></div>
 
     <div class="products-wrapper">
         <div class="product">
-            <div class="slider" ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)">
-                <img src="images/DP-148x210.jpg" class="active" alt="Продукт">
-                <img src="images/DP-148x210-2.jpg" alt="Продукт алтернативен">
-                <button class="slider-btn left" onclick="prevSlide(this)">←</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">→</button>
-            </div>
-            <h2>Продукт</h2>
+            <img src="images/DP-148x210.jpg" alt="Продукт">
+            <h2>Име на продукта</h2>
             <p>Описание на продукта</p>
             <div class="price-container">
                 <p><del>70 лв.</del></p>
@@ -112,19 +74,16 @@
     <div id="footer"></div>
 
     <script>
-        let xDown = null;
-        function handleTouchStart(evt) {
-            const firstTouch = evt.touches[0];
-            xDown = firstTouch.clientX;
+        function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => { document.getElementById('header').innerHTML = data; });
+
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => { document.getElementById('footer').innerHTML = data; });
         }
-        function handleTouchMove(evt) {
-            if (!xDown) return;
-            let xUp = evt.touches[0].clientX;
-            let xDiff = xDown - xUp;
-            if (xDiff > 0) nextSlide(evt.target);
-            else prevSlide(evt.target);
-            xDown = null;
-        }
+        loadComponents();
     </script>
 </body>
 </html>
