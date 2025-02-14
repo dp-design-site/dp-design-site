@@ -98,13 +98,56 @@
             <a href="#" class="button-buy">ПОРЪЧАЙ СЕГА!</a>
             <a href="product-template.html" class="button-see-more">Виж повече</a>
         </div>
-        <div class="product">(Дублиран продукт 2 със същата структура)</div>
-        <div class="product">(Дублиран продукт 3 със същата структура)</div>
+        <div class="product">
+            <div class="slider">
+                <img src="images/DP-148x210.jpg" class="active" alt="Продукт">
+                <button class="slider-btn left" onclick="prevSlide(this)">←</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">→</button>
+            </div>
+            <h2>Продукт 2</h2>
+            <p>Описание на продукта 2</p>
+            <div class="price-container">
+                <p><del>80 лв.</del></p>
+                <p>70 лв.</p>
+            </div>
+            <a href="#" class="button-buy">ПОРЪЧАЙ СЕГА!</a>
+            <a href="product-template.html" class="button-see-more">Виж повече</a>
+        </div>
+        <div class="product">
+            <div class="slider">
+                <img src="images/DP-148x210.jpg" class="active" alt="Продукт">
+                <button class="slider-btn left" onclick="prevSlide(this)">←</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">→</button>
+            </div>
+            <h2>Продукт 3</h2>
+            <p>Описание на продукта 3</p>
+            <div class="price-container">
+                <p><del>90 лв.</del></p>
+                <p>80 лв.</p>
+            </div>
+            <a href="#" class="button-buy">ПОРЪЧАЙ СЕГА!</a>
+            <a href="product-template.html" class="button-see-more">Виж повече</a>
+        </div>
     </div>
 
     <div id="footer"></div>
 
     <script>
+      function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                });
+
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
+        }
+        loadComponents();
+
         let xDown = null;
         function handleTouchStart(evt) {
             const firstTouch = evt.touches[0];
