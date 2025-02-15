@@ -23,6 +23,18 @@
             text-align: center;
             overflow-x: hidden;
         }
+        .promo-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background-color: #e60000;
+            color: #fff;
+            padding: 3px 8px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            z-index: 2;
+        }
         .products-wrapper {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -38,11 +50,13 @@
             padding: 15px;
             text-align: center;
         }
-        .slider {
+         .slider {
             position: relative;
             overflow: hidden;
             max-width: 250px;
             margin: auto;
+            display: flex;
+            align-items: center;
         }
         .slider img {
             width: 100%;
@@ -58,12 +72,12 @@
             background: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
-            padding: 10px;
+            padding: 8px;
             cursor: pointer;
-            opacity: 0.5;
+            opacity: 0.7;
         }
-        .slider-btn.left { left: 10px; }
-        .slider-btn.right { right: 10px; }
+        .slider-btn.left { left: 5px; }
+        .slider-btn.right { right: 5px; }
         .button-see-more, .button-buy {
             background-color: #fce5cd;
             color: #000;
@@ -108,8 +122,8 @@
             <div class="slider">
                 <img src="images/DP-148x210.jpg" class="active" alt="Продукт 1">
                 <img src="images/DP-148x210-2.jpg" alt="Продукт 1 алтернативна">
-                <button class="slider-btn left">&#10094;</button>
-                <button class="slider-btn right">&#10095;</button>
+                <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
             </div>
             <h2>Продукт 1</h2>
             <div class="price-container">
@@ -154,6 +168,23 @@
     </div>
 
     <div id="footer"></div>
+    <script>
+    function nextSlide(button) {
+        const slider = button.parentElement;
+        const images = slider.querySelectorAll('img');
+        let index = Array.from(images).findIndex(img => img.classList.contains('active'));
+        images[index].classList.remove('active');
+        images[(index + 1) % images.length].classList.add('active');
+    }
+
+    function prevSlide(button) {
+        const slider = button.parentElement;
+        const images = slider.querySelectorAll('img');
+        let index = Array.from(images).findIndex(img => img.classList.contains('active'));
+        images[index].classList.remove('active');
+        images[(index - 1 + images.length) % images.length].classList.add('active');
+    }
+    </script>
 
     <script>
       function loadComponents() {
