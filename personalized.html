@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Персонализирани продукти | DP Design</title>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (document.title === "" || document.title === "Заглавие") {
@@ -91,13 +91,66 @@
             font-weight: bold;
             font-size: 130%;
         }
+        .nav-menu a.active {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffcc99;
+    text-shadow: 0px 0px 8px rgba(255, 204, 153, 0.8);
+    transform: scale(1.05);
+}
     </style>
 </head>
 <body onload="loadComponents()">
     <div id="header"></div>
 
     <div class="products-wrapper">
-        <!-- Продукти тук -->
+        <div class="product">
+            <div class="slider">
+                <img src="images/product1.jpg" class="active" alt="Продукт 1">
+                <img src="images/product1-2.jpg" alt="Продукт 1 алтернативна">
+                <button class="slider-btn left">&#10094;</button>
+                <button class="slider-btn right">&#10095;</button>
+            </div>
+            <h2>Продукт 1</h2>
+            <div class="price-container">
+                <p><del>120 лв.</del></p>
+                <p>100 лв.</p>
+            </div>
+            <a href="#" class="button-buy">Купи</a>
+            <a href="#" class="button-see-more">Виж още</a>
+        </div>
+
+        <div class="product">
+            <div class="slider">
+                <img src="images/product2.jpg" class="active" alt="Продукт 2">
+                <img src="images/product2-2.jpg" alt="Продукт 2 алтернативна">
+                <button class="slider-btn left">&#10094;</button>
+                <button class="slider-btn right">&#10095;</button>
+            </div>
+            <h2>Продукт 2</h2>
+            <div class="price-container">
+                <p><del>150 лв.</del></p>
+                <p>130 лв.</p>
+            </div>
+            <a href="#" class="button-buy">Купи</a>
+            <a href="#" class="button-see-more">Виж още</a>
+        </div>
+
+        <div class="product">
+            <div class="slider">
+                <img src="images/product3.jpg" class="active" alt="Продукт 3">
+                <img src="images/product3-2.jpg" alt="Продукт 3 алтернативна">
+                <button class="slider-btn left">&#10094;</button>
+                <button class="slider-btn right">&#10095;</button>
+            </div>
+            <h2>Продукт 3</h2>
+            <div class="price-container">
+                <p><del>200 лв.</del></p>
+                <p>180 лв.</p>
+            </div>
+            <a href="#" class="button-buy">Купи</a>
+            <a href="#" class="button-see-more">Виж още</a>
+        </div>
     </div>
 
     <div id="footer"></div>
