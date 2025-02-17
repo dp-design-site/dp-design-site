@@ -31,9 +31,12 @@
 
             if (!Array.isArray(products)) throw new Error('Невалиден JSON формат');
 
-            document.getElementById('product-list').innerHTML = products.map(({ name, price, promoPrice, slug }) => `
+            document.getElementById('product-list').innerHTML = products.map(({ name, price, promoPrice, slug, imageUrls = [] }) => `
                 <div class="product">
                     ${promoPrice ? '<span class="promo-badge">Промо</span>' : ''}
+                    <div class="slider">
+                        ${imageUrls.map((url, index) => `<img src="${url}" ${index === 0 ? 'class="active"' : ''} alt="${name}">`).join('')}
+                    </div>
                     <h2>${name}</h2>
                     <p>${promoPrice ? `<del>${price} лв.</del> ${promoPrice} лв.` : `${price} лв.`}</p>
                     <a href="product-template.html?slug=${slug}" class="button-see-more">Виж още</a>
