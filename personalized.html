@@ -25,11 +25,11 @@
     async function loadProducts() {
         const url = 'https://script.googleusercontent.com/macros/echo?user_content_key=YOUR_USER_CONTENT_KEY';
         try {
-            const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
+            const response = await fetch(url, { headers: { 'Accept': 'application/json' }, mode: 'cors' });
             if (!response.ok) throw new Error(`HTTP грешка: ${response.status}`);
             const products = await response.json();
 
-            if (!Array.isArray(products)) throw new Error('Получен е невалиден JSON формат');
+            if (!Array.isArray(products)) throw new Error('Невалиден JSON формат');
 
             document.getElementById('product-list').innerHTML = products.map(({ name, price, promoPrice, slug }) => `
                 <div class="product">
@@ -40,8 +40,8 @@
                 </div>
             `).join('');
         } catch (error) {
-            console.error('Грешка:', error.message);
-            document.getElementById('product-list').innerHTML = '<p style="color:red;">Неуспешно зареждане на продуктите. Проверете CORS настройките и JSON формата.</p>';
+            console.error('Грешка:', error);
+            document.getElementById('product-list').innerHTML = '<p style="color:red;">Неуспешно зареждане. Проверете CORS и JSON формата.</p>';
         }
     }
     loadProducts();
