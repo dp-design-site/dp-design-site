@@ -12,42 +12,27 @@
         .promo-badge { position: absolute; top: 8px; left: 8px; background-color: #e60000; color: #fff; padding: 3px 8px; border-radius: 5px; font-size: 14px; font-weight: bold; }
         .slider img { width: 100%; display: none; }
         .slider img.active { display: block; }
-        .button-see-more, .button-buy { background-color: #fce5cd; color: #000; padding: 10px; border-radius: 5px; text-decoration: none; }
-        .price-container p del { color: red; }
-        .price-container p:last-child { font-weight: bold; font-size: 130%; }
     </style>
 </head>
 <body>
     <div id="header"></div>
     <div class="products-wrapper" id="product-list">
-        <p style="color:red; font-size:18px;">Неуспешно зареждане на продуктите. Проверете сървърната връзка или URL.</p>
+        <p style="color:red; font-size:18px;">Неуспешно зареждане на продуктите. Проверете URL или разрешенията.</p>
     </div>
     <div id="footer"></div>
 
     <script>
     async function loadProducts() {
+        const url = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_URL/exec';
         try {
-            const response = await fetch('https://script.google.com/macros/s/YOUR_DEPLOYMENT_URL/exec');
+            const response = await fetch(url);
+            console.log('Статус:', response.status);
             if (!response.ok) throw new Error(`HTTP грешка: ${response.status}`);
             const products = await response.json();
-            document.getElementById('product-list').innerHTML = products.length ? 
-                products.map(({ name, price, promoPrice, imageUrls, slug }) => `
-                    <div class="product">
-                        <div class="slider">
-                            ${promoPrice ? '<span class="promo-badge">Промо</span>' : ''}
-                            ${imageUrls.map((url, i) => `<img src="${url}" class="${i === 0 ? 'active' : ''}">`).join('')}
-                        </div>
-                        <h2>${name}</h2>
-                        <div class="price-container">
-                            ${promoPrice ? `<p><del>${price} лв.</del></p><p>${promoPrice} лв.</p>` : `<p>${price} лв.</p>`}
-                        </div>
-                        <a href="#" class="button-buy">Купи сега!</a>
-                        <a href="product-template.html?slug=${slug}" class="button-see-more">Виж още</a>
-                    </div>
-                `).join('') : '<p>Няма налични продукти.</p>';
+            console.log('Получени данни:', products);
         } catch (error) {
             console.error('Грешка при зареждане:', error);
-            document.getElementById('product-list').innerHTML = '<p style="color:red;">Неуспешно зареждане на продуктите. Проверете URL или разрешенията на скрипта.</p>';
+            alert('Неуспешно зареждане на продуктите. Проверете URL или разрешенията.');
         }
     }
     loadProducts();
