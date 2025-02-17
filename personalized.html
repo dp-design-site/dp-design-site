@@ -25,7 +25,7 @@
     async function loadProducts() {
         const url = 'https://script.googleusercontent.com/macros/echo?user_content_key=YOUR_USER_CONTENT_KEY';
         try {
-            const response = await fetch(url, { headers: { 'Accept': 'application/json' }, mode: 'cors' });
+            const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
             if (!response.ok) throw new Error(`HTTP грешка: ${response.status}`);
             const products = await response.json();
 
@@ -41,7 +41,7 @@
             `).join('');
         } catch (error) {
             console.error('Грешка:', error);
-            document.getElementById('product-list').innerHTML = '<p style="color:red;">Неуспешно зареждане. Проверете CORS и JSON формата.</p>';
+            document.getElementById('product-list').innerHTML = '<p style="color:red;">Неуспешно зареждане. Проверете URL, CORS настройките или дали скриптът е публичен.</p>';
         }
     }
     loadProducts();
