@@ -4,180 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Персонализирани продукти | DP Design</title>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            if (document.title === "" || document.title === "Заглавие") {
-                document.title = "Категория | DP Design";
-            }
-        });
-    </script>
     
     <style>
-        body {
-            background-color: #121212;
-            color: #fce5cd;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            overflow-x: hidden;
-        }
-        .promo-badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background-color: #e60000;
-            color: #fff;
-            padding: 3px 8px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 5px;
-            z-index: 2;
-        }
-        .products-wrapper {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            justify-content: center;
-            max-width: 1200px;
-            margin: auto;
-        }
-        .product {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-        }
-         .slider {
-            position: relative;
-            overflow: hidden;
-            max-width: 250px;
-            margin: auto;
-            display: flex;
-            align-items: center;
-        }
-        .slider img {
-            width: 100%;
-            display: none;
-        }
-        .slider img.active {
-            display: block;
-        }
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 8px;
-            cursor: pointer;
-            opacity: 0.7;
-        }
-        .slider-btn.left { left: 5px; }
-        .slider-btn.right { right: 5px; }
-        .button-see-more, .button-buy {
-            background-color: #fce5cd;
-            color: #000;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            display: inline-block;
-            text-decoration: none;
-            transition: transform 0.3s;
-        }
-        .button-buy {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .button-see-more:hover, .button-buy:hover {
-            transform: scale(1.05);
-        }
-        .price-container p {
-            margin: 5px 0;
-        }
-        .price-container p del {
-            color: red;
-        }
-        .price-container p:last-child {
-            font-weight: bold;
-            font-size: 130%;
-        }
-        .nav-menu a.active {
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffcc99;
-    text-shadow: 0px 0px 8px rgba(255, 204, 153, 0.8);
-    transform: scale(1.05);
-}
+        body { background-color: #121212; color: #fce5cd; font-family: Arial, sans-serif; }
+        .products-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .product { background: rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 15px; }
+        .promo-badge { position: absolute; top: 8px; left: 8px; background-color: #e60000; color: #fff; padding: 3px 8px; border-radius: 5px; font-size: 14px; font-weight: bold; }
+        .slider img { width: 100%; display: none; }
+        .slider img.active { display: block; }
+        .button-see-more, .button-buy { background-color: #fce5cd; color: #000; padding: 10px; margin-top: 10px; border-radius: 5px; text-decoration: none; }
+        .price-container p del { color: red; }
+        .price-container p:last-child { font-weight: bold; font-size: 130%; }
     </style>
 </head>
-<body onload="loadComponents()">
+<body>
     <div id="header"></div>
 
-    <div class="products-wrapper">
-        <div class="product">
-            <div class="slider">
-                <span class="promo-badge">Промо</span>
-                <img src="images/DP-148x210.jpg" class="active" alt="Продукт 1">
-                <img src="images/DP-148x210-2.jpg" alt="Продукт 1 алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
-            </div>
-            <h2>Продукт 1</h2>
-            <div class="price-container">
-                <p><del>120 лв.</del></p>
-                <p>100 лв.</p>
-            </div>
-            <a href="#" class="button-buy">Купи</a>
-            <a href="product-template.html" class="button-see-more">Виж още</a>
-        </div>
-
-        <div class="product">
-            <div class="slider">
-                <span class="promo-badge">Промо</span>
-                <img src="images/DP-148x210-2.jpg" class="active" alt="Продукт 2">
-                <img src="images/DP-148x210.jpg" alt="Продукт 2 алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
-            </div>
-            <h2>Продукт 2</h2>
-            <div class="price-container">
-                <p><del>150 лв.</del></p>
-                <p>130 лв.</p>
-            </div>
-            <a href="#" class="button-buy">Купи</a>
-           <a href="product-template.html" class="button-see-more">Виж още</a>
-        </div>
-
-        <div class="product">
-            <div class="slider">
-                <span class="promo-badge">Промо</span>
-                <img src="images/DP-148x210.jpg" class="active" alt="Продукт 3">
-                <img src="images/DP-148x210-2.jpg" alt="Продукт 3 алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
-            </div>
-            <h2>Продукт 3</h2>
-            <div class="price-container">
-                <p><del>200 лв.</del></p>
-                <p>180 лв.</p>
-            </div>
-            <a href="#" class="button-buy">Купи</a>
-            <<a href="product-template.html" class="button-see-more">Виж още</a>
-        </div>
-    </div>
+    <div class="products-wrapper" id="product-list"></div>
 
     <div id="footer"></div>
+
     <script>
-    function nextSlide(button) {
-        const slider = button.parentElement;
-        const images = slider.querySelectorAll('img');
-        let index = Array.from(images).findIndex(img => img.classList.contains('active'));
-        images[index].classList.remove('active');
-        images[(index + 1) % images.length].classList.add('active');
+    async function loadProducts() {
+        const response = await fetch('https://script.google.com/macros/s/YOUR_DEPLOYMENT_URL/exec');
+        const products = await response.json();
+        const container = document.getElementById('product-list');
+        
+        products.forEach(product => {
+            const images = product.imageUrls.map((url, i) => `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="${product.name}">`).join('');
+            const promoBadge = product.promoPrice ? '<span class="promo-badge">Промо</span>' : '';
+            const priceHTML = product.promoPrice ? `<p><del>${product.price} лв.</del></p><p>${product.promoPrice} лв.</p>` : `<p>${product.price} лв.</p>`;
+            
+            container.innerHTML += `
+                <div class="product">
+                    <div class="slider">
+                        ${promoBadge}
+                        ${images}
+                        <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
+                        <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
+                    </div>
+                    <h2>${product.name}</h2>
+                    <div class="price-container">${priceHTML}</div>
+                    <a href="#" class="button-buy">Купи сега!</a>
+                    <a href="product-template.html?slug=${product.slug}" class="button-see-more">Виж още</a>
+                </div>
+            `;
+        });
     }
 
     function prevSlide(button) {
@@ -187,24 +59,16 @@
         images[index].classList.remove('active');
         images[(index - 1 + images.length) % images.length].classList.add('active');
     }
-    </script>
 
-    <script>
-      function loadComponents() {
-            fetch('header.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('header').innerHTML = data;
-                });
+    function nextSlide(button) {
+        const slider = button.parentElement;
+        const images = slider.querySelectorAll('img');
+        let index = Array.from(images).findIndex(img => img.classList.contains('active'));
+        images[index].classList.remove('active');
+        images[(index + 1) % images.length].classList.add('active');
+    }
 
-            fetch('footer.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('footer').innerHTML = data;
-                });
-        }
-        loadComponents();
+    loadProducts();
     </script>
-    <script src="script.js" defer></script>
 </body>
 </html>
