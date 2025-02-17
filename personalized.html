@@ -8,7 +8,7 @@
     <style>
         body { background-color: #121212; color: #fce5cd; font-family: Arial, sans-serif; }
         .products-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .product { background: rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 15px; }
+        .product { background: rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 15px; position: relative; }
         .promo-badge { position: absolute; top: 8px; left: 8px; background-color: #e60000; color: #fff; padding: 3px 8px; border-radius: 5px; font-size: 14px; font-weight: bold; }
         .slider img { width: 100%; display: none; }
         .slider img.active { display: block; }
@@ -17,26 +17,32 @@
 <body>
     <div id="header"></div>
     <div class="products-wrapper" id="product-list">
-        <p style="color:red; font-size:18px;">Неуспешно зареждане на продуктите. Проверете URL или разрешенията.</p>
+        <p style="color:red; font-size:18px;">Зареждане на продуктите...</p>
     </div>
     <div id="footer"></div>
 
     <script>
     async function loadProducts() {
-        const url = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_URL/exec';
+        const url = 'https://script.googleusercontent.com/macros/echo?user_content_key=YOUR_USER_CONTENT_KEY';
         try {
             const response = await fetch(url);
-            console.log('Статус:', response.status);
             if (!response.ok) throw new Error(`HTTP грешка: ${response.status}`);
             const products = await response.json();
-            console.log('Получени данни:', products);
+            document.getElementById('product-list').innerHTML = products.map(product => `
+                <div class="product">
+                    ${product.promoPrice ? '<span class="promo-badge">Промо</span>' : ''}
+                    <h2>${product.name}</h2>
+                    <p><del>${product.promoPrice ? product.price + ' лв.' : ''}</del> ${product.promoPrice ? product.promoPrice : product.price} лв.</p>
+                    <button>Купи</button>
+                    <a href="product-template.html?slug=${product.slug}" class="button-see-more">Виж още</a>
+                </div>
+            `).join('');
         } catch (error) {
-            console.error('Грешка при зареждане:', error);
-            alert('Неуспешно зареждане на продуктите. Проверете URL или разрешенията.');
+            console.error('Грешка:', error);
+            document.getElementById('product-list').innerHTML = '<p style="color:red; font-size:18px;">Неуспешно зареждане на продуктите. Проверете URL или разрешенията.</p>';
         }
     }
     loadProducts();
     </script>
 </body>
 </html>
-
