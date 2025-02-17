@@ -25,23 +25,28 @@
     async function loadProducts() {
         const url = 'https://script.googleusercontent.com/macros/echo?user_content_key=YOUR_USER_CONTENT_KEY';
         try {
-            const response = await fetch(url, { mode: 'cors' });
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' },
+                mode: 'cors',
+                cache: 'no-cache'
+            });
             if (!response.ok) throw new Error(`HTTP грешка: ${response.status}`);
             const products = await response.json();
-            if (!Array.isArray(products) || products.length === 0) throw new Error('Получени са невалидни данни.');
+            if (!Array.isArray(products) || products.length === 0) throw new Error('Невалиден JSON формат.');
             
             document.getElementById('product-list').innerHTML = products.map(product => `
                 <div class="product">
                     ${product.promoPrice ? '<span class="promo-badge">Промо</span>' : ''}
                     <h2>${product.name}</h2>
-                    <p><del>${product.promoPrice ? product.price + ' лв.' : ''}</del> ${product.promoPrice ? product.promoPrice : product.price} лв.</p>
+                    <p>${product.promoPrice ? `<del>${product.price} лв.</del> ${product.promoPrice} лв.` : `${product.price} лв.`}</p>
                     <button>Купи</button>
                     <a href="product-template.html?slug=${product.slug}" class="button-see-more">Виж още</a>
                 </div>
             `).join('');
         } catch (error) {
-            console.error('Грешка:', error);
-            document.getElementById('product-list').innerHTML = '<p style="color:red; font-size:18px;">Неуспешно зареждане на продуктите. Проверете CORS настройките и JSON формата.</p>';
+            console.error('Грешка при зареждането:', error);
+            document.getElementById('product-list').innerHTML = '<p style="color:red; font-size:18px;">Провалено зареждане. Проверете CORS настройките и дали JSON форматът е коректен.</p>';
         }
     }
     loadProducts();
