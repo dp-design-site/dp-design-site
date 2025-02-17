@@ -19,54 +19,48 @@
 </head>
 <body>
     <div id="header"></div>
-
     <div class="products-wrapper" id="product-list"></div>
-
     <div id="footer"></div>
 
     <script>
     async function loadProducts() {
-        const response = await fetch('https://script.google.com/macros/s/YOUR_DEPLOYMENT_URL/exec');
-        const products = await response.json();
-        const container = document.getElementById('product-list');
-        
-        products.forEach(product => {
-            const images = product.imageUrls.map((url, i) => `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="${product.name}">`).join('');
-            const promoBadge = product.promoPrice ? '<span class="promo-badge">Промо</span>' : '';
-            const priceHTML = product.promoPrice ? `<p><del>${product.price} лв.</del></p><p>${product.promoPrice} лв.</p>` : `<p>${product.price} лв.</p>`;
+        try {
+            const response = await fetch('https://script.google.com/macros/s/YOUR_DEPLOYMENT_URL/exec');
+            if (!response.ok) throw new Error('Грешка при зареждането на продуктите');
+            const products = await response.json();
+            const container = document.getElementById('product-list');
             
-            container.innerHTML += `
+            container.innerHTML = products.map(product => `
                 <div class="product">
                     <div class="slider">
-                        ${promoBadge}
-                        ${images}
+                        ${product.promoPrice ? '<span class="promo-badge">Промо</span>' : ''}
+                        ${product.imageUrls.map((url, i) => `<img src="${url}" class="${i === 0 ? 'active' : ''}" alt="${product.name}">`).join('')}
                         <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
                         <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
                     </div>
                     <h2>${product.name}</h2>
-                    <div class="price-container">${priceHTML}</div>
+                    <div class="price-container">
+                        ${product.promoPrice ? `<p><del>${product.price} лв.</del></p><p>${product.promoPrice} лв.</p>` : `<p>${product.price} лв.</p>`}
+                    </div>
                     <a href="#" class="button-buy">Купи сега!</a>
                     <a href="product-template.html?slug=${product.slug}" class="button-see-more">Виж още</a>
                 </div>
-            `;
-        });
+            `).join('');
+        } catch (error) {
+            console.error('Неуспешно зареждане:', error);
+            document.getElementById('product-list').innerHTML = '<p>Неуспешно зареждане на продуктите. Опитайте отново по-късно.</p>';
+        }
     }
 
-    function prevSlide(button) {
-        const slider = button.parentElement;
+    function slide(slider, direction) {
         const images = slider.querySelectorAll('img');
-        let index = Array.from(images).findIndex(img => img.classList.contains('active'));
-        images[index].classList.remove('active');
-        images[(index - 1 + images.length) % images.length].classList.add('active');
+        let activeIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
+        images[activeIndex].classList.remove('active');
+        images[(activeIndex + direction + images.length) % images.length].classList.add('active');
     }
 
-    function nextSlide(button) {
-        const slider = button.parentElement;
-        const images = slider.querySelectorAll('img');
-        let index = Array.from(images).findIndex(img => img.classList.contains('active'));
-        images[index].classList.remove('active');
-        images[(index + 1) % images.length].classList.add('active');
-    }
+    function prevSlide(button) { slide(button.parentElement, -1); }
+    function nextSlide(button) { slide(button.parentElement, 1); }
 
     loadProducts();
     </script>
