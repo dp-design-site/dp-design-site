@@ -25,9 +25,11 @@
     async function loadProducts() {
         const url = 'https://script.googleusercontent.com/macros/echo?user_content_key=YOUR_USER_CONTENT_KEY';
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, { mode: 'cors' });
             if (!response.ok) throw new Error(`HTTP грешка: ${response.status}`);
             const products = await response.json();
+            if (!Array.isArray(products) || products.length === 0) throw new Error('Получени са невалидни данни.');
+            
             document.getElementById('product-list').innerHTML = products.map(product => `
                 <div class="product">
                     ${product.promoPrice ? '<span class="promo-badge">Промо</span>' : ''}
@@ -39,7 +41,7 @@
             `).join('');
         } catch (error) {
             console.error('Грешка:', error);
-            document.getElementById('product-list').innerHTML = '<p style="color:red; font-size:18px;">Неуспешно зареждане на продуктите. Проверете URL или разрешенията.</p>';
+            document.getElementById('product-list').innerHTML = '<p style="color:red; font-size:18px;">Неуспешно зареждане на продуктите. Проверете CORS настройките и JSON формата.</p>';
         }
     }
     loadProducts();
