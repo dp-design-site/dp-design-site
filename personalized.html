@@ -20,7 +20,7 @@
 <body>
     <div id="header"></div>
     <div class="products-wrapper" id="product-list">
-        <p style="color:red; font-size:18px;">Неуспешно зареждане на продуктите. Моля, проверете URL на сървъра или връзката.</p>
+        <p style="color:red; font-size:18px;">Неуспешно зареждане на продуктите. Проверете сървърната връзка или URL.</p>
     </div>
     <div id="footer"></div>
 
@@ -31,26 +31,27 @@
             if (!response.ok) throw new Error(`HTTP грешка: ${response.status}`);
             const products = await response.json();
             document.getElementById('product-list').innerHTML = products.length ? 
-                products.map(product => `
+                products.map(({ name, price, promoPrice, imageUrls, slug }) => `
                     <div class="product">
                         <div class="slider">
-                            ${product.promoPrice ? '<span class="promo-badge">Промо</span>' : ''}
-                            ${product.imageUrls.map((url, i) => `<img src="${url}" class="${i === 0 ? 'active' : ''}">`).join('')}
+                            ${promoPrice ? '<span class="promo-badge">Промо</span>' : ''}
+                            ${imageUrls.map((url, i) => `<img src="${url}" class="${i === 0 ? 'active' : ''}">`).join('')}
                         </div>
-                        <h2>${product.name}</h2>
+                        <h2>${name}</h2>
                         <div class="price-container">
-                            ${product.promoPrice ? `<p><del>${product.price} лв.</del></p><p>${product.promoPrice} лв.</p>` : `<p>${product.price} лв.</p>`}
+                            ${promoPrice ? `<p><del>${price} лв.</del></p><p>${promoPrice} лв.</p>` : `<p>${price} лв.</p>`}
                         </div>
                         <a href="#" class="button-buy">Купи сега!</a>
-                        <a href="product-template.html?slug=${product.slug}" class="button-see-more">Виж още</a>
+                        <a href="product-template.html?slug=${slug}" class="button-see-more">Виж още</a>
                     </div>
                 `).join('') : '<p>Няма налични продукти.</p>';
         } catch (error) {
             console.error('Грешка при зареждане:', error);
-            document.getElementById('product-list').innerHTML = '<p style="color:red;">Неуспешно зареждане на продуктите. Моля, проверете сървърната връзка.</p>';
+            document.getElementById('product-list').innerHTML = '<p style="color:red;">Неуспешно зареждане на продуктите. Проверете URL или разрешенията на скрипта.</p>';
         }
     }
     loadProducts();
     </script>
 </body>
 </html>
+
