@@ -89,7 +89,7 @@
         
         .slider-btn.left { left: 5px; }
         .slider-btn.right { right: 5px; }
-        .button-see-more, .button-buy {
+        .button-see-more, .cart-button {
             background-color: #fce5cd;
             color: #000;
             padding: 10px;
@@ -99,10 +99,7 @@
             text-decoration: none;
             transition: transform 0.3s;
         }
-        .cart-button {
-            font-size: 24px;
-            font-weight: bold;
-        }
+        
         .button-see-more:hover, .cart-button:hover {
             transform: scale(1.05);
         }
@@ -180,7 +177,7 @@
                 <p><del>200 лв.</del></p>
                 <p>180 лв.</p>
             </div>
-            <а class="cart-button" onclick="addToCart('Продукт 3', 180)">Добави в количката</а>
+            <button class="cart-button" onclick="addToCart('Продукт 3', 180)">Добави в количката</button>
             <a href="product-template.html" class="button-see-more">Виж още</a>
         </div>
     </div>
