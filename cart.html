@@ -3,67 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Количка | DP Design</title>
+    <title>Персонализирани продукти | DP Design</title>
     <style>
         body { background-color: #121212; color: #fce5cd; font-family: Arial, sans-serif; }
-        .cart-container { max-width: 600px; margin: 40px auto; background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
-        .cart-buttons { display: flex; justify-content: space-around; margin-top: 20px; }
-        .cart-button { background-color: #ffcc99; color: #000; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-        .cart-button:hover { transform: scale(1.05); }
-        .remove-button { background-color: #e60000; color: #fff; padding: 8px; border-radius: 5px; cursor: pointer; }
-        .remove-button:hover { background-color: #c00000; }
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #333; color: #fce5cd; padding: 20px; border-radius: 10px; }
-        .modal.show { display: block; }
+        .products-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .product { background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; }
+        .cart-button { background-color: #ffcc99; color: #000; padding: 10px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .remove-button { background: none; border: none; cursor: pointer; color: #fce5cd; }
+        .remove-button i { font-size: 18px; }
+        .product-name a { color: #fce5cd; text-decoration: none; transition: color 0.3s ease-in-out; }
+        .product-name a:hover { color: #ffcc99; }
     </style>
 </head>
 <body>
-    <h1>Вашата количка</h1>
-    <div class="cart-container" id="cartItems"></div>
-    <div class="cart-buttons">
-        <a class="cart-button" href="javascript:history.back()">🔙 Продължи с пазаруването</a>
-        <button class="cart-button" onclick="checkout()">💳 Поръчай</button>
+    <div class="products-wrapper">
+        <div class="product">
+            <h2 class="product-name"><a href="product-template.html">Продукт 1</a></h2>
+            <p><del>120 лв.</del> 100 лв.</p>
+            <button class="cart-button" onclick="addToCart('Продукт 1', 100)">Добави в количката</button>
+            <button class="remove-button" onclick="removeFromCart('Продукт 1')">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
     </div>
-    
-    <!-- ✅ Модален прозорец за детайли -->
-    <div id="productModal" class="modal"></div>
 
     <script>
-        function displayCart() {
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            const container = document.getElementById('cartItems');
-            const total = cartItems.reduce((sum, item) => sum + item.price, 0);
-
-            container.innerHTML = cartItems.length > 0 ? cartItems.map((item, index) => `
-                <div class="cart-item">
-                    <span>${item.name}</span>
-                    <span>${item.price.toFixed(2)} лв.</span>
-                    <button class="remove-button" onclick="removeFromCart(${index})">❌</button>
-                    <button class="cart-button" onclick="openModal('${item.name} - Допълнителна информация')">ℹ️</button>
-                </div>`).join('') : '<p>Вашата количка е празна.</p>';
-        }
-
-        function removeFromCart(index) {
+        function addToCart(name, price) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart.splice(index, 1);
+            cart.push({ name, price });
             localStorage.setItem('cart', JSON.stringify(cart));
-            displayCart();
+            alert(`${name} добавен в количката!`);
         }
 
-        function checkout() {
-            alert('Благодарим за поръчката!');
-            localStorage.removeItem('cart');
-            displayCart();
+        function removeFromCart(name) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.name !== name);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${name} премахнат от количката.`);
         }
-
-        function openModal(details) {
-            const modal = document.getElementById('productModal');
-            modal.textContent = details;
-            modal.classList.add('show');
-            setTimeout(() => modal.classList.remove('show'), 3000);
-        }
-
-        displayCart();
     </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
