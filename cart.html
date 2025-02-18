@@ -25,6 +25,15 @@
         text-align: left;
         overflow: hidden;
     }
+        /* ✅ Градиент под заглавието */
+    .header-gradient {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
+    }
         .cart-container {
             max-width: 600px;
             margin: 40px auto;
@@ -63,6 +72,11 @@
     </style>
 </head>
 <body>
+    <!-- ✅ Хедър с фоново изображение -->
+<header class="header-wrapper">
+    <h1 class="header-title"></h1>
+    <div class="header-gradient"></div>
+</header>
     <h1>Вашата количка</h1>
     <div class="cart-container" id="cartItems"></div>
     <div class="cart-total" id="cartTotal"></div>
