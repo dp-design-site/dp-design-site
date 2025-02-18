@@ -1,4 +1,4 @@
-<!-- ✅ Обновена страница cart.html с бутон за продължаване на пазаруването -->
+<!-- ✅ Обновена страница cart.html с хедър, бутон за продължаване на пазаруването и футър -->
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -10,33 +10,26 @@
             background-color: #121212;
             color: #fce5cd;
             font-family: Arial, sans-serif;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
             text-align: center;
         }
-        /* ✅ Хедър с фон */
-    .header-wrapper {
-        position: relative;
-        top: 0px;
-        left: 0px;
-        right: 0px;
-        height: 220px;
-        background: url('images/header-background.jpg') no-repeat center center/cover;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-start;
-        padding: 20px;
-        text-align: left;
-        overflow: hidden;
-    }
-        /* ✅ Градиент под заглавието */
-    .header-gradient {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100px;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
-    }
+        .header-wrapper {
+            width: 100%;
+            height: 220px;
+            background: url('images/header-background.jpg') no-repeat center center/cover;
+            position: relative;
+            padding: 0;
+            margin: 0;
+        }
+        .header-gradient {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
+        }
         .cart-container {
             max-width: 600px;
             margin: 40px auto;
@@ -49,11 +42,6 @@
             justify-content: space-between;
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .cart-total {
-            font-size: 20px;
-            font-weight: bold;
-            margin: 20px 0;
         }
         .cart-buttons {
             display: flex;
@@ -69,23 +57,30 @@
             text-decoration: none;
             transition: transform 0.3s;
         }
-        .cart-button:hover {
-            transform: scale(1.05);
+        .cart-button:hover { transform: scale(1.05); }
+        .footer {
+            margin-top: 40px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fce5cd;
         }
     </style>
 </head>
 <body>
-    <!-- ✅ Хедър с фоново изображение -->
-<header class="header-wrapper">
-    <h1 class="header-title"></h1>
-    <div class="header-gradient"></div>
-</header>
+    <header class="header-wrapper">
+        <div class="header-gradient"></div>
+    </header>
+
     <h1>Вашата количка</h1>
     <div class="cart-container" id="cartItems"></div>
     <div class="cart-total" id="cartTotal"></div>
     <div class="cart-buttons">
         <a class="cart-button" href="javascript:history.back()">🔙 Продължи с пазаруването</a>
         <button class="cart-button" onclick="checkout()">💳 Поръчай</button>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 DP Design | Всички права запазени.</p>
     </div>
 
     <script>
