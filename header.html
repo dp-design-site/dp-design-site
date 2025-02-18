@@ -11,6 +11,10 @@
         <a href="prototyping.html">3D прототипиране</a>
         <a href="contacts.html">Контакти</a>
     </div>
+     <!-- 🛒 Икона на количката -->
+    <div class="cart-icon" onclick="openCart()">
+        🛒 (<span id="cart-count">0</span>)
+    </div>
 </nav>
 
 <!-- Фон за мобилното меню -->
@@ -67,7 +71,19 @@
         console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
     });
 </script>
+<!-- ✅ JavaScript логика за количката -->
+<script>
+    let cart = [];
 
+    function addToCart(product) {
+        cart.push(product);
+        document.getElementById('cart-count').textContent = cart.length;
+    }
+
+    function openCart() {
+        alert('Вашата количка съдържа ' + cart.length + ' продукта.');
+    }
+</script>
 
 <!-- ✅ CSS -->
 <style>
@@ -89,6 +105,24 @@
     .nav-left {
         display: flex;
         align-items: center;
+    }
+    <!-- ✅ CSS стил за количката -->
+    .cart-icon {
+        font-size: 16px;
+        color: #fce5cd;
+        cursor: pointer;
+        margin-left: 20px;
+    }
+    .cart-modal {
+        position: fixed;
+        top: 60px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.9);
+        color: #fce5cd;
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+        z-index: 1001;
     }
 
     .nav-logo {
