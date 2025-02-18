@@ -4,17 +4,17 @@
         <button class="hamburger" id="menuButton">☰</button>
         <a href="index.html" class="nav-logo">dp | design</a>
     </div>
-    <div class="nav-menu" id="menu">
+    <div class="nav-menu" id="menu" style="margin-right: 50px;">
         <a href="index.html">Начало</a>
         <a href="personalized.html">Персонализирани продукти</a>
         <a href="home_decor.html">Дом и декорация</a>
         <a href="prototyping.html">3D прототипиране</a>
         <a href="contacts.html">Контакти</a>
     </div>
-      <!-- 🛒 Количка с ховър ефект -->
-    <div class="cart-icon" onclick="openCart()">
+      <!-- 🛒 Количка с линк към нова страница -->
+    <a href="cart.html" class="cart-icon">
         🛒 (<span id="cart-count">0</span>)
-    </div>
+    </a>
 </nav>
 
 <!-- Фон за мобилното меню -->
@@ -79,10 +79,6 @@
         cart.push(product);
         document.getElementById('cart-count').textContent = cart.length;
     }
-
-    function openCart() {
-        alert('Вашата количка съдържа ' + cart.length + ' продукта.');
-    }
 </script>
 
 <!-- ✅ CSS -->
@@ -118,6 +114,11 @@
         color: #ffcc99;
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
         transform: scale(1.1);
+    }
+    .nav-menu {
+        margin-right: 60px;
+        display: flex;
+        gap: 25px;
     }
 
     .nav-logo {
