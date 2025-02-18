@@ -1,0 +1,75 @@
+<!-- ✅ Нова страница cart.html за преглед на количката -->
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Количка | DP Design</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #fce5cd;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        .cart-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .cart-total {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .checkout-button {
+            background-color: #ffcc00;
+            color: #000;
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Вашата количка</h1>
+    <div class="cart-container" id="cartItems"></div>
+    <div class="cart-total" id="cartTotal"></div>
+    <button class="checkout-button" onclick="checkout()">Поръчай</button>
+
+    <script>
+        function displayCart() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const container = document.getElementById('cartItems');
+            const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+
+            container.innerHTML = cartItems.map(item => `
+                <div class="cart-item">
+                    <span>${item.name}</span>
+                    <span>${item.price.toFixed(2)} лв.</span>
+                </div>`).join('');
+
+            document.getElementById('cartTotal').textContent = `Обща сума: ${total.toFixed(2)} лв.`;
+        }
+
+        function checkout() {
+            alert('Благодарим за поръчката!');
+            localStorage.removeItem('cart');
+            displayCart();
+        }
+
+        displayCart();
+    </script>
+</body>
+</html>
