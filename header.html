@@ -3,7 +3,7 @@
     <div class="nav-left">
         <button class="hamburger" id="menuButton">☰</button>
         <a href="index.html" class="nav-logo">
-            <img src="https://drive.google.com/uc?export=view&id=1f5kR4-Z1QLxEMDrRCdvhng65gK6lmNci" alt="DP Design Logo" class="nav-logo-img">
+            <img src="https://drive.google.com/thumbnail?id=YOUR_IMAGE_ID&sz=w200" alt="DP Design Logo" class="nav-logo-img">
         </a>
     </div>
     <div class="nav-menu" id="menu">
@@ -87,13 +87,16 @@
         padding: 0 20px;
         z-index: 1000;
     }
-     .nav-logo img.logo-svg {
-        height: 40px;
+     .nav-logo-img {
+        height: 32px;
         width: auto;
-        transition: transform 0.3s ease-in-out;
+        vertical-align: middle;
+        transition: transform 0.3s;
+        border-radius: 4px;
     }
-    .nav-logo img.logo-svg:hover {
-        transform: scale(1.05);
+    .nav-logo-img:hover {
+        transform: scale(1.1);
+        filter: brightness(1.2);
     }
 
     .nav-left {
