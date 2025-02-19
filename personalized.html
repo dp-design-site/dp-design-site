@@ -228,7 +228,7 @@
             let existingItem = cartItems.find(item => item.name.trim() === normalizedName);
         
             if (existingItem) {
-                existingItem.quantity += 1; // Увеличаваме количеството с 1
+                existingItem.quantity + 1; // Увеличаваме количеството с 1
             } else {
                 cartItems.push({ name: normalizedName, price: price || 0, quantity: 1 }); // Добавяме нов продукт
             }
