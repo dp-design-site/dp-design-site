@@ -110,11 +110,22 @@
     </div>
 
     <script>
+        function addToCart(newItem) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            let existingItem = cartItems.find(item => item.name === newItem.name);
+
+            if (existingItem) {
+                existingItem.quantity += newItem.quantity;
+            } else {
+                cartItems.push(newItem);
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            displayCart();
+        }
+
         function displayCart() {
             let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            cartItems = cartItems.map(item => ({ ...item, quantity: item.quantity || 1 }));
-            localStorage.setItem('cart', JSON.stringify(cartItems));
-            
             const container = document.getElementById('cartItems');
             let total = 0;
 
