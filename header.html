@@ -106,14 +106,15 @@
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
             userAuth.textContent = `👤 ${user.firstName}`;
-            userAuth.href = 'profile.html';
+            userAuth.setAttribute('href', 'profile.html');
         } else {
             userAuth.textContent = '🔑 Вход';
-            userAuth.href = 'login.html';
+            userAuth.setAttribute('href', 'login.html');
         }
     }
     document.addEventListener('DOMContentLoaded', updateHeader);
 </script>
+
 
 <!-- ✅ CSS -->
 <style>
