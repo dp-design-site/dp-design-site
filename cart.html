@@ -112,7 +112,9 @@
     <script>
         function addToCart(newItem) {
             let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            newItem.quantity = newItem.quantity && !isNaN(newItem.quantity) ? newItem.quantity : 1;
+            newItem.quantity = newItem.quantity && !isNaN(newItem.quantity) ? parseInt(newItem.quantity) : 1;
+            newItem.price = newItem.price && !isNaN(newItem.price) ? parseFloat(newItem.price) : 0;
+            
             let existingItem = cartItems.find(item => item.name === newItem.name);
 
             if (existingItem) {
@@ -131,7 +133,7 @@
             let total = 0;
 
             container.innerHTML = cartItems.length > 0 ? cartItems.map((item, index) => {
-                total += (item.price || 0) * (item.quantity || 1);
+                total += item.price * item.quantity;
                 return `
                     <div class="cart-item">
                         <a href="${item.link}" style="color: #fce5cd; text-decoration: none;">${item.name}</a>
@@ -140,7 +142,7 @@
                             <span>${item.quantity}</span>
                             <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">➕</button>
                         </div>
-                        <span>${((item.price || 0) * (item.quantity || 1)).toFixed(2)} лв.</span>
+                        <span>${(item.price * item.quantity).toFixed(2)} лв.</span>
                         <button class="remove-btn" onclick="confirmRemove(${index})">🗑️</button>
                     </div>`;
             }).join('') : '<p>Вашата количка е празна.</p>';
