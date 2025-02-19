@@ -100,6 +100,21 @@
     document.addEventListener('DOMContentLoaded', updateHeader);
 </script>
 
+<script>
+    function updateHeader() {
+        const userAuth = document.getElementById('userAuth');
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            userAuth.textContent = `👤 ${user.firstName}`;
+            userAuth.href = 'profile.html';
+        } else {
+            userAuth.textContent = '🔑 Вход';
+            userAuth.href = 'login.html';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', updateHeader);
+</script>
+
 <!-- ✅ CSS -->
 <style>
     /* Основен стил на навигационния бар */
