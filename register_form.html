@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | DP Design</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #fce5cd;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        input {
+            background: #222;
+            color: #fce5cd;
+        }
+        button {
+            background-color: #fce5cd;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Създаване на акаунт</h2>
+        <input type="text" id="firstName" placeholder="Име" required>
+        <input type="text" id="lastName" placeholder="Фамилия" required>
+        <input type="email" id="email" placeholder="Имейл" required>
+        <input type="password" id="password" placeholder="Парола" required>
+        <input type="text" id="phone" placeholder="Телефон">
+        <input type="text" id="address" placeholder="Адрес за доставка">
+        <button onclick="registerUser()">Регистрация</button>
+    </div>
+
+    <script>
+        function registerUser() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+
+            if (!firstName || !lastName || !email || !password) {
+                alert('Моля, попълнете всички задължителни полета!');
+                return;
+            }
+
+            const userData = {
+                firstName, lastName, email, password, phone, address
+            };
+
+            console.log('Изпращане на данни:', userData); // За тестване
+            alert('Регистрацията е успешна!');
+        }
+    </script>
+</body>
+</html>
