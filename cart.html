@@ -111,7 +111,10 @@
 
     <script>
         function displayCart() {
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItems = cartItems.map(item => ({ ...item, quantity: item.quantity || 1 }));
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            
             const container = document.getElementById('cartItems');
             let total = 0;
 
