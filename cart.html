@@ -1,4 +1,3 @@
-<!-- ✅ Обновена страница cart.html с хедър, бутон за продължаване на пазаруването и футър -->
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -19,18 +18,16 @@
             height: 220px;
             background: url('images/header-background.jpg') no-repeat center center/cover;
             position: relative;
-            padding: 0;
-            margin: 0;
         }
         .header-title {
-        font-size: 32px;
-        font-weight: bold;
-        color: #fce5cd;
-        position: absolute;
-        bottom: 10px;
-        left: 20px;
-        z-index: 2;
-    }
+            font-size: 32px;
+            font-weight: bold;
+            color: #fce5cd;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 2;
+        }
         .header-gradient {
             position: absolute;
             bottom: 0;
@@ -49,6 +46,7 @@
         .cart-item {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
@@ -67,6 +65,13 @@
             transition: transform 0.3s;
         }
         .cart-button:hover { transform: scale(1.05); }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #fce5cd;
+            font-size: 16px;
+            cursor: pointer;
+        }
         .footer {
             margin-top: 40px;
             padding: 10px;
@@ -77,11 +82,10 @@
 </head>
 <body>
     <header class="header-wrapper">
-        <h1 class="header-title"></h1>
+        <h1 class="header-title">Вашата количка</h1>
         <div class="header-gradient"></div>
     </header>
 
-    <h1>Вашата количка</h1>
     <div class="cart-container" id="cartItems"></div>
     <div class="cart-total" id="cartTotal"></div>
     <div class="cart-buttons">
@@ -97,15 +101,32 @@
         function displayCart() {
             const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
             const container = document.getElementById('cartItems');
-            const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+            let total = 0;
 
-            container.innerHTML = cartItems.length > 0 ? cartItems.map(item => `
-                <div class="cart-item">
-                    <span>${item.name}</span>
-                    <span>${item.price.toFixed(2)} лв.</span>
-                </div>`).join('') : '<p>Вашата количка е празна.</p>';
+            container.innerHTML = cartItems.length > 0 ? cartItems.map((item, index) => {
+                total += item.price;
+                return `
+                    <div class="cart-item">
+                        <a href="${item.link}" style="color: #fce5cd; text-decoration: none;">${item.name}</a>
+                        <span>${item.price.toFixed(2)} лв.</span>
+                        <button class="remove-btn" onclick="confirmRemove(${index})">🗑️</button>
+                    </div>`;
+            }).join('') : '<p>Вашата количка е празна.</p>';
 
             document.getElementById('cartTotal').textContent = `Обща сума: ${total.toFixed(2)} лв.`;
+        }
+
+        function confirmRemove(index) {
+            if (confirm('Сигурни ли сте, че искате да премахнете този продукт?')) {
+                removeItem(index);
+            }
+        }
+
+        function removeItem(index) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItems.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            displayCart();
         }
 
         function checkout() {
