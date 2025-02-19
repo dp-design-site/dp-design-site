@@ -115,8 +115,9 @@
             let existingItem = cartItems.find(item => item.name === newItem.name);
 
             if (existingItem) {
-                existingItem.quantity += newItem.quantity;
+                existingItem.quantity = (existingItem.quantity || 1) + (newItem.quantity || 1);
             } else {
+                newItem.quantity = newItem.quantity || 1;
                 cartItems.push(newItem);
             }
             
@@ -130,7 +131,7 @@
             let total = 0;
 
             container.innerHTML = cartItems.length > 0 ? cartItems.map((item, index) => {
-                total += item.price * item.quantity;
+                total += (item.price || 0) * (item.quantity || 1);
                 return `
                     <div class="cart-item">
                         <a href="${item.link}" style="color: #fce5cd; text-decoration: none;">${item.name}</a>
@@ -139,7 +140,7 @@
                             <span>${item.quantity}</span>
                             <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">➕</button>
                         </div>
-                        <span>${(item.price * item.quantity).toFixed(2)} лв.</span>
+                        <span>${((item.price || 0) * (item.quantity || 1)).toFixed(2)} лв.</span>
                         <button class="remove-btn" onclick="confirmRemove(${index})">🗑️</button>
                     </div>`;
             }).join('') : '<p>Вашата количка е празна.</p>';
