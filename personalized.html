@@ -222,21 +222,28 @@
     let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
     let normalizedName = name.trim();
+    let found = false;
 
-    // Търсене на съществуващ продукт
-    let existingItem = cartItems.find(item => item.name.trim() === normalizedName);
+    // Обновяване на количката – ако продуктът вече съществува, увеличаваме quantity
+    cartItems = cartItems.map(item => {
+        if (item.name.trim() === normalizedName) {
+            item.quantity = (item.quantity || 1) + 1;
+            found = true;
+        }
+        return item;
+    });
 
-    if (existingItem) {
-        existingItem.quantity = (existingItem.quantity || 1) + 1; // Увеличаваме количеството с 1
-    } else {
-        cartItems.push({ name: normalizedName, price: price || 0, quantity: 1 }); // Добавяме нов продукт с quantity: 1
+    // Ако не е намерен, добавяме нов продукт
+    if (!found) {
+        cartItems.push({ name: normalizedName, price: price || 0, quantity: 1 });
     }
 
     localStorage.setItem('cart', JSON.stringify(cartItems));
+    console.log("Обновена количка:", cartItems); // Проверяваме съдържанието
 
-    console.log("Обновена количка:", cartItems); // Виждаме дали работи правилно
     alert(`${normalizedName} добавен в количката!`);
 }
+
 
 
 
