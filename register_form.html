@@ -13,19 +13,6 @@
             margin: 0;
             padding: 0;
         }
-        .header {
-            background: #222;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #fce5cd;
-        }
-        .header a {
-            color: #fce5cd;
-            text-decoration: none;
-            font-size: 18px;
-        }
         .container {
             max-width: 400px;
             margin: 50px auto;
@@ -56,21 +43,7 @@
     </style>
 </head>
 <body>
-    <nav class="nav-bar">
-        <div class="nav-left">
-            <button class="hamburger" id="menuButton">☰</button>
-            <a href="index.html" class="nav-logo">dp | design</a>
-        </div>
-        <div class="nav-menu" id="menu" style="margin-right: 10px;">
-            <a href="index.html">Начало</a>
-            <a href="personalized.html">Персонализирани продукти</a>
-            <a href="home_decor.html">Дом и декорация</a>
-            <a href="prototyping.html">3D прототипиране</a>
-            <a href="contacts.html">Контакти</a>
-        </div>
-        <a href="#" id="userAuth">Вход</a>
-        <a href="cart.html" class="cart-icon">🛒 (<span id="cart-count">0</span>)</a>
-    </nav>
+    <div id="header"></div>
     
     <div class="container">
         <h2>Създаване на акаунт</h2>
@@ -82,6 +55,8 @@
         <input type="text" id="address" placeholder="Адрес за доставка">
         <button onclick="registerUser()">Регистрация</button>
     </div>
+    
+    <div id="footer"></div>
 
     <script>
         function registerUser() {
@@ -101,22 +76,23 @@
             localStorage.setItem('user', JSON.stringify(userData));
 
             alert('Регистрацията е успешна!');
-            updateHeader();
         }
 
-        function updateHeader() {
-            const userAuth = document.getElementById('userAuth');
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user) {
-                userAuth.textContent = user.firstName;
-                userAuth.href = 'profile.html';
-            } else {
-                userAuth.textContent = 'Вход';
-                userAuth.href = 'login.html';
-            }
+        function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                });
+            
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
         }
-
-        document.addEventListener('DOMContentLoaded', updateHeader);
+        
+        document.addEventListener('DOMContentLoaded', loadComponents);
     </script>
 </body>
 </html>
