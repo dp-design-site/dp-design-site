@@ -218,21 +218,25 @@
         loadComponents();
     </script>
     <script>
-        function addToCart(name, price) {
-    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+               function addToCart(name, price) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+        
+            // Нормализиране на името (премахване на излишни интервали)
+            let normalizedName = name.trim();
+        
+            // Проверка дали продуктът вече е в количката
+            let existingItem = cartItems.find(item => item.name.trim() === normalizedName);
+        
+            if (existingItem) {
+                existingItem.quantity += 1; // Увеличаваме количеството с 1
+            } else {
+                cartItems.push({ name: normalizedName, price: price || 0, quantity: 1 }); // Добавяме нов продукт
+            }
+        
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            alert(`${normalizedName} добавен в количката!`);
+        }
 
-    // Проверка дали продуктът вече е в количката
-    let existingItem = cartItems.find(item => item.name === name);
-
-    if (existingItem) {
-        existingItem.quantity += 1; // Увеличаваме количеството с 1
-    } else {
-        cartItems.push({ name, price: price || 0, quantity: 1 }); // Добавяме нов продукт
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-    alert(`${name} добавен в количката!`);
-}
 
     </script>
     <script src="script.js" defer></script>
