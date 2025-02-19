@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моят профил | DP Design</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #fce5cd;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #fce5cd;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+    
+    <div class="container">
+        <h2>Моят профил</h2>
+        <p><strong>Име:</strong> <span id="userName"></span></p>
+        <p><strong>Имейл:</strong> <span id="userEmail"></span></p>
+        <p><strong>Телефон:</strong> <span id="userPhone"></span></p>
+        <p><strong>Адрес за доставка:</strong> <span id="userAddress"></span></p>
+        
+        <h3>История на поръчките</h3>
+        <div id="orderHistory">Няма поръчки.</div>
+        
+        <button onclick="logout()">Изход</button>
+    </div>
+    
+    <div id="footer"></div>
+
+    <script>
+        function loadProfile() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('userName').textContent = user.firstName + ' ' + user.lastName;
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userPhone').textContent = user.phone || 'Няма въведен телефон';
+            document.getElementById('userAddress').textContent = user.address || 'Няма въведен адрес';
+        }
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+        function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                });
+            
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProfile();
+            loadComponents();
+        });
+    </script>
+</body>
+</html>
