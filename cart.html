@@ -112,12 +112,12 @@
     <script>
         function addToCart(newItem) {
             let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            newItem.quantity = newItem.quantity && !isNaN(newItem.quantity) ? newItem.quantity : 1;
             let existingItem = cartItems.find(item => item.name === newItem.name);
 
             if (existingItem) {
-                existingItem.quantity = (existingItem.quantity || 1) + (newItem.quantity || 1);
+                existingItem.quantity += newItem.quantity;
             } else {
-                newItem.quantity = newItem.quantity || 1;
                 cartItems.push(newItem);
             }
             
