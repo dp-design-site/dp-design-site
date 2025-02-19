@@ -11,6 +11,7 @@
         <a href="prototyping.html">3D прототипиране</a>
         <a href="contacts.html">Контакти</a>
     </div>
+    <a href="#" id="userAuth">Вход</a>
       <!-- 🛒 Количка с линк към нова страница -->
     <a href="cart.html" class="cart-icon">
         🛒 (<span id="cart-count">0</span>)
@@ -79,6 +80,22 @@
         cart.push(product);
         document.getElementById('cart-count').textContent = cart.length;
     }
+</script>
+
+<script>
+    function updateHeader() {
+        const userAuth = document.getElementById('userAuth');
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            userAuth.textContent = user.firstName;
+            userAuth.href = 'profile.html';
+        } else {
+            userAuth.textContent = 'Вход';
+            userAuth.href = 'login.html';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', updateHeader);
 </script>
 
 <!-- ✅ CSS -->
