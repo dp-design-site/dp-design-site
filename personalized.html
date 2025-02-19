@@ -219,11 +219,21 @@
     </script>
     <script>
         function addToCart(name, price) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart.push({ name, price });
-            localStorage.setItem('cart', JSON.stringify(cart));
-            alert(`${name} добавен в количката!`);
-        }
+    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Проверка дали продуктът вече е в количката
+    let existingItem = cartItems.find(item => item.name === name);
+
+    if (existingItem) {
+        existingItem.quantity += 1; // Увеличаваме количеството с 1
+    } else {
+        cartItems.push({ name, price: price || 0, quantity: 1 }); // Добавяме нов продукт
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+    alert(`${name} добавен в количката!`);
+}
+
     </script>
     <script src="script.js" defer></script>
 </body>
