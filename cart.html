@@ -110,17 +110,14 @@
     </div>
 
     <script>
-        function addToCart(newItem) {
+        function addToCart(name, price) {
             let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            newItem.quantity = newItem.quantity && !isNaN(newItem.quantity) ? parseInt(newItem.quantity) : 1;
-            newItem.price = newItem.price && !isNaN(newItem.price) ? parseFloat(newItem.price) : 0;
-            
-            let existingItem = cartItems.find(item => item.name === newItem.name);
+            let existingItem = cartItems.find(item => item.name === name);
 
             if (existingItem) {
-                existingItem.quantity += newItem.quantity;
+                existingItem.quantity += 1;
             } else {
-                cartItems.push(newItem);
+                cartItems.push({ name, price, quantity: 1 });
             }
             
             localStorage.setItem('cart', JSON.stringify(cartItems));
@@ -136,7 +133,7 @@
                 total += item.price * item.quantity;
                 return `
                     <div class="cart-item">
-                        <a href="${item.link}" style="color: #fce5cd; text-decoration: none;">${item.name}</a>
+                        <a href="#" style="color: #fce5cd; text-decoration: none;">${item.name}</a>
                         <div class="quantity-controls">
                             <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">➖</button>
                             <span>${item.quantity}</span>
