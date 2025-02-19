@@ -4,13 +4,14 @@
         <button class="hamburger" id="menuButton">☰</button>
         <a href="index.html" class="nav-logo">dp | design</a>
     </div>
-    <div class="nav-menu" id="menu" style="margin-right: 10px;">
+   <div class="nav-menu" id="menu" style="display: flex; align-items: center; gap: 20px; margin-right: auto;">
         <a href="index.html">Начало</a>
         <a href="personalized.html">Персонализирани продукти</a>
         <a href="home_decor.html">Дом и декорация</a>
         <a href="prototyping.html">3D прототипиране</a>
         <a href="contacts.html">Контакти</a>
     </div>
+     <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
     <a href="#" id="userAuth">Вход</a>
       <!-- 🛒 Количка с линк към нова страница -->
     <a href="cart.html" class="cart-icon">
@@ -94,7 +95,6 @@
             userAuth.href = 'login.html';
         }
     }
-
     document.addEventListener('DOMContentLoaded', updateHeader);
 </script>
 
@@ -133,7 +133,6 @@
         transform: scale(1.1);
     }
     .nav-menu {
-        margin-right: 60px;
         display: flex;
         gap: 10px;
     }
