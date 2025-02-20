@@ -83,24 +83,25 @@
                 return;
             }
             
-            fetch('https://cors-proxy-newea0n5z-danyps-projects.vercel.app/proxy?url=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbyXxvCKqd-26xc_amxbgSBQDsEQBkIAcb81qSgGs6GNGOlQbUUapB9X1YPc3TqNGjoG%2Fexec', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ firstName, lastName, email, password, phone, address })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert('Регистрацията е успешна!');
-                    window.location.href = 'login.html';
-                } else {
-                    alert('Грешка: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Грешка при заявката:', error);
-                alert('Възникна грешка при регистрацията.');
-            });
+                    fetch('https://script.google.com/macros/s/AKfycbzJ86oFaVeVCkj4VHKwH_ae-ulW16C5gvqhvW8BES1O1jOgaLembpayW14Yv3bslM3u/exec', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ firstName, lastName, email, password, phone, address })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Регистрацията е успешна!');
+                window.location.href = 'login.html';
+            } else {
+                alert('Грешка: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Грешка при заявката:', error);
+            alert('Възникна грешка при регистрацията.');
+        });
+
         }
 
         function loadComponents() {
