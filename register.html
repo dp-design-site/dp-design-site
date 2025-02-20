@@ -83,7 +83,7 @@
                 return;
             }
             
-            fetch('https://script.google.com/macros/s/AKfycbyXxvCKqd-26xc_amxbgSBQDsEQBkIAcb81qSgGs6GNGOlQbUUapB9X1YPc3TqNGjoG/exec', {
+            fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbyypjvRqxaokUCJxTsMghuDva6Dh2om-X6DjCpwz9k/dev', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ firstName, lastName, email, password, phone, address })
