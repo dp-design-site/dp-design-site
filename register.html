@@ -83,7 +83,7 @@
                 return;
             }
             
-                    fetch('https://script.google.com/macros/s/AKfycbzJ86oFaVeVCkj4VHKwH_ae-ulW16C5gvqhvW8BES1O1jOgaLembpayW14Yv3bslM3u/exec', {
+                            fetch('https://script.google.com/macros/s/AKfycbwUyYBlLhc-5Pzh7W0LW3io4I1SDVuJVlOSn0opLkvUwlZg6d100tk7GjHnJ-C6tTUk/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ firstName, lastName, email, password, phone, address })
@@ -101,6 +101,7 @@
             console.error('Грешка при заявката:', error);
             alert('Възникна грешка при регистрацията.');
         });
+
 
         }
 
