@@ -7,8 +7,8 @@
    
        
     </div>
-     <!--<div class="nav-right" style="display: flex; align-items: center; gap: 15px;">-->
-    <div class="nav-menu" id="menu" style="display: flex; align-items: center; gap: 5px;">
+     <!--<div class="nav-right" style="display: flex; align-items: center; gap: 15px;">   style="display: flex; align-items: center; gap: 5px;"-->
+    <div class="nav-menu" id="menu" >
         <a href="index.html">Начало</a>
         <a href="personalized.html">Персонализирани продукти</a>
         <a href="home_decor.html">Дом и декорация</a>
@@ -30,10 +30,10 @@
     <div class="header-gradient"></div>
 </header>
 
-<!-- ✅ JavaScript поправка -->
 <script>
     console.log("🔥 Скриптът е зареден!");
 
+    // ✅ Глобално задаване на toggleMenu
     function toggleMenu() {
         console.log("☰ Кликнато е върху бутона за меню!");
 
@@ -47,19 +47,18 @@
 
         menu.classList.toggle("open");
         menuOverlay.classList.toggle("visible");
+
+        console.log(menu.classList.contains("open") ? "✅ Менюто е отворено!" : "❌ Менюто е затворено!");
     }
+
+    // ✅ Присвояване на функцията към window
+    window.toggleMenu = toggleMenu;
 
     document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Страницата е заредена!");
 
         const menuButton = document.getElementById("menuButton");
         const menuOverlay = document.getElementById("menuOverlay");
-        const menu = document.getElementById("menu");
-        const menuLinks = document.querySelectorAll(".nav-menu a");
-
-        // ✅ Уверяваме се, че менюто започва скрито
-        menu.classList.remove("open");
-        menuOverlay.classList.remove("visible");
 
         if (menuButton) {
             menuButton.addEventListener("click", toggleMenu);
@@ -73,17 +72,9 @@
             console.error("❌ Фонът на менюто не е намерен!");
         }
 
-        // ✅ Затваряне на менюто при клик върху линк
-        menuLinks.forEach(link => {
-            link.addEventListener("click", function () {
-                console.log(`📌 Кликнато е на ${link.textContent}, менюто ще се затвори.`);
-                menu.classList.remove("open");
-                menuOverlay.classList.remove("visible");
-            });
-        });
+        console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
     });
 </script>
-
 <!-- ✅ Логика за количката -->
 <script>
     let cart = [];
@@ -128,39 +119,20 @@
 <!-- ✅ CSS -->
 <style>
     /* Основен стил на навигационния бар */
-    .nav-menu {
-        display: none; /* 🔥 Менюто е скрито по подразбиране */
-        flex-direction: column;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 60%;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.9);
-        padding: 20px;
-        text-align: left;
-        z-index: 999;
-        transition: transform 0.3s ease-in-out;
-    }
-    /* ✅ Менюто се показва при отваряне */
-    .nav-menu.open {
-        display: flex;
-    }
-.menu-overlay {
+    .nav-bar {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4);
-        z-index: 998;
-        display: none; /* 🔥 Скрито по подразбиране */
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 0 20px;
+        z-index: 1000;
     }
 
-    /* ✅ Фонът се показва при отворено меню */
-    .menu-overlay.visible {
-        display: block;
-    }
     .nav-left {
         display: flex;
         align-items: center;
