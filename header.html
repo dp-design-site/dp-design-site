@@ -30,6 +30,7 @@
     <div class="header-gradient"></div>
 </header>
 
+<!-- ✅ JavaScript поправка -->
 <script>
     console.log("🔥 Скриптът е зареден!");
 
@@ -44,13 +45,8 @@
             return;
         }
 
-        if (menu.style.display === "none" || menu.style.display === "") {
-            menu.style.display = "flex"; // Показваме менюто
-            menuOverlay.style.display = "block"; // Показваме overlay
-        } else {
-            menu.style.display = "none"; // Скриваме менюто
-            menuOverlay.style.display = "none"; // Скриваме overlay
-        }
+        menu.classList.toggle("open");
+        menuOverlay.classList.toggle("visible");
     }
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -61,9 +57,9 @@
         const menu = document.getElementById("menu");
         const menuLinks = document.querySelectorAll(".nav-menu a");
 
-        // ✅ Автоматично скриване на менюто при зареждане
-        menu.style.display = "none";
-        menuOverlay.style.display = "none";
+        // ✅ Уверяваме се, че менюто започва скрито
+        menu.classList.remove("open");
+        menuOverlay.classList.remove("visible");
 
         if (menuButton) {
             menuButton.addEventListener("click", toggleMenu);
@@ -81,11 +77,10 @@
         menuLinks.forEach(link => {
             link.addEventListener("click", function () {
                 console.log(`📌 Кликнато е на ${link.textContent}, менюто ще се затвори.`);
-                menu.style.display = "none";
-                menuOverlay.style.display = "none";
+                menu.classList.remove("open");
+                menuOverlay.classList.remove("visible");
             });
         });
-
     });
 </script>
 
@@ -133,20 +128,39 @@
 <!-- ✅ CSS -->
 <style>
     /* Основен стил на навигационния бар */
-    .nav-bar {
+    .nav-menu {
+        display: none; /* 🔥 Менюто е скрито по подразбиране */
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 60%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.9);
+        padding: 20px;
+        text-align: left;
+        z-index: 999;
+        transition: transform 0.3s ease-in-out;
+    }
+    /* ✅ Менюто се показва при отваряне */
+    .nav-menu.open {
+        display: flex;
+    }
+.menu-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 0 20px;
-        z-index: 1000;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 998;
+        display: none; /* 🔥 Скрито по подразбиране */
     }
 
+    /* ✅ Фонът се показва при отворено меню */
+    .menu-overlay.visible {
+        display: block;
+    }
     .nav-left {
         display: flex;
         align-items: center;
