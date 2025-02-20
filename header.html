@@ -44,20 +44,13 @@
             return;
         }
 
-        // Проверяваме дали менюто е отворено
-        let isOpen = menu.classList.contains("open");
-
-        if (isOpen) {
-            menu.classList.remove("open");
-            menu.style.display = "none"; // Скриваме менюто
-            menuOverlay.classList.remove("visible");
-        } else {
-            menu.classList.add("open");
+        if (menu.style.display === "none" || menu.style.display === "") {
             menu.style.display = "flex"; // Показваме менюто
-            menuOverlay.classList.add("visible");
+            menuOverlay.style.display = "block"; // Показваме overlay
+        } else {
+            menu.style.display = "none"; // Скриваме менюто
+            menuOverlay.style.display = "none"; // Скриваме overlay
         }
-
-        console.log(isOpen ? "❌ Менюто е затворено!" : "✅ Менюто е отворено!");
     }
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -67,6 +60,10 @@
         const menuOverlay = document.getElementById("menuOverlay");
         const menu = document.getElementById("menu");
         const menuLinks = document.querySelectorAll(".nav-menu a");
+
+        // ✅ Автоматично скриване на менюто при зареждане
+        menu.style.display = "none";
+        menuOverlay.style.display = "none";
 
         if (menuButton) {
             menuButton.addEventListener("click", toggleMenu);
@@ -80,21 +77,15 @@
             console.error("❌ Фонът на менюто не е намерен!");
         }
 
-        // ✅ Добавяме слушател към всички линкове в менюто, за да се затваря след избор
+        // ✅ Затваряне на менюто при клик върху линк
         menuLinks.forEach(link => {
             link.addEventListener("click", function () {
                 console.log(`📌 Кликнато е на ${link.textContent}, менюто ще се затвори.`);
-                menu.classList.remove("open");
                 menu.style.display = "none";
-                menuOverlay.classList.remove("visible");
+                menuOverlay.style.display = "none";
             });
         });
 
-        // ✅ Проверяваме дали менюто трябва да бъде скрито при зареждане на страницата
-        if (menu.classList.contains("open")) {
-            menu.classList.remove("open");
-            menu.style.display = "none";
-        }
     });
 </script>
 
