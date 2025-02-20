@@ -33,7 +33,6 @@
 <script>
     console.log("🔥 Скриптът е зареден!");
 
-    // ✅ Глобално задаване на toggleMenu
     function toggleMenu() {
         console.log("☰ Кликнато е върху бутона за меню!");
 
@@ -45,20 +44,29 @@
             return;
         }
 
-        menu.classList.toggle("open");
-        menuOverlay.classList.toggle("visible");
+        // Проверяваме дали менюто е отворено
+        let isOpen = menu.classList.contains("open");
 
-        console.log(menu.classList.contains("open") ? "✅ Менюто е отворено!" : "❌ Менюто е затворено!");
+        if (isOpen) {
+            menu.classList.remove("open");
+            menu.style.display = "none"; // Скриваме менюто
+            menuOverlay.classList.remove("visible");
+        } else {
+            menu.classList.add("open");
+            menu.style.display = "flex"; // Показваме менюто
+            menuOverlay.classList.add("visible");
+        }
+
+        console.log(isOpen ? "❌ Менюто е затворено!" : "✅ Менюто е отворено!");
     }
-
-    // ✅ Присвояване на функцията към window
-    window.toggleMenu = toggleMenu;
 
     document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Страницата е заредена!");
 
         const menuButton = document.getElementById("menuButton");
         const menuOverlay = document.getElementById("menuOverlay");
+        const menu = document.getElementById("menu");
+        const menuLinks = document.querySelectorAll(".nav-menu a");
 
         if (menuButton) {
             menuButton.addEventListener("click", toggleMenu);
@@ -72,9 +80,24 @@
             console.error("❌ Фонът на менюто не е намерен!");
         }
 
-        console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
+        // ✅ Добавяме слушател към всички линкове в менюто, за да се затваря след избор
+        menuLinks.forEach(link => {
+            link.addEventListener("click", function () {
+                console.log(`📌 Кликнато е на ${link.textContent}, менюто ще се затвори.`);
+                menu.classList.remove("open");
+                menu.style.display = "none";
+                menuOverlay.classList.remove("visible");
+            });
+        });
+
+        // ✅ Проверяваме дали менюто трябва да бъде скрито при зареждане на страницата
+        if (menu.classList.contains("open")) {
+            menu.classList.remove("open");
+            menu.style.display = "none";
+        }
     });
 </script>
+
 <!-- ✅ Логика за количката -->
 <script>
     let cart = [];
