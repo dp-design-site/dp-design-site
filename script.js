@@ -78,6 +78,35 @@ function updatePageState() {
     // ❗ Инициализираме менюто при смяна на страницата
     initMenu();
 }
+document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function () { // 🔥 Изчакваме, за да е сигурно, че футерът е зареден
+        const banner = document.getElementById("cookie-banner");
+        const acceptBtn = document.getElementById("accept-cookies");
+        const declineBtn = document.getElementById("decline-cookies");
+
+        if (!banner || !acceptBtn || !declineBtn) {
+            console.error("❌ Банерът за бисквитки не беше намерен!");
+            return;
+        }
+
+        // ✅ Проверка дали потребителят вече е дал отговор
+        if (localStorage.getItem("cookiesAccepted") !== null) {
+            banner.style.display = "none"; // 🚀 Скриваме банера
+        }
+
+        acceptBtn.addEventListener("click", function () {
+            localStorage.setItem("cookiesAccepted", "true");
+            banner.style.display = "none"; // ✅ Скриваме банера при натискане
+        });
+
+        declineBtn.addEventListener("click", function () {
+            localStorage.setItem("cookiesAccepted", "false");
+            banner.style.display = "none"; // ✅ Скриваме банера при отказ
+        });
+
+    }, 500); // 🕒 Добавяме малко забавяне (500ms), за да сме сигурни, че футерът е зареден
+});
+
 
 // ✅ Чакаме хедъра да се зареди, преди да изпълним основния код
 function loadComponents() {
