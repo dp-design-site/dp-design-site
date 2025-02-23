@@ -1,6 +1,12 @@
 <!-- footer.html -->
 <footer>
     <div class="footer-content">
+                <!-- ✅ Банер за бисквитки -->
+        <div id="cookie-banner" class="cookie-banner">
+            <p>Този сайт използва бисквитки за подобряване на вашето преживяване. <a href="cookies-policy.html">Научи повече</a></p>
+            <button id="accept-cookies">Приемам</button>
+            <button id="decline-cookies">Отказ</button>
+        </div>
         <span>София, България</span>
         <a href="tel:+359898747472">📞 +359898747472</a>
         <a href="mailto:danypavlov@gmail.com">✉ sales.dpdesign@gmail.com</a>
@@ -15,6 +21,7 @@
                 <img src="images/whatsapp-icon.png" alt="WhatsApp">
             </a>
         </div>
+        <a >© 2025 DP Design | Всички права запазени.</a>
     </div>
 </footer>
 
@@ -70,7 +77,73 @@ footer {
     transform: scale(1.2);
     background-color: rgba(255, 204, 153, 0.2);
 }
-</style>
+/* ✅ Стилизация на банера */
+    .cookie-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        color: #fce5cd;
+        padding: 10px 20px;
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .cookie-banner a {
+        color: #ffcc99;
+        text-decoration: underline;
+    }
+
+    .cookie-banner button {
+        background: #ffcc99;
+        border: none;
+        padding: 8px 12px;
+        margin-left: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .cookie-banner button:hover {
+        transform: scale(1.05);
+    }
 
 </style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const banner = document.getElementById("cookie-banner");
+        const acceptBtn = document.getElementById("accept-cookies");
+        const declineBtn = document.getElementById("decline-cookies");
 
+        // ✅ Проверка дали потребителят вече е дал отговор
+        if (localStorage.getItem("cookiesAccepted") !== null) {
+            banner.style.display = "none";
+        }
+
+        acceptBtn.addEventListener("click", function () {
+            localStorage.setItem("cookiesAccepted", "true");
+            banner.style.display = "none";
+        });
+
+        declineBtn.addEventListener("click", function () {
+            localStorage.setItem("cookiesAccepted", "false");
+            banner.style.display = "none";
+        });
+    });
+
+    // ✅ Следене на посетените страници
+    document.addEventListener("DOMContentLoaded", function () {
+        let pagesVisited = JSON.parse(localStorage.getItem("pagesVisited")) || [];
+        let currentPage = window.location.pathname;
+
+        if (!pagesVisited.includes(currentPage)) {
+            pagesVisited.push(currentPage);
+        }
+
+        localStorage.setItem("pagesVisited", JSON.stringify(pagesVisited));
+    });
+</script>
