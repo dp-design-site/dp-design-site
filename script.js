@@ -78,8 +78,9 @@ function updatePageState() {
     // ❗ Инициализираме менюто при смяна на страницата
     initMenu();
 }
+
 document.addEventListener("DOMContentLoaded", function () {
-    setTimeout(function () { // 🔥 Изчакваме, за да е сигурно, че футерът е зареден
+    setTimeout(function () {
         const banner = document.getElementById("cookie-banner");
         const acceptBtn = document.getElementById("accept-cookies");
         const declineBtn = document.getElementById("decline-cookies");
@@ -89,24 +90,26 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // ✅ Проверка дали потребителят вече е дал отговор
+        // ✅ Ако вече има избор, изобщо не показваме банера
         if (localStorage.getItem("cookiesAccepted") !== null) {
-            banner.style.display = "none"; // 🚀 Скриваме банера
+            return; // ❌ Спираме тук, банерът никога няма да се покаже
         }
+
+        // ✅ Ако няма избор, банерът се показва
+        banner.style.display = "flex";
 
         acceptBtn.addEventListener("click", function () {
             localStorage.setItem("cookiesAccepted", "true");
-            banner.style.display = "none"; // ✅ Скриваме банера при натискане
+            banner.style.display = "none";
         });
 
         declineBtn.addEventListener("click", function () {
             localStorage.setItem("cookiesAccepted", "false");
-            banner.style.display = "none"; // ✅ Скриваме банера при отказ
+            banner.style.display = "none";
         });
 
-    }, 500); // 🕒 Добавяме малко забавяне (500ms), за да сме сигурни, че футерът е зареден
+    }, 100); // 🔥 Леко забавяне, за да е сигурно, че футерът е зареден
 });
-
 
 // ✅ Чакаме хедъра да се зареди, преди да изпълним основния код
 function loadComponents() {
