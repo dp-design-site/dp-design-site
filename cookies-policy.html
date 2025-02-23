@@ -36,6 +36,15 @@
             height: 100px;
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
         }
+        .button-back {
+            font-size: 32px;
+            font-weight: bold;
+            color: #fce5cd;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 2;
+        }
         
         .footer {
             margin-top: 40px;
@@ -59,7 +68,7 @@
         <li><strong>Маркетингови бисквитки</strong> – използват се за персонализирани реклами.</li>
     </ul>
     <p>Можете да управлявате бисквитките си чрез настройките на браузъра.</p>
-    <h2 href="javascript:history.back()" >Върни се към сайта</h2>
+    <a class="button-back" href="javascript:history.back()" >Върни се към сайта</a>
 
     <div class="footer">
         <p>&copy; 2025 DP Design | Всички права запазени.</p>
