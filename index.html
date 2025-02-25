@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Очаквайте скоро | DP Design</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #fce5cd;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .header-img {
+            width: 100%;
+            height: auto;
+        }
+        .container {
+            padding: 50px;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <img src="images/header-background.jpg" alt="DP Design" class="header-img">
+    <div class="container">
+        <h1>Очаквайте скоро!</h1>
+        <p>Работим усилено по завършването на нашия уебсайт. Благодарим за търпението!</p>
+    </div>
+    
+    <div id="footer"></div>
+
+    <script>
+        // Динамично зареждане на футъра
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer').innerHTML = data;
+            });
+    </script>
+</body>
+</html>
