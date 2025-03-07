@@ -177,22 +177,27 @@ console.log("✅ script.js е зареден правилно!");
 document.addEventListener("DOMContentLoaded", function () {
     console.log("🔍 Проверка на потребителската роля...");
 
-    const adminPanelLink = document.getElementById("admin-panel-link");
-    const userRole = localStorage.getItem("userRole");
-    console.log("User role:", userRole);
+    setTimeout(() => {
+        const adminPanelLink = document.getElementById("admin-panel-link");
+        const userRole = localStorage.getItem("userRole");
 
-    if (adminPanelLink) {
-        if (userRole === "admin") {
-            adminPanelLink.style.display = "block"; // 👈 Показваме бутона
-            console.log("✅ Админ бутонът е активен!");
+        console.log("User role:", userRole);
+        console.log("Admin panel link:", adminPanelLink);
+
+        if (adminPanelLink) {
+            if (userRole === "admin") {
+                adminPanelLink.style.display = "block"; // 👈 Показваме бутона
+                console.log("✅ Админ бутонът е активен!");
+            } else {
+                adminPanelLink.style.display = "none"; // Скриваме го за не-админи
+                console.log("🚫 Админ бутонът е скрит.");
+            }
         } else {
-            adminPanelLink.style.display = "none"; // Скриваме го за не-админи
-            console.log("🚫 Админ бутонът е скрит.");
+            console.error("❌ Админ панел елементът не е намерен!");
         }
-    } else {
-        console.error("❌ Админ панел елементът не е намерен!");
-    }
+    }, 500); // ⏳ Изчакваме 500ms за да сме сигурни, че елементът е зареден
 });
+
 
 console.log("🔥 script.js е зареден успешно!");
 
