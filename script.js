@@ -157,5 +157,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("🚀 Проверка за администратор!");
+
+    const adminPanelLink = document.getElementById("admin-panel-link");
+    const userRole = localStorage.getItem("userRole");
+
+    if (userRole === "admin") {
+        console.log("✅ Потребителят е админ - показваме бутона!");
+        adminPanelLink.style.display = "block"; // Показва линка
+    } else {
+        console.log("❌ Потребителят НЕ е админ - скриваме бутона!");
+        adminPanelLink.style.display = "none"; // Уверяваме се, че е скрит
+    }
+});
+
 
 window.addEventListener("popstate", updatePageState);
