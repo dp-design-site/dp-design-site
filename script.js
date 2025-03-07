@@ -208,6 +208,80 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+document.addEventListener("DOMContentLoaded", async function () {
+    const productList = document.getElementById("product-list");
+
+    if (!productList) return;
+
+    try {
+        const response = await fetch("https://api.dp-design.art/products");
+        const products = await response.json();
+
+        if (products.length === 0) {
+            productList.innerHTML = "<p>❌ Няма налични продукти.</p>";
+            return;
+        }
+
+        productList.innerHTML = ""; // Изчистваме съобщението за зареждане
+
+        products.forEach(product => {
+            const productItem = document.createElement("div");
+            productItem.classList.add("product-item");
+            productItem.innerHTML = `
+                <p><strong>${product.name}</strong></p>
+                <p>Цена: ${product.price} лв.</p>
+                <p>Категория: ${product.category || "Няма категория"}</p>
+                <button class="edit-btn" data-id="${product.id}">✏️ Редактиране</button>
+                <button class="delete-btn" data-id="${product.id}">🗑️ Изтриване</button>
+            `;
+
+            productList.appendChild(productItem);
+        });
+
+        // Добавяме събития за бутоните
+        document.querySelectorAll(".edit-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const productId = this.getAttribute("data-id");
+                window.location.href = `edit-product.html?id=${productId}`;
+            });
+        });
+
+        document.querySelectorAll(".delete-btn").forEach(btn => {
+            btn.addEventListener("click", async function () {
+                const productId = this.getAttribute("data-id");
+                if (confirm("❗ Сигурни ли сте, че искате да изтриете този продукт?")) {
+                    await deleteProduct(productId);
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error("Грешка при зареждане на продуктите:", error);
+        productList.innerHTML = "<p>⚠️ Проблем при зареждане на продуктите.</p>";
+    }
+});
+
+async function deleteProduct(productId) {
+    try {
+        const response = await fetch(`https://api.dp-design.art/products/${productId}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            alert("✅ Продуктът беше изтрит успешно!");
+            location.reload(); // Презареждаме страницата, за да обновим списъка
+        } else {
+            alert("❌ Грешка при изтриване на продукта.");
+        }
+    } catch (error) {
+        console.error("Грешка:", error);
+        alert("⚠️ Възникна проблем при изтриването.");
+    }
+}
 
 
 console.log("🔥 script.js е зареден успешно!");
