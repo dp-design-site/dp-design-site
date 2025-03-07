@@ -93,6 +93,8 @@
 </head>
 <body>
 
+    <div id="header"></div>
+
     <!-- Лява навигация -->
     <div class="sidebar">
         <h2>Админ Панел</h2>
@@ -123,6 +125,8 @@
         </div>
     </div>
 
+    <div id="footer"></div>
+
     <!-- Зареждане на хедър и футър -->
     <script>
         function loadComponents() {
@@ -142,6 +146,25 @@
             window.location.href = "add-product.html";
         }
     </script>
+
+    <script>
+    function loadComponents() {
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+            });
+
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer').innerHTML = data;
+            });
+    }
+
+    loadComponents();
+</script>
+
 
 </body>
 </html>
