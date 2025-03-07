@@ -148,4 +148,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Симулираме проверка на администраторски достъп (тук ще е от бекенда)
+    const userRole = localStorage.getItem("userRole"); // Вземаме ролята от локалното хранилище
+
+    if (userRole === "admin") {
+        document.getElementById("admin-panel-link").style.display = "block";
+    }
+});
+
+
 window.addEventListener("popstate", updatePageState);
