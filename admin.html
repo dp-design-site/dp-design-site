@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ Панел | DP Design</title>
+    
+    <link rel="stylesheet" href="style.css"> <!-- Основен стил -->
+    
+    <style>
+        /* Основни стилове */
+        body {
+            background-color: #121212;
+            color: #fce5cd;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* Лява странична навигация */
+        .sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            padding-top: 20px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h2 {
+            color: #ffcc99;
+            text-align: center;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #fce5cd;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #ffcc99;
+            color: #121212;
+        }
+
+        /* Основно съдържание */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .dashboard {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .products-container {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Бутони */
+        .btn {
+            background: #ffcc99;
+            color: #121212;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #f5b977;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Лява навигация -->
+    <div class="sidebar">
+        <h2>Админ Панел</h2>
+        <a href="#">🏠 Табло</a>
+        <a href="#">📦 Продукти</a>
+        <a href="#">➕ Добави продукт</a>
+        <a href="#">📊 Статистики</a>
+        <a href="#">⚙️ Настройки</a>
+    </div>
+
+    <!-- Основно съдържание -->
+    <div class="main-content">
+        <h1>Добре дошли в админ панела!</h1>
+
+        <!-- Табло с кратка информация -->
+        <div class="dashboard">
+            <h2>Общ преглед</h2>
+            <p>📦 Общо продукти: <span id="total-products">0</span></p>
+            <p>🔥 Най-гледани продукти: <span id="top-product">Няма данни</span></p>
+        </div>
+
+        <!-- Списък с продукти -->
+        <div class="products-container">
+            <h2>Продукти</h2>
+            <button class="btn" onclick="openAddProductForm()">➕ Добави нов продукт</button>
+            <p id="no-products">Няма налични продукти.</p>
+            <div id="products-list"></div>
+        </div>
+    </div>
+
+    <!-- Зареждане на хедър и футър -->
+    <script>
+        function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => { document.getElementById('header').innerHTML = data; });
+
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => { document.getElementById('footer').innerHTML = data; });
+        }
+
+        loadComponents();
+
+        // Функция за отваряне на формата за добавяне на продукт (ще я добавим в следващите стъпки)
+        function openAddProductForm() {
+            window.location.href = "add-product.html";
+        }
+    </script>
+
+</body>
+</html>
