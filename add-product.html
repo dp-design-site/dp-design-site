@@ -1,79 +1,89 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectItem } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Добавяне на продукт | DP Design</title>
+    
+    <link rel="stylesheet" href="style.css"> <!-- Основните стилове на сайта -->
+</head>
+<body>
 
-export default function AddProductForm() {
-  const [product, setProduct] = useState({
-    name: "",
-    description: "",
-    price: "",
-    promo_price: "",
-    category: "",
-    options: "",
-    images: []
-  });
+    <!-- Хедър (автоматично вмъкване) -->
+    <div id="header"></div>
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
-  };
+    <main class="content">
+        <h1>Добавяне на продукт</h1>
+        <form id="productForm" class="product-form">
+            
+            <label for="name">Име на продукта:</label>
+            <input type="text" id="name" name="name" required>
 
-  const handleImageUpload = (e) => {
-    setProduct({ ...product, images: Array.from(e.target.files) });
-  };
+            <label for="description">Описание:</label>
+            <textarea id="description" name="description" required></textarea>
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Submitting product:", product);
-    // TODO: Integrate with backend API
-  };
-
-  return (
-    <Card className="max-w-xl mx-auto mt-10 p-5">
-      <CardContent>
-        <h2 className="text-xl font-semibold mb-4">Добавяне на продукт</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label>Име на продукта</Label>
-            <Input type="text" name="name" value={product.name} onChange={handleChange} required />
-          </div>
-          <div>
-            <Label>Описание</Label>
-            <Textarea name="description" value={product.description} onChange={handleChange} required />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Цена</Label>
-              <Input type="number" name="price" value={product.price} onChange={handleChange} required />
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="price">Цена:</label>
+                    <input type="number" id="price" name="price" required>
+                </div>
+                <div>
+                    <label for="promo_price">Промоционална цена:</label>
+                    <input type="number" id="promo_price" name="promo_price">
+                </div>
             </div>
-            <div>
-              <Label>Промоционална цена</Label>
-              <Input type="number" name="promo_price" value={product.promo_price} onChange={handleChange} />
-            </div>
-          </div>
-          <div>
-            <Label>Категория</Label>
-            <Select name="category" value={product.category} onChange={handleChange} required>
-              <SelectItem value="gifts">Персонализирани подаръци</SelectItem>
-              <SelectItem value="home">Дом и декорация</SelectItem>
-              <SelectItem value="prototyping">3D прототипиране</SelectItem>
-            </Select>
-          </div>
-          <div>
-            <Label>Опции (размери, цветове и др.)</Label>
-            <Input type="text" name="options" value={product.options} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Качване на снимки</Label>
-            <Input type="file" multiple onChange={handleImageUpload} />
-          </div>
-          <Button type="submit">Добави продукт</Button>
+
+            <label for="category">Категория:</label>
+            <select id="category" name="category" required>
+                <option value="gifts">Персонализирани подаръци</option>
+                <option value="home">Дом и декорация</option>
+                <option value="prototyping">3D прототипиране</option>
+            </select>
+
+            <label for="options">Опции (размери, цветове и др.):</label>
+            <input type="text" id="options" name="options">
+
+            <label for="images">Качване на снимки:</label>
+            <input type="file" id="images" name="images" multiple>
+
+            <button type="submit">Добави продукт</button>
         </form>
-      </CardContent>
-    </Card>
-  );
-}
+    </main>
+
+    <!-- Футър (автоматично вмъкване) -->
+    <div id="footer"></div>
+
+    <script>
+        function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                });
+
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
+        }
+
+        loadComponents();
+
+        // Логика за изпращане на формата
+        document.getElementById("productForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const product = {};
+            formData.forEach((value, key) => {
+                product[key] = value;
+            });
+
+            console.log("Добавяне на продукт:", product);
+            alert("Продуктът е добавен (симулирано).");
+        });
+    </script>
+
+</body>
+</html>
