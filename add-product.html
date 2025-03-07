@@ -1,0 +1,79 @@
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectItem } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+
+export default function AddProductForm() {
+  const [product, setProduct] = useState({
+    name: "",
+    description: "",
+    price: "",
+    promo_price: "",
+    category: "",
+    options: "",
+    images: []
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
+
+  const handleImageUpload = (e) => {
+    setProduct({ ...product, images: Array.from(e.target.files) });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Submitting product:", product);
+    // TODO: Integrate with backend API
+  };
+
+  return (
+    <Card className="max-w-xl mx-auto mt-10 p-5">
+      <CardContent>
+        <h2 className="text-xl font-semibold mb-4">Добавяне на продукт</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label>Име на продукта</Label>
+            <Input type="text" name="name" value={product.name} onChange={handleChange} required />
+          </div>
+          <div>
+            <Label>Описание</Label>
+            <Textarea name="description" value={product.description} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Цена</Label>
+              <Input type="number" name="price" value={product.price} onChange={handleChange} required />
+            </div>
+            <div>
+              <Label>Промоционална цена</Label>
+              <Input type="number" name="promo_price" value={product.promo_price} onChange={handleChange} />
+            </div>
+          </div>
+          <div>
+            <Label>Категория</Label>
+            <Select name="category" value={product.category} onChange={handleChange} required>
+              <SelectItem value="gifts">Персонализирани подаръци</SelectItem>
+              <SelectItem value="home">Дом и декорация</SelectItem>
+              <SelectItem value="prototyping">3D прототипиране</SelectItem>
+            </Select>
+          </div>
+          <div>
+            <Label>Опции (размери, цветове и др.)</Label>
+            <Input type="text" name="options" value={product.options} onChange={handleChange} />
+          </div>
+          <div>
+            <Label>Качване на снимки</Label>
+            <Input type="file" multiple onChange={handleImageUpload} />
+          </div>
+          <Button type="submit">Добави продукт</Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
