@@ -26,7 +26,7 @@
             background: rgba(0, 0, 0, 0.85); /* Тъмен фон за по-добра видимост */
             padding-top: 20px;
             height: 100vh;
-            position: relative;  /* Уверяваме се, че е в правилния слой */
+            position: fixed; /* Фиксирано меню */
             z-index: 10; /* По-висок приоритет от хедъра */
             top: 0;
             left: 0;
@@ -56,6 +56,8 @@
         /* Основно съдържание */
         .main-content {
             margin-left: 250px;
+            position: relative;
+            z-index: 5; /* Под менюто, но над хедъра */
             padding: 20px;
             flex-grow: 1;
             text-align: center;
@@ -103,10 +105,14 @@
             flex: 1; /* Задържа съдържанието над футъра */
         }
 
-                /* Фонът на хедъра да остане отзад */
+                /* ✅ Уверяваме се, че фоновото изображение е най-отзад */
         .header-wrapper {
-            position: relative;
-            z-index: 1; /* По-нисък от менюто */
+            position: absolute; /* За да остане най-отзад */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 220px; /* Запазваме височината */
+            z-index: 1; /* Най-ниско ниво */
         }
 
         
