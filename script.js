@@ -198,6 +198,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 500); // ⏳ Изчакваме 500ms за да сме сигурни, че елементът е зареден
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const addProductBtn = document.getElementById("add-product-btn");
+
+    if (addProductBtn) {
+        addProductBtn.addEventListener("click", function () {
+            window.location.href = "add-product.html"; // Пренасочва към формата за добавяне
+        });
+    }
+});
+
+
 
 console.log("🔥 script.js е зареден успешно!");
 
