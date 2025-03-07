@@ -172,5 +172,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+console.log("✅ script.js е зареден правилно!");
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("🔍 Проверка на потребителската роля...");
+
+    const adminPanelLink = document.getElementById("admin-panel-link");
+    const userRole = localStorage.getItem("userRole");
+    console.log("User role:", userRole);
+
+    if (adminPanelLink) {
+        if (userRole === "admin") {
+            adminPanelLink.style.display = "block"; // 👈 Показваме бутона
+            console.log("✅ Админ бутонът е активен!");
+        } else {
+            adminPanelLink.style.display = "none"; // Скриваме го за не-админи
+            console.log("🚫 Админ бутонът е скрит.");
+        }
+    } else {
+        console.error("❌ Админ панел елементът не е намерен!");
+    }
+});
+
+
 
 window.addEventListener("popstate", updatePageState);
