@@ -194,6 +194,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
+console.log("🔥 script.js е зареден успешно!");
 
 window.addEventListener("popstate", updatePageState);
