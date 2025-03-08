@@ -40,9 +40,11 @@
             gap: 10px;
             margin-top: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
         .thumbnails img {
             width: 60px;
+            height: 60px;
             cursor: pointer;
             border-radius: 5px;
             transition: transform 0.3s;
@@ -53,7 +55,8 @@
         .product-details {
             flex: 1;
             text-align: left;
-            max-width: 600px;
+            max-width: 500px;
+            padding-right: 20px;
         }
         .promo-badge {
             position: absolute;
@@ -65,7 +68,7 @@
             font-weight: bold;
             border-radius: 5px;
         }
-        .input-field {
+        .input-field, .dropdown {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -125,6 +128,12 @@
             <textarea id="product-description" class="input-field" placeholder="Описание на продукта"></textarea>
             <input type="number" id="product-price" class="input-field" placeholder="Цена (лв.)">
             <input type="number" id="promo-price" class="input-field" placeholder="Промо цена (лв.) (Оставете празно, ако няма)">
+            <select id="product-category" class="dropdown">
+                <option value="">-- Изберете категория --</option>
+                <option value="personalized">Персонализирани продукти</option>
+                <option value="home_decor">Дом и декорация</option>
+                <option value="prototyping">3D прототипиране</option>
+            </select>
             <button class="order-btn" onclick="saveProduct()">Добави продукт</button>
         </div>
     </div>
@@ -196,9 +205,10 @@
           const description = document.getElementById('product-description').value;
           const price = document.getElementById('product-price').value;
           const promoPrice = document.getElementById('promo-price').value;
+          const category = document.getElementById('product-category').value;
 
           console.log("📌 Запазване на продукта:", {
-              name, description, price, promoPrice
+              name, description, price, promoPrice, category
           });
 
           alert("✅ Продуктът е добавен успешно!");
