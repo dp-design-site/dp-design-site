@@ -3,141 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Редактиране на продукт | DP Design</title>
-    <link rel="stylesheet" href="style.css"> <!-- Основен CSS -->
-
+    <title>Редакция на продукт | DP Design</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
     <style>
         body {
             background-color: #121212;
             color: #fce5cd;
             font-family: Arial, sans-serif;
-            text-align: center;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 500px;
-            margin: 50px auto;
+        .product-container {
+            display: flex;
+            flex-direction: row;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-image {
+            position: relative;
+            flex: 0 0 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .product-image img {
+            width: 100%;
+            max-width: 250px;
             border-radius: 10px;
         }
-        input, textarea {
-            width: 95%;
-            padding: 10px;
-            margin: 10px auto;
-            border: none;
-            border-radius: 5px;
-        }
-        button {
-            width: 50%;
-            padding: 10px;
+        .thumbnails {
+            display: flex;
+            gap: 10px;
             margin-top: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #fce5cd;
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-        button:hover {
-            transform: scale(1.05);
+        .thumbnails img {
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        .thumbnails img:hover {
+            transform: scale(1.1);
+        }
+        .product-details {
+            flex: 1;
+            text-align: left;
+            max-width: 500px;
+            padding-right: 20px;
+        }
+        .input-field, .dropdown {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #1e1e1e;
+            border: 1px solid #444;
+            color: #fce5cd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .file-input {
+            display: none;
+        }
+        .upload-btn {
+            background-color: #ffcc99;
+            color: #000;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .save-btn {
+            background-color: #ffcc99;
+            color: #000;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            .product-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .product-image {
+                width: 60%;
+            }
         }
     </style>
 </head>
-<body>
+<body onload="loadProductData()">
+    <div id="header"></div>
 
-    <div id="header"></div> <!-- Динамичен хедър -->
-
-    <div class="container">
-        <h2>Редактиране на продукт</h2>
-        <form id="edit-product-form">
-            <input type="hidden" id="product-id">
-            <label>Име на продукта:</label>
-            <input type="text" id="product-name" required>
-            
-            <label>Описание:</label>
-            <textarea id="product-description" required></textarea>
-            
-            <label>Цена:</label>
-            <input type="number" id="product-price" required>
-            
-            <label>Промоционална цена:</label>
-            <input type="number" id="product-promo-price">
-
-            <label>Категория:</label>
-            <input type="text" id="product-category">
-            
-            <button type="submit">💾 Запази промените</button>
-        </form>
+    <div class="product-container">
+        <div class="product-image">
+            <span class="promo-badge" id="promo-badge" style="display: none;">ПРОМО</span>
+            <img id="product-preview" src="images/placeholder.png" alt="Продуктово изображение">
+            <input type="file" id="image-upload" class="file-input" accept="image/*" multiple>
+            <button class="upload-btn" onclick="document.getElementById('image-upload').click();">Качи снимки</button>
+            <div class="thumbnails" id="thumbnail-container"></div>
+        </div>
+        <div class="product-details">
+            <input type="text" id="product-name" class="input-field" placeholder="Име на продукта">
+            <textarea id="product-description" class="input-field" placeholder="Описание на продукта"></textarea>
+            <input type="number" id="product-price" class="input-field" placeholder="Цена (лв.)">
+            <input type="number" id="promo-price" class="input-field" placeholder="Промо цена (лв.) (Оставете празно, ако няма)">
+            <select id="product-category" class="dropdown">
+                <option value="">-- Изберете категория --</option>
+                <option value="personalized">Персонализирани продукти</option>
+                <option value="home_decor">Дом и декорация</option>
+                <option value="prototyping">3D прототипиране</option>
+            </select>
+            <button class="save-btn" onclick="updateProduct()">Запази промените</button>
+        </div>
     </div>
 
-    <div id="footer"></div> <!-- Динамичен футър -->
+    <div id="footer"></div>
 
-    <script src="script.js" defer></script>
     <script>
-        document.addEventListener("DOMContentLoaded", async function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get("id");
+      function loadProductData() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const productId = urlParams.get("id");
 
-            if (!productId) {
-                alert("❌ Липсва ID на продукта.");
-                window.location.href = "admin.html";
-                return;
-            }
+          if (!productId) {
+              alert("❌ Липсва ID на продукта!");
+              window.location.href = "admin.html"; // Пренасочване
+              return;
+          }
 
-            document.getElementById("product-id").value = productId;
+          fetch(`https://api.dp-design.art/products/${productId}`)
+              .then(response => response.json())
+              .then(data => {
+                  document.getElementById("product-name").value = data.name;
+                  document.getElementById("product-description").value = data.description;
+                  document.getElementById("product-price").value = data.price;
+                  document.getElementById("promo-price").value = data.promo_price || "";
+                  document.getElementById("product-category").value = data.category || "";
 
-            try {
-                const response = await fetch(`https://api.dp-design.art/products/${productId}`);
-                const product = await response.json();
+                  if (data.images.length > 0) {
+                      document.getElementById("product-preview").src = `images/${data.images[0]}`;
+                      const thumbnails = document.getElementById("thumbnail-container");
+                      thumbnails.innerHTML = "";
+                      data.images.forEach(image => {
+                          const img = document.createElement("img");
+                          img.src = `images/${image}`;
+                          thumbnails.appendChild(img);
+                      });
+                  }
+              })
+              .catch(error => console.error("Грешка при зареждане:", error));
+      }
 
-                document.getElementById("product-name").value = product.name;
-                document.getElementById("product-description").value = product.description;
-                document.getElementById("product-price").value = product.price;
-                document.getElementById("product-promo-price").value = product.promo_price || "";
-                document.getElementById("product-category").value = product.category || "";
+      function updateProduct() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const productId = urlParams.get("id");
 
-            } catch (error) {
-                console.error("⚠️ Грешка при зареждане на продукта:", error);
-                alert("❌ Неуспешно зареждане на продукта.");
-                window.location.href = "admin.html";
-            }
+          const updatedData = {
+              name: document.getElementById("product-name").value,
+              description: document.getElementById("product-description").value,
+              price: document.getElementById("product-price").value,
+              promo_price: document.getElementById("promo-price").value,
+              category: document.getElementById("product-category").value
+          };
 
-            document.getElementById("edit-product-form").addEventListener("submit", async function (e) {
-                e.preventDefault();
-
-                const updatedProduct = {
-                    name: document.getElementById("product-name").value,
-                    description: document.getElementById("product-description").value,
-                    price: document.getElementById("product-price").value,
-                    promo_price: document.getElementById("product-promo-price").value || null,
-                    category: document.getElementById("product-category").value || null
-                };
-
-                try {
-                    const response = await fetch(`https://api.dp-design.art/products/${productId}`, {
-                        method: "PUT",
-                        headers: {
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(updatedProduct)
-                    });
-
-                    if (response.ok) {
-                        alert("✅ Продуктът е обновен успешно!");
-                        window.location.href = "admin.html";
-                    } else {
-                        alert("❌ Неуспешна промяна.");
-                    }
-                } catch (error) {
-                    console.error("⚠️ Грешка при записването:", error);
-                    alert("❌ Възникна проблем.");
-                }
-            });
-        });
+          fetch(`https://api.dp-design.art/products/${productId}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(updatedData)
+          })
+          .then(response => response.json())
+          .then(data => {
+              alert("✅ Продуктът е обновен успешно!");
+              window.location.href = "admin.html"; 
+          })
+          .catch(error => console.error("Грешка при обновяване:", error));
+      }
     </script>
-
 </body>
 </html>
