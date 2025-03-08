@@ -79,3 +79,22 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+function initProductTable() {
+    const productRows = document.querySelectorAll(".product-row");
+
+    productRows.forEach(row => {
+        row.addEventListener("click", function() {
+            productRows.forEach(r => r.classList.remove("selected"));
+            this.classList.add("selected");
+
+            console.log("✅ Избран продукт:", this.querySelector("td:nth-child(3)").textContent);
+        });
+    });
+
+    console.log("✅ Таблицата с продукти е инициализирана!");
+}
+
+// ✅ Извикваме функцията след зареждане на съдържанието
+setTimeout(initProductTable, 500);
+
