@@ -283,6 +283,23 @@ async function deleteProduct(productId) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    const addProductButton = document.getElementById("add-product-btn");
+
+    if (addProductButton) {
+        addProductButton.addEventListener("click", function() {
+            fetch("admin-sections/add-product.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("admin-content").innerHTML = data;
+                    console.log("✅ Заредена е формата за добавяне на продукти!");
+                })
+                .catch(error => console.error("❌ Грешка при зареждане на формата:", error));
+        });
+    }
+});
+
+
 
 console.log("🔥 script.js е зареден успешно!");
 
