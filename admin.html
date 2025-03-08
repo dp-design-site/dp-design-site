@@ -181,6 +181,32 @@
             loadContent("dashboard");
         });
     </script>
+    
+     <script>
+    function loadContent(section) {
+    fetch(`admin-sections/${section}.html`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("admin-content").innerHTML = data;
+            console.log(`✅ Заредено съдържание: ${section}`);
+
+            // ✅ Ако зареждаме продуктите – зареди скрипта за тях
+            if (section === "products") {
+                loadScript("scripts/products.js");
+            }
+        })
+        .catch(error => console.error("❌ Грешка при зареждане на съдържанието:", error));
+}
+
+// ✅ Функция за динамично зареждане на JS файлове
+function loadScript(scriptSrc) {
+    const script = document.createElement("script");
+    script.src = scriptSrc;
+    script.defer = true;
+    document.body.appendChild(script);
+    console.log(`🚀 Зареден скрипт: ${scriptSrc}`);
+}
+</script>
 
 </body>
 </html>
