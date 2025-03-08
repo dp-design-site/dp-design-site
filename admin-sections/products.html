@@ -2,7 +2,7 @@
     <h2>📦 Продукти</h2>
 
     <!-- Бутон за добавяне на нов продукт -->
-    <button id="add-product-btn" class="btn">➕ Добави продукт</button>
+    <button id="add-product-btn" class="btn-add-product">➕ Добави нов продукт</button>
 
     <!-- Таблица с продукти -->
     <table class="products-table">
@@ -82,6 +82,33 @@
         color: #e60000;
         transform: scale(1.1);
     }
+
+    /* Контейнер за заглавие и бутон */
+.products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Стилен бутон за добавяне на продукт */
+.btn-add-product {
+    background: #ffcc99;
+    color: #121212;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.btn-add-product:hover {
+    background: #f5b977;
+}
+
 </style>
 
 <!-- ✅ Скрипт за динамично зареждане на продуктите -->
