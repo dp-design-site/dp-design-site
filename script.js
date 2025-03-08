@@ -312,6 +312,37 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+    const rows = document.querySelectorAll(".product-row");
+
+    rows.forEach(row => {
+        row.addEventListener("click", function() {
+            // Премахваме "selected" от всички редове
+            rows.forEach(r => r.classList.remove("selected"));
+
+            // Добавяме "selected" само на текущия ред
+            this.classList.add("selected");
+
+            console.log("✅ Избран продукт:", this.querySelector("td:nth-child(3)").textContent);
+        });
+    });
+
+    // Бутон "Добави продукт" отваря add-product.html
+    document.getElementById("add-product-btn").addEventListener("click", function() {
+        window.location.href = "add-product.html";
+    });
+});
+
+document.getElementById("save-product-btn").addEventListener("click", function(event) {
+    event.preventDefault(); // Предотвратяваме стандартното поведение
+
+    // 🚀 Запазване на продукта (тук ще бъде добавена логика за API)
+    console.log("✅ Продуктът е запазен!");
+
+    // ✅ Пренасочване обратно към admin.html -> Продукти
+    window.location.href = "admin.html?section=products";
+});
+
 
 console.log("🔥 script.js е зареден успешно!");
 
