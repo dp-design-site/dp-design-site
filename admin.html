@@ -6,7 +6,7 @@
     <title>Админ Панел | DP Design</title>
     
     <link rel="stylesheet" href="style.css"> <!-- Основен стил -->
-    
+
     <style>
         /* Основни стилове */
         body {
@@ -21,15 +21,13 @@
         /* Лява странична навигация */
         .sidebar {
             width: 250px;
-            min-height: 100vh; /* Да покрива цялата височина на страницата */
-            /*background-color: #1a1a1a;*/
-            background: rgba(0, 0, 0, 0.85); /* Тъмен фон за по-добра видимост */
+            min-height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
             padding-top: 50px;
-            height: 100vh;
-            position: fixed; /* Фиксирано меню */
-            z-index: 10; /* По-висок приоритет от хедъра */
+            position: fixed;
             top: 0;
             left: 0;
+            z-index: 10;
             overflow-y: auto;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
         }
@@ -56,193 +54,130 @@
         /* Основно съдържание */
         .main-content {
             margin-left: 250px;
-            position: relative;
-            z-index: 5; /* Под менюто, но над хедъра */
             padding: 20px;
             flex-grow: 1;
             text-align: center;
         }
 
-        .dashboard {
-            padding: 20px;
+        .admin-content {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
-        }
-
-        .products-container {
             padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         /* Бутони */
-        .btn {
-            background: #ffcc99;
-            color: #121212;
-            padding: 10px 15px;
+        .menu-button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 12px;
             border: none;
+            background: transparent;
+            color: #fce5cd;
+            font-size: 18px;
             cursor: pointer;
             transition: 0.3s;
-            border-radius: 5px;
-            font-size: 16px;
         }
 
-        .btn:hover {
-            background: #f5b977;
+        .menu-button:hover, .menu-button.active {
+            background: #ffcc99;
+            color: #121212;
         }
 
-                html, body {
+        .special {
+            font-weight: bold;
+        }
+
+        /* Фиксиране на футъра */
+        html, body {
             height: 100%;
-            margin: 0;
             display: flex;
             flex-direction: column;
         }
         
         .admin-content {
-            flex: 1; /* Задържа съдържанието над футъра */
+            flex: 1;
         }
 
-                /* ✅ Уверяваме се, че фоновото изображение е най-отзад */
-        .header-wrapper {
-            position: absolute; /* За да остане най-отзад */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 220px; /* Запазваме височината */
-            z-index: 1; /* Най-ниско ниво */
-        }
-
-        
         #footer {
             background-color: black;
             color: #fce5cd;
             text-align: center;
             padding: 10px 0;
         }
-
-
     </style>
 </head>
 <body>
 
     <!-- Лява навигация -->
-    <nav class="admin-menu">
-    <button class="menu-button active" data-section="dashboard">🏠 Табло</button>
-    <button class="menu-button" data-section="products">📦 Продукти</button>
-    <button id="add-product-btn" class="menu-button special">➕ Добави продукт</button>
-    <button class="menu-button" data-section="recycle-bin">🗑️ Кошче</button>
-    <button class="menu-button" data-section="stats">📊 Статистика</button>
-    <button class="menu-button" data-section="settings">⚙️ Настройки</button>
-</nav>
- <div id="header"></div>
+    <nav class="sidebar">
+        <h2>Админ Панел</h2>
+        <button class="menu-button active" data-section="dashboard">🏠 Табло</button>
+        <button class="menu-button" data-section="products">📦 Продукти</button>
+        <button id="add-product-btn" class="menu-button special" data-section="add-product">➕ Добави продукт</button>
+        <button class="menu-button" data-section="recycle-bin">🗑️ Кошче</button>
+        <button class="menu-button" data-section="stats">📊 Статистика</button>
+        <button class="menu-button" data-section="settings">⚙️ Настройки</button>
+    </nav>
+
     <!-- Основно съдържание -->
-    <div class="main-content">
-        <h1>Добре дошли в админ панела!</h1>
-
-        <!-- Табло с кратка информация -->
-        <div class="dashboard">
-            <h2>Общ преглед</h2>
-            <p>📦 Общо продукти: <span id="total-products">0</span></p>
-            <p>🔥 Най-гледани продукти: <span id="top-product">Няма данни</span></p>
+    <main class="main-content">
+        <div id="admin-content">
+            <!-- Тук ще се зарежда съдържанието динамично -->
         </div>
-
-        <!-- Списък с продукти -->
-        <div class="products-container">
-            <h2>Продукти</h2>
-            <button id="add-product-btn" class="add-product-button">➕ Добави нов продукт</button>
-            <p id="no-products">Няма налични продукти.</p>
-            <div id="products-list"></div>
-            <p>🔄 Зареждане на продукти...</p>
-        </div>
-
-    </div>
+    </main>
 
     <div id="footer"></div>
 
     <!-- Зареждане на хедър и футър -->
     <script>
-    function loadComponents() {
-        fetch('header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header').innerHTML = data;
-                console.log("✅ Хедърът е зареден!");
-                setTimeout(() => {
-                    console.log("⏳ Зареждане на скриптовете...");
-                    const script = document.createElement("script");
-                    script.src = "script.js";
-                    script.defer = true;
-                    document.body.appendChild(script);
-                }, 100); // Малко забавяне за сигурност
-            });
+        function loadComponents() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                    console.log("✅ Хедърът е зареден!");
+                });
 
-        fetch('footer.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('footer').innerHTML = data;
-            });
-    }
-    document.addEventListener('DOMContentLoaded', loadComponents);
-</script>
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
+        }
+        document.addEventListener('DOMContentLoaded', loadComponents);
+    </script>
 
-
+    <!-- Логика за динамично зареждане на съдържание -->
     <script>
-    function loadComponents() {
-        fetch('header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header').innerHTML = data;
+        document.addEventListener("DOMContentLoaded", function() {
+            const menuButtons = document.querySelectorAll(".menu-button");
+            const contentContainer = document.getElementById("admin-content");
+
+            function loadContent(section) {
+                fetch(`admin-sections/${section}.html`)
+                    .then(response => response.text())
+                    .then(data => {
+                        contentContainer.innerHTML = data;
+                    })
+                    .catch(error => console.error("Грешка при зареждане на съдържанието:", error));
+            }
+
+            // Клик на меню бутон
+            menuButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    menuButtons.forEach(btn => btn.classList.remove("active"));
+                    this.classList.add("active");
+                    const section = this.getAttribute("data-section");
+                    loadContent(section);
+                });
             });
 
-        fetch('footer.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('footer').innerHTML = data;
-            });
-    }
-
-    loadComponents();
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const menuButtons = document.querySelectorAll(".menu-button");
-    const contentContainer = document.getElementById("admin-content");
-    const addProductButton = document.getElementById("add-product-btn");
-
-    function loadContent(section) {
-        fetch(`admin-sections/${section}.html`)
-            .then(response => response.text())
-            .then(data => {
-                contentContainer.innerHTML = data;
-            })
-            .catch(error => console.error("Грешка при зареждане на съдържанието:", error));
-    }
-
-    // Клик на меню бутон
-    menuButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            menuButtons.forEach(btn => btn.classList.remove("active"));
-            this.classList.add("active");
-            const section = this.getAttribute("data-section");
-            loadContent(section);
+            // Зареждаме "Табло" по подразбиране
+            loadContent("dashboard");
         });
-    });
+    </script>
 
-    // Бутон "Добави продукт"
-    if (addProductButton) {
-        addProductButton.addEventListener("click", function() {
-            loadContent("add-product");
-        });
-    }
-
-    // Зареждаме "Табло" по подразбиране
-    loadContent("dashboard");
-});
-</script>
-
-<script src="script.js" defer></script>
 </body>
 </html>
