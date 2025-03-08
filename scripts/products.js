@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // ✅ Бутон "Добави продукт" – пренасочва към add-product.html
     if (addProductButton) {
         addProductButton.addEventListener("click", function() {
-            window.location.href = "add-product.html";
+            window.location.href = "https://dp-design.art/add-product.html";
         });
     }
 
