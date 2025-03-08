@@ -183,20 +183,23 @@
     </script>
     
      <script>
-    function loadContent(section) {
+   function loadContent(section) {
     fetch(`admin-sections/${section}.html`)
         .then(response => response.text())
         .then(data => {
             document.getElementById("admin-content").innerHTML = data;
-            console.log(`✅ Заредено съдържание: ${section}`);
 
-            // ✅ Ако зареждаме продуктите – зареди скрипта за тях
+            // ✅ След като съдържанието е заредено, добавяме нужните скриптове
             if (section === "products") {
-                loadScript("scripts/products.js");
+                const script = document.createElement("script");
+                script.src = "scripts/products.js";
+                script.defer = true;
+                document.body.appendChild(script);
             }
         })
-        .catch(error => console.error("❌ Грешка при зареждане на съдържанието:", error));
+        .catch(error => console.error("Грешка при зареждане на съдържанието:", error));
 }
+
 
 // ✅ Функция за динамично зареждане на JS файлове
 function loadScript(scriptSrc) {
