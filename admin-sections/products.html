@@ -4,23 +4,46 @@
     <!-- Бутон за добавяне на нов продукт -->
     <button id="add-product-btn" class="btn-add-product">➕ Добави нов продукт</button>
 
-    <!-- Таблица с продукти -->
-    <table class="products-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Изображение</th>
-                <th>Име</th>
-                <th>Категория</th>
-                <th>Цена</th>
-                <th>Промо цена</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody id="product-list">
-            <!-- Продуктите ще се зареждат динамично тук -->
-        </tbody>
-    </table>
+    <table class="product-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Изображение</th>
+            <th>Име</th>
+            <th>Категория</th>
+            <th>Цена</th>
+            <th>Промо цена</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="product-row">
+            <td>1</td>
+            <td><img src="images/sample1.jpg" class="product-thumbnail"></td>
+            <td>3D Принтирана Фигура</td>
+            <td>Персонализирани</td>
+            <td>100 лв.</td>
+            <td>80 лв.</td>
+            <td class="actions">
+                <button class="edit-btn">✏️</button>
+                <button class="delete-btn">🗑️</button>
+            </td>
+        </tr>
+        <tr class="product-row">
+            <td>2</td>
+            <td><img src="images/sample2.jpg" class="product-thumbnail"></td>
+            <td>3D Декорация</td>
+            <td>Дом и декорация</td>
+            <td>50 лв.</td>
+            <td>40 лв.</td>
+            <td class="actions">
+                <button class="edit-btn">✏️</button>
+                <button class="delete-btn">🗑️</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 
     <p id="no-products">🔄 Зареждане на продукти...</p>
 </div>
@@ -83,7 +106,7 @@
         transform: scale(1.1);
     }
 
-    /* Контейнер за заглавие и бутон */
+/* Подравняване на бутона "Добави нов продукт" вляво */
 .products-header {
     display: flex;
     justify-content: space-between;
@@ -91,7 +114,6 @@
     margin-bottom: 10px;
 }
 
-/* Стилен бутон за добавяне на продукт */
 .btn-add-product {
     background: #ffcc99;
     color: #121212;
@@ -103,11 +125,37 @@
     font-size: 16px;
     font-weight: bold;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    margin-left: 0;
 }
 
 .btn-add-product:hover {
     background: #f5b977;
 }
+
+/* Скриваме бутоните за редакция и изтриване, докато не кликнем върху реда */
+.actions {
+    display: none;
+}
+
+/* Когато редът е активен, бутоните се показват */
+.product-row.selected .actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Маркиране на кликнатия ред */
+.product-row:hover {
+    background-color: rgba(255, 204, 153, 0.2);
+    cursor: pointer;
+}
+
+.product-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
 
 </style>
 
