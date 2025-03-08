@@ -14,18 +14,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    const rows = document.querySelectorAll(".product-row");
-
-    rows.forEach(row => {
-        row.addEventListener("click", function() {
-            rows.forEach(r => r.classList.remove("selected"));
-            this.classList.add("selected");
-
-            console.log("✅ Избран продукт:", this.querySelector("td").textContent);
-        });
-    });
-});
 
 document.addEventListener("DOMContentLoaded", function() {
     const rows = document.querySelectorAll(".product-row");
@@ -40,11 +28,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
             console.log("✅ Избран продукт:", this.querySelector("td:nth-child(3)").textContent);
         });
-    });
-
-    // Бутон "Добави продукт" отваря add-product.html
-    document.getElementById("add-product-btn").addEventListener("click", function() {
-        window.location.href = "add-product.html";
     });
 });
 
