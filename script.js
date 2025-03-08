@@ -299,6 +299,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+    const rows = document.querySelectorAll(".product-row");
+
+    rows.forEach(row => {
+        row.addEventListener("click", function() {
+            rows.forEach(r => r.classList.remove("selected"));
+            this.classList.add("selected");
+
+            console.log("✅ Избран продукт:", this.querySelector("td").textContent);
+        });
+    });
+});
 
 
 console.log("🔥 script.js е зареден успешно!");
