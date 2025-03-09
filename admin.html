@@ -183,32 +183,41 @@
     </script>
     
      <script>
-   function loadContent(section) {
-    fetch(`admin-sections/${section}.html`)
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("admin-content").innerHTML = data;
+       function loadContent(section) {
+        let sectionPath = `admin-sections/${section}.html`;
+    
+        // Проверяваме дали сме в admin.html или някъде другаде
+        if (window.location.pathname.includes("admin-sections")) {
+            sectionPath = `../admin-sections/${section}.html`;
+        }
+    
+        fetch(sectionPath)
+            .then(response => {
+                if (!response.ok) throw new Error("Файлът не е намерен.");
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById("admin-content").innerHTML = data;
+                console.log(`✅ Заредено съдържание: ${sectionPath}`);
+    
+                // Изпълняваме специфични скриптове за всяка секция
+                if (section === "products") {
+                    loadProductScripts();
+                }
+            })
+            .catch(error => console.error("❌ Грешка при зареждане на съдържанието:", error));
+    }
 
-            // ✅ След като съдържанието е заредено, добавяме нужните скриптове
-            if (section === "products") {
-                const script = document.createElement("script");
-                script.src = "scripts/products.js";
-                script.defer = true;
-                document.body.appendChild(script);
-            }
-        })
-        .catch(error => console.error("Грешка при зареждане на съдържанието:", error));
-}
 
 
-// ✅ Функция за динамично зареждане на JS файлове
-function loadScript(scriptSrc) {
-    const script = document.createElement("script");
-    script.src = scriptSrc;
-    script.defer = true;
-    document.body.appendChild(script);
-    console.log(`🚀 Зареден скрипт: ${scriptSrc}`);
-}
+    // ✅ Функция за динамично зареждане на JS файлове
+    function loadProductScripts() {
+        const script = document.createElement("script");
+        script.src = "scripts/products.js";
+        script.defer = true;
+        document.body.appendChild(script);
+        console.log("📜 Зареден е products.js");
+    }
 </script>
 
 </body>
