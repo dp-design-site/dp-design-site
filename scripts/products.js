@@ -95,6 +95,20 @@ function initProductTable() {
     console.log("✅ Таблицата с продукти е инициализирана!");
 }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(() => {
+            const productList = document.getElementById("product-list");
+            if (!productList) {
+                console.error("❌ Продуктовата таблица все още не е заредена! Опитваме отново...");
+                return;
+            }
+    
+            console.log("✅ Продуктовата таблица е намерена!", productList);
+            initializeProductTable(); // Функция за зареждане на продуктите
+        }, 300); // Изчакване от 300ms
+    });
+
+
 // ✅ Извикваме функцията след зареждане на съдържанието
 setTimeout(initProductTable, 500);
 
