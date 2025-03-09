@@ -183,13 +183,15 @@
     </script>
     
      <script>
-       function loadContent(section) {
+           function loadContent(section) {
         let sectionPath = `admin-sections/${section}.html`;
     
-        // Проверяваме дали сме в admin.html или някъде другаде
+        // Проверка дали admin-sections/ се намира в пътя
         if (window.location.pathname.includes("admin-sections")) {
             sectionPath = `../admin-sections/${section}.html`;
         }
+    
+        console.log(`🛠 Опит за зареждане: ${sectionPath}`); // 🔍 Проверка дали пътят е правилен
     
         fetch(sectionPath)
             .then(response => {
@@ -200,13 +202,15 @@
                 document.getElementById("admin-content").innerHTML = data;
                 console.log(`✅ Заредено съдържание: ${sectionPath}`);
     
-                // Изпълняваме специфични скриптове за всяка секция
+                // Проверяваме дали сме заредили секцията "products"
                 if (section === "products") {
+                    console.log("📦 Продуктовата секция е заредена, изпълняваме loadProductScripts()");
                     loadProductScripts();
                 }
             })
             .catch(error => console.error("❌ Грешка при зареждане на съдържанието:", error));
     }
+
 
 
 
