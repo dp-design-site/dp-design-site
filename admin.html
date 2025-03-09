@@ -154,34 +154,52 @@
 
     <!-- Логика за динамично зареждане на съдържание -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+               document.addEventListener("DOMContentLoaded", function() {
+            console.log("🚀 Админ панелът е зареден!"); // Дебъгване
+        
             const menuButtons = document.querySelectorAll(".menu-button");
             const contentContainer = document.getElementById("admin-content");
-
+        
             function loadContent(section) {
-                fetch(`admin-sections/${section}.html`)
-                    .then(response => response.text())
+                let sectionPath = `admin-sections/${section}.html`;
+        
+                // Ако сме вътре в admin-sections/, коригираме пътя
+                if (window.location.pathname.includes("admin-sections")) {
+                    sectionPath = `../admin-sections/${section}.html`;
+                }
+        
+                console.log(`🛠 Опит за зареждане на: ${sectionPath}`);
+        
+                fetch(sectionPath)
+                    .then(response => {
+                        if (!response.ok) throw new Error(`❌ Грешка: ${sectionPath} не е намерен`);
+                        return response.text();
+                    })
                     .then(data => {
                         contentContainer.innerHTML = data;
+                        console.log(`✅ Заредено съдържание: ${sectionPath}`);
+        
+                        // Ако сме заредили секцията с продукти, зареждаме scripts/products.js
+                        if (section === "products") {
+                            console.log("📦 Продуктовата секция е заредена, изпълняваме loadProductScripts()");
+                            loadProductScripts();
+                        }
                     })
-                    .catch(error => console.error("Грешка при зареждане на съдържанието:", error));
+                    .catch(error => console.error("❌ Грешка при зареждане:", error));
             }
-
-            // Клик на меню бутон
+        
+            // ✅ Функция за динамично зареждане на JS файлове
+            function loadProductScripts() {
+                const script = document.createElement("script");
+                script.src = "scripts/products.js";
+                script.defer = true;
+                document.body.appendChild(script);
+                console.log("📜 Зареден е products.js");
+            }
+        
+            // ✅ Добавяме слушатели за всички бутони в менюто
             menuButtons.forEach(button => {
                 button.addEventListener("click", function() {
-                    menuButtons.forEach(btn => btn.classList.remove("active"));
-                    this.classList.add("active");
-                    const section = this.getAttribute("data-section");
-                    loadContent(section);
-                });
-            });
-
-                    document.addEventListener("DOMContentLoaded", function () {
-            const menuButtons = document.querySelectorAll(".menu-button");
-        
-            menuButtons.forEach(button => {
-                button.addEventListener("click", function () {
                     console.log(`🟢 Натиснат бутон: ${this.dataset.section}`); // ✅ Дебъгване
         
                     menuButtons.forEach(btn => btn.classList.remove("active"));
@@ -191,12 +209,11 @@
                     loadContent(section);
                 });
             });
-        });
-
-
-            // Зареждаме "Табло" по подразбиране
+        
+            // ✅ Зареждаме "Табло" по подразбиране
             loadContent("dashboard");
         });
+
     </script>
     
      <script>
