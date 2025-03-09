@@ -177,6 +177,23 @@
                 });
             });
 
+                    document.addEventListener("DOMContentLoaded", function () {
+            const menuButtons = document.querySelectorAll(".menu-button");
+        
+            menuButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    console.log(`🟢 Натиснат бутон: ${this.dataset.section}`); // ✅ Дебъгване
+        
+                    menuButtons.forEach(btn => btn.classList.remove("active"));
+                    this.classList.add("active");
+        
+                    const section = this.getAttribute("data-section");
+                    loadContent(section);
+                });
+            });
+        });
+
+
             // Зареждаме "Табло" по подразбиране
             loadContent("dashboard");
         });
