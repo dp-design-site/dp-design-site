@@ -1,59 +1,56 @@
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("🚀 Зареждане на scripts/products.js...");
+console.log("🚀 Зареждане на products.js...");
 
-    const tableBody = document.getElementById("products-table-body");
-    const addProductButton = document.getElementById("add-product-btn");
+// ✅ Правим проверка дали `products-table-body` съществува
+const productList = document.getElementById("products-table-body");
+if (!productList) {
+    console.error("❌ Продуктовата таблица не е намерена! Скриптът няма да се изпълни.");
+} else {
+    console.log("✅ Таблицата с продукти е намерена!");
+    initProducts();
+}
 
-    // 🛒 Динамично зареждане на фиктивни продукти (ако няма API)
-    if (tableBody) {
-        tableBody.innerHTML = `
-            <tr class="product-row">
-                <td>1</td>
-                <td><img src="images/sample1.jpg" alt="Product 1" width="50"></td>
-                <td>3D Принтирана Фигура</td>
-                <td>Персонализирани</td>
-                <td>100 лв.</td>
-                <td>80 лв.</td>
-                <td class="actions">
-                    <button class="edit-btn">✏️</button>
-                    <button class="delete-btn">🗑️</button>
-                </td>
-            </tr>
-            <tr class="product-row">
-                <td>2</td>
-                <td><img src="images/sample2.jpg" alt="Product 2" width="50"></td>
-                <td>3D Декоративна Статуетка</td>
-                <td>Дом и декорация</td>
-                <td>120 лв.</td>
-                <td>-</td>
-                <td class="actions">
-                    <button class="edit-btn">✏️</button>
-                    <button class="delete-btn">🗑️</button>
-                </td>
-            </tr>
-        `;
-    }
+// ✅ Функция за зареждане на продукти
+function initProducts() {
+    console.log("🔄 Инициализиране на продуктовата таблица...");
+    productList.innerHTML = `
+        <tr class="product-row">
+            <td>1</td>
+            <td><img src="images/sample1.jpg" alt="Product 1" width="50"></td>
+            <td>3D Принтирана Фигура</td>
+            <td>Персонализирани</td>
+            <td>100 лв.</td>
+            <td>80 лв.</td>
+            <td class="actions">
+                <button class="edit-btn">✏️</button>
+                <button class="delete-btn">🗑️</button>
+            </td>
+        </tr>
+    `;
 
-    // ✅ Добавяне на селекция на реда при клик
+    // ✅ Добавяне на събитие за селектиране на ред
     document.querySelectorAll(".product-row").forEach(row => {
         row.addEventListener("click", function() {
             document.querySelectorAll(".product-row").forEach(r => r.classList.remove("selected"));
             this.classList.add("selected");
-
-            // Показване на бутоните само за избрания ред
-            document.querySelectorAll(".actions button").forEach(btn => btn.style.display = "none");
-            this.querySelectorAll(".actions button").forEach(btn => btn.style.display = "inline-block");
-
-            console.log("✅ Избран продукт:", this.children[2].textContent);
         });
     });
 
-    // ✅ Бутон "Добави продукт" – пренасочва към add-product.html
-    if (addProductButton) {
-        addProductButton.addEventListener("click", function() {
+    console.log("✅ Продуктите са заредени успешно!");
+}
+
+// ✅ Свързваме бутона "Добави продукт"
+setTimeout(() => {
+    const addProductBtn = document.getElementById("add-product-btn");
+    if (addProductBtn) {
+        addProductBtn.addEventListener("click", function() {
             window.location.href = "https://dp-design.art/add-product.html";
         });
+        console.log("✅ Бутона 'Добави продукт' е активен!");
+    } else {
+        console.error("❌ Бутона 'Добави продукт' не е намерен!");
     }
+}, 500);
+
 
     // ✅ Бутон за редактиране на продукт
     document.querySelectorAll(".edit-btn").forEach(btn => {
