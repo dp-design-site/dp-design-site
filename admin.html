@@ -220,33 +220,39 @@
           function loadContent(section) {
     let sectionPath = `admin-sections/${section}.html`;
 
+    if (window.location.pathname.includes("admin-sections")) {
+        sectionPath = `../admin-sections/${section}.html`;
+    }
+
     console.log(`🛠 Опит за зареждане на: ${sectionPath}`);
 
     fetch(sectionPath)
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) throw new Error("Файлът не е намерен.");
+            return response.text();
+        })
         .then(data => {
             document.getElementById("admin-content").innerHTML = data;
             console.log(`✅ Заредено съдържание: ${sectionPath}`);
 
-            // 🟢 Изчакваме малко, за да сме сигурни, че DOM е обновен
-            setTimeout(() => {
-                if (section === "products") {
-                    console.log("📦 Продуктовата секция е заредена, изпълняваме loadProductScripts()");
-                    loadProductScripts();
-                }
-            }, 200);
+            // 📦 Ако зареждаме `products.html`, принудително стартираме `products.js`
+            if (section === "products") {
+                console.log("📦 Продуктовата секция е заредена, изпълняваме loadProductScripts()");
+                setTimeout(loadProductScripts, 300); // Малко забавяне за безопасност
+            }
         })
-        .catch(error => console.error("❌ Грешка при зареждане:", error));
+        .catch(error => console.error("❌ Грешка при зареждане на съдържанието:", error));
 }
 
-    // ✅ Функция за динамично зареждане на JS файлове
-    function loadProductScripts() {
-        const script = document.createElement("script");
-        script.src = "scripts/products.js";
-        script.defer = true;
-        document.body.appendChild(script);
-        console.log("📜 Зареден е products.js");
-    }
+// ✅ Функция за зареждане на `products.js`
+function loadProductScripts() {
+    const script = document.createElement("script");
+    script.src = "scripts/products.js";
+    script.defer = true;
+    document.body.appendChild(script);
+    console.log("📜 Зареден е products.js");
+}
+
 </script>
 
 </body>
