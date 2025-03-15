@@ -56,9 +56,9 @@ function populateProductTable(products) {
         row.classList.add("product-row");
         row.innerHTML = `
             <td>${product.id}</td>
-            <td><img src="${product.images && product.images[0] ? product.images[0] : 'images/sample1.jpg'}" alt="Продуктово изображение" class="product-thumbnail"></td>
+            <td><img src="${product.images && product.images.length > 0 ? 'https://api.dp-design.art/uploads/' + product.images[0] : 'images/sample1.jpg'}" alt="Продуктово изображение" class="product-thumbnail"></td>
             <td>${product.name}</td>
-            <td>${product.category || "Без категория"}</td>
+            <td>${product.category ? product.category : "Без категория"}</td>
             <td>${product.price} лв.</td>
             <td>${product.promo_price ? product.promo_price + " лв." : "—"}</td>
             <td class="actions">
