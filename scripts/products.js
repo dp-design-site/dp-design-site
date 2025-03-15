@@ -105,6 +105,17 @@ function initProductTable() {
         }, 300); // Изчакване от 300ms
     });
 
+console.log("🚀 Стартиране на products.js...");
+setTimeout(() => {
+    const tableBody = document.getElementById("products-table-body");
+    if (tableBody) {
+        console.log("✅ Таблицата с продукти е намерена!");
+    } else {
+        console.error("❌ Таблицата с продукти НЕ е намерена!");
+    }
+}, 1000);
+
+
 
 // ✅ Извикваме функцията след зареждане на съдържанието
 setTimeout(initProductTable, 500);
