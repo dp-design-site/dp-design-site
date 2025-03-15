@@ -11,6 +11,7 @@ if (!productList) {
 
 // ✅ Функция за зареждане на продукти
 function initProducts() {
+    console.log("📦 Изпълнява се loadProducts()");
     console.log("🔄 Инициализиране на продуктовата таблица...");
     productList.innerHTML = `
         <tr class="product-row">
