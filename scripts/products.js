@@ -1,123 +1,138 @@
 console.log("🚀 Зареждане на products.js...");
 
-// ✅ Правим проверка дали `products-table-body` съществува
-const productList = document.getElementById("products-table-body");
-if (!productList) {
-    console.error("❌ Продуктовата таблица не е намерена! Скриптът няма да се изпълни.");
-} else {
+// ✅ Изчакваме таблицата да бъде налична
+setTimeout(() => {
+    const productList = document.getElementById("products-table-body");
+    if (!productList) {
+        console.error("❌ Продуктовата таблица не е намерена! Скриптът няма да се изпълни.");
+        return;
+    }
     console.log("✅ Таблицата с продукти е намерена!");
-    initProducts();
+    
+    // 🚀 Зареждаме продуктите от API или фиктивни продукти
+    loadProducts();
+}, 500);
+
+// ✅ Функция за зареждане на продукти от API-то
+function loadProducts() {
+    console.log("📦 Изпълнява се loadProducts()...");
+    
+    fetch("https://api.dp-design.art/products")
+        .then(response => {
+            console.log("🌍 Отговор от API-то:", response);
+            return response.json();
+        })
+        .then(data => {
+            console.log("📊 Получени данни:", data);
+            populateProductTable(data);
+        })
+        .catch(error => {
+            console.error("❌ Грешка при fetch:", error);
+            console.warn("⚠️ Зареждаме фиктивни продукти...");
+            loadDummyProducts(); // Ако има грешка, зареждаме фиктивни данни
+        });
 }
 
-// ✅ Функция за зареждане на продукти
-function initProducts() {
-    console.log("📦 Изпълнява се loadProducts()");
-    console.log("🔄 Инициализиране на продуктовата таблица...");
-    productList.innerHTML = `
-        <tr class="product-row">
-            <td>1</td>
-            <td><img src="images/sample1.jpg" alt="Product 1" width="50"></td>
-            <td>3D Принтирана Фигура</td>
-            <td>Персонализирани</td>
-            <td>100 лв.</td>
-            <td>80 лв.</td>
+// ✅ Функция за попълване на таблицата с продукти
+function populateProductTable(products) {
+    const productList = document.getElementById("products-table-body");
+    productList.innerHTML = "";
+
+    if (products.length === 0) {
+        document.getElementById("no-products").textContent = "Няма налични продукти.";
+        return;
+    }
+
+    products.forEach(product => {
+        const row = document.createElement("tr");
+        row.classList.add("product-row");
+        row.innerHTML = `
+            <td>${product.id}</td>
+            <td><img src="${product.images ? product.images[0] : 'images/sample1.jpg'}" alt="Продуктово изображение" class="product-thumbnail"></td>
+            <td>${product.name}</td>
+            <td>${product.category || "Без категория"}</td>
+            <td>${product.price} лв.</td>
+            <td>${product.promo_price ? product.promo_price + " лв." : "—"}</td>
             <td class="actions">
                 <button class="edit-btn">✏️</button>
                 <button class="delete-btn">🗑️</button>
             </td>
-        </tr>
-    `;
+        `;
 
-    // ✅ Добавяне на събитие за селектиране на ред
-    document.querySelectorAll(".product-row").forEach(row => {
+        // ✅ Добавяме клик събитие за маркиране на ред
         row.addEventListener("click", function() {
             document.querySelectorAll(".product-row").forEach(r => r.classList.remove("selected"));
             this.classList.add("selected");
         });
+
+        // ✅ Свързваме бутоните
+        row.querySelector(".edit-btn").addEventListener("click", function(event) {
+            event.stopPropagation();
+            window.location.href = `edit-product.html?id=${product.id}`;
+        });
+
+        row.querySelector(".delete-btn").addEventListener("click", function(event) {
+            event.stopPropagation();
+            if (confirm(`⚠️ Сигурни ли сте, че искате да изтриете "${product.name}"?`)) {
+                deleteProduct(product.id);
+            }
+        });
+
+        productList.appendChild(row);
     });
 
     console.log("✅ Продуктите са заредени успешно!");
 }
 
-// ✅ Свързваме бутона "Добави продукт"
+// ✅ Зареждаме фиктивни продукти ако няма API
+function loadDummyProducts() {
+    console.log("📦 Зареждаме фиктивни продукти...");
+
+    const dummyProducts = [
+        {
+            id: 1,
+            images: ["images/sample1.jpg"],
+            name: "3D Принтирана Фигура",
+            category: "Персонализирани",
+            price: "100",
+            promo_price: "80"
+        },
+        {
+            id: 2,
+            images: ["images/sample2.jpg"],
+            name: "3D Декоративна Статуетка",
+            category: "Дом и декорация",
+            price: "120",
+            promo_price: null
+        }
+    ];
+
+    populateProductTable(dummyProducts);
+}
+
+// ✅ Изтриване на продукт
+function deleteProduct(productId) {
+    fetch(`https://api.dp-design.art/products/${productId}`, { method: "DELETE" })
+        .then(response => {
+            if (response.ok) {
+                alert("✅ Продуктът беше изтрит!");
+                loadProducts();
+            } else {
+                alert("❌ Грешка при изтриване на продукта!");
+            }
+        })
+        .catch(error => console.error("❌ Грешка при изтриване:", error));
+}
+
+// ✅ Активиране на бутона "Добави продукт"
 setTimeout(() => {
     const addProductBtn = document.getElementById("add-product-btn");
     if (addProductBtn) {
         addProductBtn.addEventListener("click", function() {
             window.location.href = "https://dp-design.art/add-product.html";
         });
-        console.log("✅ Бутона 'Добави продукт' е активен!");
+        console.log("✅ Бутонът 'Добави продукт' е активен!");
     } else {
-        console.error("❌ Бутона 'Добави продукт' не е намерен!");
+        console.error("❌ Бутонът 'Добави продукт' не е намерен!");
     }
 }, 500);
-
-
-    // ✅ Бутон за редактиране на продукт
-    document.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.addEventListener("click", function(event) {
-            event.stopPropagation(); // Спира пропагирането, за да не тригерира селекцията
-            const productId = this.closest("tr").children[0].textContent;
-            console.log("📝 Редактиране на продукт ID:", productId);
-            window.location.href = `edit-product.html?id=${productId}`;
-        });
-    });
-
-    // ✅ Бутон за изтриване на продукт
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.addEventListener("click", function(event) {
-            event.stopPropagation();
-            const productRow = this.closest("tr");
-            const productName = productRow.children[2].textContent;
-
-            if (confirm(`⚠️ Сигурни ли сте, че искате да изтриете "${productName}"?`)) {
-                productRow.remove();
-                console.log("🗑️ Продуктът е изтрит:", productName);
-            }
-        });
-    });
-});
-
-function initProductTable() {
-    const productRows = document.querySelectorAll(".product-row");
-
-    productRows.forEach(row => {
-        row.addEventListener("click", function() {
-            productRows.forEach(r => r.classList.remove("selected"));
-            this.classList.add("selected");
-
-            console.log("✅ Избран продукт:", this.querySelector("td:nth-child(3)").textContent);
-        });
-    });
-
-    console.log("✅ Таблицата с продукти е инициализирана!");
-}
-
-    document.addEventListener("DOMContentLoaded", function() {
-        setTimeout(() => {
-            const productList = document.getElementById("product-list");
-            if (!productList) {
-                console.error("❌ Продуктовата таблица все още не е заредена! Опитваме отново...");
-                return;
-            }
-    
-            console.log("✅ Продуктовата таблица е намерена!", productList);
-            initializeProductTable(); // Функция за зареждане на продуктите
-        }, 300); // Изчакване от 300ms
-    });
-
-console.log("🚀 Стартиране на products.js...");
-setTimeout(() => {
-    const tableBody = document.getElementById("products-table-body");
-    if (tableBody) {
-        console.log("✅ Таблицата с продукти е намерена!");
-    } else {
-        console.error("❌ Таблицата с продукти НЕ е намерена!");
-    }
-}, 1000);
-
-
-
-// ✅ Извикваме функцията след зареждане на съдържанието
-setTimeout(initProductTable, 500);
-
