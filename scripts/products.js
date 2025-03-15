@@ -16,7 +16,7 @@ setTimeout(() => {
 // ✅ Функция за зареждане на продукти от API-то
 function loadProducts() {
     console.log("📦 Изпълнява се loadProducts()...");
-    
+    console.log("🔄 Добавяме следните продукти в таблицата:", data);
     fetch("https://api.dp-design.art/products")
         .then(response => {
             console.log("🌍 Отговор от API-то:", response);
