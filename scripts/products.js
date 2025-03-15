@@ -1,23 +1,20 @@
 console.log("🚀 Зареждане на products.js...");
 
-// ✅ Изчакваме малко преди да стартираме зареждането
-setTimeout(() => {
+// ✅ Изчакваме DOM да бъде готов и проверяваме за таблицата
+function waitForTableAndLoadProducts() {
     console.log("📦 Опит за намиране на таблицата с продукти...");
     const productList = document.getElementById("products-table-body");
 
     if (!productList) {
         console.error("❌ Продуктовата таблица НЕ е намерена! Опитваме отново след 500ms...");
-        setTimeout(loadProducts, 500); // Изчакване преди нов опит
+        setTimeout(waitForTableAndLoadProducts, 500);
     } else {
         console.log("✅ Таблицата с продукти е намерена!");
         loadProducts();
     }
+}
 
-    // ✅ Проверяваме бутона "Добави продукт"
-    activateAddProductButton();
-}, 500);
-
-// ✅ Функция за зареждане на продукти от API-то
+// ✅ Функция за зареждане на продукти от API или фиктивни
 function loadProducts() {
     console.log("📦 Изпълнява се loadProducts()...");
 
@@ -29,13 +26,6 @@ function loadProducts() {
         })
         .then(data => {
             console.log("📊 Получени данни:", data);
-
-            if (!Array.isArray(data)) {
-                console.error("❌ Получените данни не са масив!", data);
-                throw new Error("Невалиден формат на данните");
-            }
-
-            console.log("🔄 Добавяме следните продукти в таблицата:", data);
             populateProductTable(data);
         })
         .catch(error => {
@@ -126,18 +116,6 @@ function loadDummyProducts() {
     populateProductTable(dummyProducts);
 }
 
-// ✅ Изтриване на продукт
-function deleteProduct(productId) {
-    fetch(`https://api.dp-design.art/products/${productId}`, { method: "DELETE" })
-        .then(response => {
-            if (!response.ok) throw new Error("Грешка при изтриване!");
-
-            alert("✅ Продуктът беше изтрит!");
-            loadProducts();
-        })
-        .catch(error => console.error("❌ Грешка при изтриване:", error));
-}
-
 // ✅ Функция за активиране на бутона "Добави продукт"
 function activateAddProductButton() {
     const addProductBtn = document.getElementById("add-product-btn");
@@ -151,3 +129,7 @@ function activateAddProductButton() {
         setTimeout(activateAddProductButton, 500);
     }
 }
+
+// ✅ Започваме проверка за таблицата и бутона "Добави продукт"
+waitForTableAndLoadProducts();
+activateAddProductButton();
