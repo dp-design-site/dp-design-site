@@ -1,29 +1,29 @@
 console.log("🚀 Зареждане на products.js...");
 
-// ✅ Изчакваме таблицата да бъде налична
-setTimeout(() => {
-    const productList = document.getElementById("products-table-body");
-    if (!productList) {
-        console.error("❌ Продуктовата таблица не е намерена! Скриптът няма да се изпълни.");
-        return;
-    }
-    console.log("✅ Таблицата с продукти е намерена!");
-    
-    // 🚀 Зареждаме продуктите от API или фиктивни продукти
+// ✅ Стартираме зареждането на продукти
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("📦 DOMContentLoaded – стартиране на loadProducts()...");
     loadProducts();
-}, 500);
+});
 
 // ✅ Функция за зареждане на продукти от API-то
 function loadProducts() {
     console.log("📦 Изпълнява се loadProducts()...");
-    console.log("🔄 Добавяме следните продукти в таблицата:", data);
+
     fetch("https://api.dp-design.art/products")
         .then(response => {
+            if (!response.ok) throw new Error(`Грешен отговор от API: ${response.status}`);
             console.log("🌍 Отговор от API-то:", response);
             return response.json();
         })
         .then(data => {
             console.log("📊 Получени данни:", data);
+
+            if (!Array.isArray(data)) {
+                console.error("❌ Получените данни не са масив!", data);
+                throw new Error("Невалиден формат на данните");
+            }
+
             populateProductTable(data);
         })
         .catch(error => {
@@ -36,6 +36,12 @@ function loadProducts() {
 // ✅ Функция за попълване на таблицата с продукти
 function populateProductTable(products) {
     const productList = document.getElementById("products-table-body");
+
+    if (!productList) {
+        console.error("❌ Продуктовата таблица не е намерена!");
+        return;
+    }
+
     productList.innerHTML = "";
 
     if (products.length === 0) {
@@ -48,7 +54,7 @@ function populateProductTable(products) {
         row.classList.add("product-row");
         row.innerHTML = `
             <td>${product.id}</td>
-            <td><img src="${product.images ? product.images[0] : 'images/sample1.jpg'}" alt="Продуктово изображение" class="product-thumbnail"></td>
+            <td><img src="${product.images && product.images[0] ? product.images[0] : 'images/sample1.jpg'}" alt="Продуктово изображение" class="product-thumbnail"></td>
             <td>${product.name}</td>
             <td>${product.category || "Без категория"}</td>
             <td>${product.price} лв.</td>
@@ -60,18 +66,18 @@ function populateProductTable(products) {
         `;
 
         // ✅ Добавяме клик събитие за маркиране на ред
-        row.addEventListener("click", function() {
+        row.addEventListener("click", function () {
             document.querySelectorAll(".product-row").forEach(r => r.classList.remove("selected"));
             this.classList.add("selected");
         });
 
         // ✅ Свързваме бутоните
-        row.querySelector(".edit-btn").addEventListener("click", function(event) {
+        row.querySelector(".edit-btn").addEventListener("click", function (event) {
             event.stopPropagation();
             window.location.href = `edit-product.html?id=${product.id}`;
         });
 
-        row.querySelector(".delete-btn").addEventListener("click", function(event) {
+        row.querySelector(".delete-btn").addEventListener("click", function (event) {
             event.stopPropagation();
             if (confirm(`⚠️ Сигурни ли сте, че искате да изтриете "${product.name}"?`)) {
                 deleteProduct(product.id);
@@ -114,25 +120,23 @@ function loadDummyProducts() {
 function deleteProduct(productId) {
     fetch(`https://api.dp-design.art/products/${productId}`, { method: "DELETE" })
         .then(response => {
-            if (response.ok) {
-                alert("✅ Продуктът беше изтрит!");
-                loadProducts();
-            } else {
-                alert("❌ Грешка при изтриване на продукта!");
-            }
+            if (!response.ok) throw new Error("Грешка при изтриване!");
+
+            alert("✅ Продуктът беше изтрит!");
+            loadProducts();
         })
         .catch(error => console.error("❌ Грешка при изтриване:", error));
 }
 
 // ✅ Активиране на бутона "Добави продукт"
-setTimeout(() => {
+document.addEventListener("DOMContentLoaded", function () {
     const addProductBtn = document.getElementById("add-product-btn");
     if (addProductBtn) {
-        addProductBtn.addEventListener("click", function() {
+        addProductBtn.addEventListener("click", function () {
             window.location.href = "https://dp-design.art/add-product.html";
         });
         console.log("✅ Бутонът 'Добави продукт' е активен!");
     } else {
         console.error("❌ Бутонът 'Добави продукт' не е намерен!");
     }
-}, 500);
+});
