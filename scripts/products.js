@@ -1,10 +1,21 @@
 console.log("🚀 Зареждане на products.js...");
 
-// ✅ Стартираме зареждането на продукти
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("📦 DOMContentLoaded – стартиране на loadProducts()...");
-    loadProducts();
-});
+// ✅ Изчакваме малко преди да стартираме зареждането
+setTimeout(() => {
+    console.log("📦 Опит за намиране на таблицата с продукти...");
+    const productList = document.getElementById("products-table-body");
+
+    if (!productList) {
+        console.error("❌ Продуктовата таблица НЕ е намерена! Опитваме отново след 500ms...");
+        setTimeout(loadProducts, 500); // Изчакване преди нов опит
+    } else {
+        console.log("✅ Таблицата с продукти е намерена!");
+        loadProducts();
+    }
+
+    // ✅ Проверяваме бутона "Добави продукт"
+    activateAddProductButton();
+}, 500);
 
 // ✅ Функция за зареждане на продукти от API-то
 function loadProducts() {
@@ -30,7 +41,7 @@ function loadProducts() {
         .catch(error => {
             console.error("❌ Грешка при fetch:", error);
             console.warn("⚠️ Зареждаме фиктивни продукти...");
-            loadDummyProducts(); // Ако има грешка, зареждаме фиктивни данни
+            loadDummyProducts();
         });
 }
 
@@ -66,13 +77,11 @@ function populateProductTable(products) {
             </td>
         `;
 
-        // ✅ Добавяме клик събитие за маркиране на ред
         row.addEventListener("click", function () {
             document.querySelectorAll(".product-row").forEach(r => r.classList.remove("selected"));
             this.classList.add("selected");
         });
 
-        // ✅ Свързваме бутоните
         row.querySelector(".edit-btn").addEventListener("click", function (event) {
             event.stopPropagation();
             window.location.href = `edit-product.html?id=${product.id}`;
@@ -129,8 +138,8 @@ function deleteProduct(productId) {
         .catch(error => console.error("❌ Грешка при изтриване:", error));
 }
 
-// ✅ Активиране на бутона "Добави продукт"
-document.addEventListener("DOMContentLoaded", function () {
+// ✅ Функция за активиране на бутона "Добави продукт"
+function activateAddProductButton() {
     const addProductBtn = document.getElementById("add-product-btn");
     if (addProductBtn) {
         addProductBtn.addEventListener("click", function () {
@@ -139,5 +148,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Бутонът 'Добави продукт' е активен!");
     } else {
         console.error("❌ Бутонът 'Добави продукт' не е намерен!");
+        setTimeout(activateAddProductButton, 500);
     }
-});
+}
