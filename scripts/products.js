@@ -24,6 +24,7 @@ function loadProducts() {
                 throw new Error("Невалиден формат на данните");
             }
 
+            console.log("🔄 Добавяме следните продукти в таблицата:", data);
             populateProductTable(data);
         })
         .catch(error => {
