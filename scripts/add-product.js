@@ -38,8 +38,10 @@ async function saveProduct() {
     try {
         const response = await fetch("https://api.dp-design.art/products", {
             method: "POST",
+            headers: { "Accept": "application/json" }, // Приема само JSON
             body: formData
         });
+
 
         const result = await response.json();
         if (response.ok) {
