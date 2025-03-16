@@ -142,34 +142,24 @@
     }
 
     fetch(`https://api.dp-design.art/products/${productId}`)
-    .then(response => response.json())
-    .then(data => {
-        if (!data || data.length === 0) {
-            alert("❌ Продуктът не е намерен!");
-            window.location.href = "admin.html";
-            return;
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP грешка! Статус: ${response.status}`);
         }
-
-        const product = data[0]; // Взимаме първия (и единствен) елемент
-
-        document.getElementById("product-name").value = product.name;
-        document.getElementById("product-description").value = product.description;
-        document.getElementById("product-price").value = product.price;
-        document.getElementById("promo-price").value = product.promo_price || "";
-        document.getElementById("product-category").value = product.category || "";
-
-        if (product.images && product.images.length > 0) {
-            document.getElementById("product-preview").src = `/uploads/${product.images[0]}`;
-            const thumbnails = document.getElementById("thumbnail-container");
-            thumbnails.innerHTML = "";
-            product.images.forEach(image => {
-                const img = document.createElement("img");
-                img.src = `/uploads/${image}`;
-                thumbnails.appendChild(img);
-            });
-        }
+        return response.json();
     })
-    .catch(error => console.error("Грешка при зареждане:", error));
+    .then(data => {
+        if (!data || Object.keys(data).length === 0) {
+            throw new Error("Грешка: Върнати са празни данни.");
+        }
+        document.getElementById("product-name").value = data.name || "";
+        document.getElementById("product-description").value = data.description || "";
+        document.getElementById("product-price").value = data.price || "";
+        document.getElementById("promo-price").value = data.promo_price || "";
+        document.getElementById("product-category").value = data.category || "";
+    })
+    .catch(error => console.error("❌ Грешка при зареждане на продукта:", error));
+
 
 }
 
