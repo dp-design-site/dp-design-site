@@ -1,49 +1,43 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("🚀 Зареждане на продукта за редакция...");
 
+    // 1️⃣ Извличаме ID-то на продукта от URL
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get("id");
 
     if (!productId) {
         alert("❌ Липсва ID на продукта!");
-        window.location.href = "admin.html"; // Пренасочване
+        window.location.href = "admin.html"; // Пренасочване обратно
         return;
     }
 
+    // 2️⃣ Зареждаме информацията за продукта
     fetch(`https://api.dp-design.art/products/${productId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (!data || data.length === 0) {
-                console.error("❌ Продуктът не е намерен!");
-                alert("⚠️ Продуктът не беше намерен!");
-                return;
-            }
+        .then(response => {
+            if (!response.ok) throw new Error(`Грешен отговор от API: ${response.status}`);
+            return response.json();
+        })
+        .then(product => {
+            console.log("📊 Получени данни:", product);
 
-            const product = data[0]; // Взимаме първия елемент от масива
-            console.log("📦 Зареден продукт:", product);
-
+            // 3️⃣ Попълваме формата с информацията от API-то
             document.getElementById("product-name").value = product.name;
             document.getElementById("product-description").value = product.description;
             document.getElementById("product-price").value = product.price;
             document.getElementById("promo-price").value = product.promo_price || "";
             document.getElementById("product-category").value = product.category || "";
 
-            // Зареждане на снимки
-            const productPreview = document.getElementById("product-preview");
-            const thumbnails = document.getElementById("thumbnail-container");
-            thumbnails.innerHTML = "";
-
+            // 4️⃣ Зареждаме изображението (ако има)
+            const previewImage = document.getElementById("product-preview");
             if (product.images && product.images.length > 0) {
-                productPreview.src = `https://dp-design.art/images/${product.images[0]}`; // Променяме линка към реалния URL
-                product.images.forEach(image => {
-                    const img = document.createElement("img");
-                    img.src = `https://dp-design.art/images/${image}`;
-                    thumbnails.appendChild(img);
-                });
+                previewImage.src = `https://api.dp-design.art/uploads/${product.images[0]}`;
+            } else {
+                previewImage.src = "images/placeholder.png";
             }
         })
-        .catch(error => console.error("❌ Грешка при зареждане:", error));
+        .catch(error => console.error("❌ Грешка при зареждане на продукта:", error));
 });
+
 
 document.getElementById("save-btn").addEventListener("click", function () {
     console.log("💾 Обновяване на продукта...");
