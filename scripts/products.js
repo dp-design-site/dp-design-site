@@ -54,9 +54,15 @@ function populateProductTable(products) {
     products.forEach(product => {
         const row = document.createElement("tr");
         row.classList.add("product-row");
+
+        // ✅ Проверка за изображения
+        const productImage = product.images && product.images.length > 0 
+            ? `https://api.dp-design.art/uploads/${product.images[0]}` 
+            : "images/placeholder.png";
+
         row.innerHTML = `
             <td>${product.id}</td>
-            <td><img src="${product.images && product.images.length > 0 ? 'https://api.dp-design.art/uploads/' + product.images[0] : 'images/sample1.jpg'}" alt="Продуктово изображение" class="product-thumbnail"></td>
+            <td><img src="${productImage}" alt="Продуктово изображение" class="product-thumbnail"></td>
             <td>${product.name}</td>
             <td>${product.category ? product.category : "Без категория"}</td>
             <td>${product.price} лв.</td>
@@ -67,16 +73,19 @@ function populateProductTable(products) {
             </td>
         `;
 
+        // ✅ Маркиране на избрания ред
         row.addEventListener("click", function () {
             document.querySelectorAll(".product-row").forEach(r => r.classList.remove("selected"));
             this.classList.add("selected");
         });
 
+        // ✅ Бутон "Редактиране"
         row.querySelector(".edit-btn").addEventListener("click", function (event) {
             event.stopPropagation();
             window.location.href = `edit-product.html?id=${product.id}`;
         });
 
+        // ✅ Бутон "Изтриване"
         row.querySelector(".delete-btn").addEventListener("click", function (event) {
             event.stopPropagation();
             if (confirm(`⚠️ Сигурни ли сте, че искате да изтриете "${product.name}"?`)) {
@@ -97,7 +106,7 @@ function loadDummyProducts() {
     const dummyProducts = [
         {
             id: 1,
-            images: ["images/sample1.jpg"],
+            images: ["sample1.jpg"],
             name: "3D Принтирана Фигура",
             category: "Персонализирани",
             price: "100",
@@ -105,7 +114,7 @@ function loadDummyProducts() {
         },
         {
             id: 2,
-            images: ["images/sample2.jpg"],
+            images: ["sample2.jpg"],
             name: "3D Декоративна Статуетка",
             category: "Дом и декорация",
             price: "120",
@@ -132,19 +141,24 @@ function activateAddProductButton() {
 
 // ✅ Функция за изтриване на продукт
 function deleteProduct(productId) {
-    if (!confirm("Сигурни ли сте, че искате да изтриете този продукт?")) return;
+    console.log(`🗑️ Опит за изтриване на продукт с ID: ${productId}`);
 
     fetch(`https://api.dp-design.art/products/${productId}`, {
         method: "DELETE",
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => {
+        if (!response.ok) throw new Error("Грешка при изтриване на продукта!");
+
         alert("✅ Продуктът беше изтрит успешно!");
-        location.reload(); // Презареждаме списъка с продукти
+        loadProducts(); // Презареждаме списъка с продукти
     })
     .catch(error => console.error("❌ Грешка при изтриване на продукта:", error));
 }
 
+// ✅ Проверяваме дали `deleteProduct` е дефиниран
+if (typeof deleteProduct === "undefined") {
+    console.error("❌ Функцията deleteProduct не е намерена! Увери се, че products.js е зареден.");
+}
 
 // ✅ Започваме проверка за таблицата и бутона "Добави продукт"
 waitForTableAndLoadProducts();
