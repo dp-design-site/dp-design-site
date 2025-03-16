@@ -44,3 +44,32 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error("❌ Грешка при зареждане:", error));
 });
+
+document.getElementById("save-btn").addEventListener("click", function () {
+    console.log("💾 Обновяване на продукта...");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get("id");
+
+    const updatedData = {
+        name: document.getElementById("product-name").value.trim(),
+        description: document.getElementById("product-description").value.trim(),
+        price: parseFloat(document.getElementById("product-price").value) || 0,
+        promo_price: parseFloat(document.getElementById("promo-price").value) || null,
+        category: document.getElementById("product-category").value
+    };
+
+    fetch(`https://api.dp-design.art/products/${productId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Продуктът е обновен успешно!", data);
+        alert("✅ Продуктът е обновен успешно!");
+        window.location.href = "admin.html"; 
+    })
+    .catch(error => console.error("❌ Грешка при обновяване:", error));
+});
+
