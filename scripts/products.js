@@ -130,6 +130,22 @@ function activateAddProductButton() {
     }
 }
 
+// ✅ Функция за изтриване на продукт
+function deleteProduct(productId) {
+    if (!confirm("Сигурни ли сте, че искате да изтриете този продукт?")) return;
+
+    fetch(`https://api.dp-design.art/products/${productId}`, {
+        method: "DELETE",
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("✅ Продуктът беше изтрит успешно!");
+        location.reload(); // Презареждаме списъка с продукти
+    })
+    .catch(error => console.error("❌ Грешка при изтриване на продукта:", error));
+}
+
+
 // ✅ Започваме проверка за таблицата и бутона "Добави продукт"
 waitForTableAndLoadProducts();
 activateAddProductButton();
