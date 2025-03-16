@@ -32,8 +32,9 @@ async function saveProduct() {
     formData.append("category", category);
 
     for (let i = 0; i < imageUpload.length; i++) {
-        formData.append("images", imageUpload[i]);
-    }
+    formData.append("images", imageUpload[i], imageUpload[i].name);
+}
+
 
     try {
         const response = await fetch("https://api.dp-design.art/products", {
