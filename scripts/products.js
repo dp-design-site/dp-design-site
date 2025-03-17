@@ -62,7 +62,10 @@ function populateProductTable(products) {
 
         row.innerHTML = `
             <td>${product.id}</td>
-            <td><img src="${product.images[0]}" alt="Продуктово изображение" class="product-thumbnail"></td>
+            <td>
+                <img src="${product.images && product.images.length > 0 ? 'https://api.dp-design.art/uploads/' + product.images[0] : 'images/placeholder.png'}" 
+                     alt="Продуктово изображение" class="product-thumbnail">
+            </td>
             <td>${product.name}</td>
             <td>${product.category ? product.category : "Без категория"}</td>
             <td>${product.price} лв.</td>
