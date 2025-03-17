@@ -62,7 +62,7 @@ function populateProductTable(products) {
 
         row.innerHTML = `
             <td>${product.id}</td>
-            <td><img src="${productImage}" alt="Продуктово изображение" class="product-thumbnail"></td>
+            <td><img src="${product.images[0]}" alt="Продуктово изображение" class="product-thumbnail"></td>
             <td>${product.name}</td>
             <td>${product.category ? product.category : "Без категория"}</td>
             <td>${product.price} лв.</td>
