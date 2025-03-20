@@ -256,24 +256,85 @@
         }
     });
 
+        async function uploadImages(productId) {
+    const imageUpload = document.getElementById("image-upload").files;
+
+    if (imageUpload.length === 0) {
+        alert("❌ Моля, изберете поне една снимка за качване!");
+        return;
+    }
+
+    const formData = new FormData();
+    for (let i = 0; i < imageUpload.length; i++) {
+        formData.append("images", imageUpload[i]);
+    }
+
+    try {
+        const response = await fetch(`https://api.dp-design.art/products/${productId}/upload-images`, {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("✅ Снимките са качени успешно!");
+            loadProductData(productId); // Презареждане на продукта след качване
+        } else {
+            console.error("❌ Грешка при качване:", result);
+            alert("❌ Неуспешно качване на снимки.");
+        }
+    } catch (error) {
+        console.error("❌ Грешка:", error);
+        alert("❌ Възникна грешка при качването.");
+    }
+}
+
+
     // ✅ Функция за изтриване на снимка
-    async function deleteImage(productId, imageName, imgElement) {
-        try {
-            const response = await fetch(`https://api.dp-design.art/products/${productId}/delete-image`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ image: imageName })
-            });
+    async function deleteImage(productId, imageName) {
+    if (!confirm("Сигурни ли сте, че искате да изтриете тази снимка?")) return;
 
-            if (!response.ok) throw new Error("Грешка при изтриване на снимката");
+    try {
+        const response = await fetch(`https://api.dp-design.art/products/${productId}/delete-image`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ image: imageName })
+        });
 
-            imgElement.remove(); // Премахване на изображението от UI
-            alert("✅ Снимката е изтрита успешно!");
-        } catch (error) {
-            console.error("❌ Грешка при изтриване на снимката:", error);
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("✅ Снимката беше успешно изтрита.");
+            loadProductData(productId); // Презареждаме информацията за продукта
+        } else {
+            console.error("❌ Грешка при изтриване:", result);
             alert("❌ Неуспешно изтриване на снимката.");
         }
+    } catch (error) {
+        console.error("❌ Грешка:", error);
+        alert("❌ Възникна грешка при изтриването.");
     }
+}
+
+        document.addEventListener("DOMContentLoaded", function () {
+    const productId = new URLSearchParams(window.location.search).get("id");
+    if (productId) {
+        loadProductData(productId);
+    }
+
+    document.getElementById("upload-btn").addEventListener("click", function () {
+        document.getElementById("image-upload").click();
+    });
+
+    document.getElementById("image-upload").addEventListener("change", function () {
+        uploadImages(productId);
+    });
+});
+
+
 </script>
 
     <script src="scripts/edit-product.js" defer></script>
