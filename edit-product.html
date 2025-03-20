@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редакция на продукт | DP Design</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+    <script src="scripts/edit-product.js" defer></script>
     <style>
         body {
             background-color: #121212;
@@ -102,7 +103,7 @@
         }
     </style>
 </head>
-<body onload="loadProductData()">
+<body>
     <div id="header"></div>
 
     <div class="product-container">
@@ -131,213 +132,11 @@
     <div id="footer"></div>
 
     <script>
-      async function loadProductData(productId) {
-    try {
-        const response = await fetch(`https://api.dp-design.art/products/${productId}`);
-        const product = await response.json();
-
-        if (!response.ok) {
-            throw new Error(product.error || "Грешка при зареждане на продукта");
-        }
-
-        // Запълване на текстовите полета
-        document.getElementById("product-name").value = product.name;
-        document.getElementById("product-description").value = product.description;
-        document.getElementById("product-price").value = product.price;
-        document.getElementById("promo-price").value = product.promo_price || "";
-        document.getElementById("product-category").value = product.category;
-
-        // ✅ Зареждане на основното изображение
-        if (product.images && product.images.length > 0) {
-            document.getElementById("product-preview").src = `/uploads/${product.images[0]}`;
-        }
-
-        // ✅ Зареждане на миниатюрите
-        const thumbnailContainer = document.getElementById("thumbnail-container");
-        thumbnailContainer.innerHTML = ""; // Изчистваме предишните миниатюри
-
-        product.images.forEach((image, index) => {
-            const imgElement = document.createElement("img");
-            imgElement.src = `/uploads/${image}`;
-            imgElement.dataset.filename = image; // Запазваме името за триене
-            imgElement.classList.add("thumbnail");
-
-            // Добавяне на клик събитие за триене на снимка
-            imgElement.addEventListener("click", () => deleteImage(productId, image));
-
-            thumbnailContainer.appendChild(imgElement);
-        });
-
-    } catch (error) {
-        console.error("❌ Грешка при зареждане на продукта:", error);
-        alert("❌ Неуспешно зареждане на продукта.");
-    }
-}
-
-
-      function updateProduct() {
-          const urlParams = new URLSearchParams(window.location.search);
-          const productId = urlParams.get("id");
-
-          const updatedData = {
-              name: document.getElementById("product-name").value,
-              description: document.getElementById("product-description").value,
-              price: document.getElementById("product-price").value,
-              promo_price: document.getElementById("promo-price").value,
-              category: document.getElementById("product-category").value
-          };
-
-          fetch(`https://api.dp-design.art/products/${productId}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(updatedData)
-          })
-          .then(response => response.json())
-          .then(data => {
-              alert("✅ Продуктът е обновен успешно!");
-              window.location.href = "admin.html"; 
-          })
-          .catch(error => console.error("Грешка при обновяване:", error));
-      }
-    </script>
-    <script>
-    document.addEventListener("DOMContentLoaded", async function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get("id");
-
-        if (!productId) {
-            alert("Грешка: Липсва ID на продукт!");
-            return;
-        }
-
-        try {
-            const response = await fetch(`https://api.dp-design.art/products/${productId}`);
-            const product = await response.json();
-
-            if (!response.ok) {
-                throw new Error("Грешка при зареждане на продукта");
-            }
-
-            // ✅ Попълване на формата с данните на продукта
-            document.getElementById("product-name").value = product.name || "";
-            document.getElementById("product-description").value = product.description || "";
-            document.getElementById("product-price").value = product.price || "";
-            document.getElementById("promo-price").value = product.promo_price || "";
-            document.getElementById("product-category").value = product.category || "";
-
-            // ✅ Зареждане на съществуващите снимки
-            const preview = document.getElementById("product-preview");
-            const thumbnails = document.getElementById("thumbnail-container");
-            thumbnails.innerHTML = "";
-
-            if (product.images && product.images.length > 0) {
-                preview.src = `/uploads/${product.images[0]}`; // Първата снимка като главна
-
-                product.images.forEach(image => {
-                    const img = document.createElement("img");
-                    img.src = `/uploads/${image}`;
-                    img.style.width = "60px";
-                    img.style.height = "60px";
-                    img.style.cursor = "pointer";
-
-                    // ✅ Добавяне на функционалност за изтриване на снимки
-                    img.addEventListener("click", function () {
-                        if (confirm("Сигурни ли сте, че искате да изтриете тази снимка?")) {
-                            deleteImage(productId, image, img);
-                        }
-                    });
-
-                    thumbnails.appendChild(img);
-                });
-            }
-        } catch (error) {
-            console.error("❌ Грешка при зареждане на продукта:", error);
-            alert("❌ Грешка при зареждане на продукта.");
-        }
-    });
-
-        async function uploadImages(productId) {
-    const imageUpload = document.getElementById("image-upload").files;
-
-    if (imageUpload.length === 0) {
-        alert("❌ Моля, изберете поне една снимка за качване!");
-        return;
-    }
-
-    const formData = new FormData();
-    for (let i = 0; i < imageUpload.length; i++) {
-        formData.append("images", imageUpload[i]);
-    }
-
-    try {
-        const response = await fetch(`https://api.dp-design.art/products/${productId}/upload-images`, {
-            method: "POST",
-            body: formData
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            alert("✅ Снимките са качени успешно!");
-            loadProductData(productId); // Презареждане на продукта след качване
-        } else {
-            console.error("❌ Грешка при качване:", result);
-            alert("❌ Неуспешно качване на снимки.");
-        }
-    } catch (error) {
-        console.error("❌ Грешка:", error);
-        alert("❌ Възникна грешка при качването.");
-    }
-}
-
-
-    // ✅ Функция за изтриване на снимка
-    async function deleteImage(productId, imageName) {
-    if (!confirm("Сигурни ли сте, че искате да изтриете тази снимка?")) return;
-
-    try {
-        const response = await fetch(`https://api.dp-design.art/products/${productId}/delete-image`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ image: imageName })
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            alert("✅ Снимката беше успешно изтрита.");
-            loadProductData(productId); // Презареждаме информацията за продукта
-        } else {
-            console.error("❌ Грешка при изтриване:", result);
-            alert("❌ Неуспешно изтриване на снимката.");
-        }
-    } catch (error) {
-        console.error("❌ Грешка:", error);
-        alert("❌ Възникна грешка при изтриването.");
-    }
-}
-
+        // Динамично зареждане на хедър и футър
         document.addEventListener("DOMContentLoaded", function () {
-    const productId = new URLSearchParams(window.location.search).get("id");
-    if (productId) {
-        loadProductData(productId);
-    }
-
-    document.getElementById("upload-btn").addEventListener("click", function () {
-        document.getElementById("image-upload").click();
-    });
-
-    document.getElementById("image-upload").addEventListener("change", function () {
-        uploadImages(productId);
-    });
-});
-
-
-</script>
-
-    <script src="scripts/edit-product.js" defer></script>
-
+            document.getElementById("header").innerHTML = '<object type="text/html" data="header.html"></object>';
+            document.getElementById("footer").innerHTML = '<object type="text/html" data="footer.html"></object>';
+        });
+    </script>
 </body>
 </html>
