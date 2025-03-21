@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     imageUpload.addEventListener("change", function () {
         if (imageUpload.files.length === 0) {
-            alert("❌ Моля, изберете изображения за качване!");
+            //alert("❌ Моля, изберете изображения за качване!");
             return;
         }
         const productId = getProductId();
