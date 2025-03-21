@@ -1,26 +1,35 @@
 document.addEventListener("DOMContentLoaded", async function () {
-    console.log("🚀 Зареждане на продукта за редакция...");
+    console.log("🚀 Зареждане на редактора на продукта...");
 
     const uploadBtn = document.getElementById("upload-btn");
     const imageUpload = document.getElementById("image-upload");
 
-    // ✅ Проверяваме дали бутоните съществуват, преди да добавяме event listeners
-    if (uploadBtn && imageUpload) {
-        uploadBtn.addEventListener("click", function () {
-            imageUpload.click();
-        });
-
-        imageUpload.addEventListener("change", function () {
-            const productId = getProductId();
-            if (!productId) {
-                alert("❌ Проблем с ID на продукта!");
-                return;
-            }
-            uploadNewImages(productId);
-        });
-    } else {
+    if (!uploadBtn || !imageUpload) {
         console.error("❌ Бутонът за качване или input полето липсват!");
+        return;
     }
+
+    // ✅ При натискане на бутона, отваряме файловия диалог с малко изчакване
+    uploadBtn.addEventListener("click", function () {
+        console.log("📸 Отваряне на файловия диалог...");
+        setTimeout(() => {
+            imageUpload.click();
+        }, 100); // Изчакване 100ms, за да избегнем проблеми с браузърната обработка
+    });
+
+    imageUpload.addEventListener("change", function () {
+        if (imageUpload.files.length === 0) {
+            alert("❌ Моля, изберете изображения за качване!");
+            return;
+        }
+        const productId = getProductId();
+        if (!productId) {
+            alert("❌ Проблем с ID на продукта!");
+            return;
+        }
+        console.log("📂 Избрани файлове за качване:", imageUpload.files);
+        uploadNewImages(productId);
+    });
 
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get("id");
@@ -29,7 +38,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         alert("❌ Липсва ID на продукта!");
         return;
     }
-
 
     window.getProductId = function () {
         return productId;
@@ -68,18 +76,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 const deleteBtn = document.createElement("button");
                 deleteBtn.innerText = "🗑";
-                deleteBtn.style.position = "absolute";
-                deleteBtn.style.top = "5px";
-                deleteBtn.style.right = "5px";
-                deleteBtn.style.display = "none";
+                deleteBtn.classList.add("delete-btn");
                 deleteBtn.onclick = () => deleteImage(productId, image, imgContainer);
 
                 const setMainBtn = document.createElement("button");
                 setMainBtn.innerText = "★";
-                setMainBtn.style.position = "absolute";
-                setMainBtn.style.bottom = "5px";
-                setMainBtn.style.right = "5px";
-                setMainBtn.style.display = "none";
+                setMainBtn.classList.add("set-main-btn");
                 setMainBtn.onclick = () => setMainImage(productId, image);
 
                 imgContainer.onmouseover = () => {
@@ -164,17 +166,18 @@ async function deleteImage(productId, imageName, imgElement) {
         alert("❌ Неуспешно изтриване на снимката.");
     }
 }
+// ✅ Функция за качване на снимки
 async function uploadNewImages(productId) {
-    const imageUpload = document.getElementById("image-upload").files;
+    const imageUpload = document.getElementById("image-upload");
 
-    if (imageUpload.length === 0) {
+    if (!imageUpload || imageUpload.files.length === 0) {
         alert("❌ Моля, изберете изображения за качване!");
         return;
     }
 
     const formData = new FormData();
-    for (let i = 0; i < imageUpload.length; i++) {
-        formData.append("images", imageUpload[i]);
+    for (let i = 0; i < imageUpload.files.length; i++) {
+        formData.append("images", imageUpload.files[i]);
     }
 
     try {
