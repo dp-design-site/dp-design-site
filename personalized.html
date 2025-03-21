@@ -33,11 +33,13 @@
             margin: auto;
         }
         .product {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .product .button-container {
+            margin-top: auto; /* Това избутва бутоните долу */
         }
         .promo-badge {
             position: absolute;
@@ -51,20 +53,28 @@
             border-radius: 5px;
             z-index: 2;
         }
-        .slider {
+         .slider {
             position: relative;
             overflow: hidden;
-            max-width: 250px;
-            margin: auto;
+            width: 100%;
+            height: 250px; /* Фиксирана височина за всички слайдери */
             display: flex;
             align-items: center;
+            justify-content: center;
         }
+        
         .slider img {
-            width: 100%;
+            max-height: 100%;
+            width: auto;
+            max-width: 100%;
             display: none;
+            object-fit: contain; /* Запазва пропорциите без изрязване */
         }
+        
         .slider img.active {
             display: block;
+        }
+
         }
         .slider-btn {
             position: absolute;
@@ -152,17 +162,20 @@
                 : `<img src="images/placeholder.png" class="active" alt="Няма изображение">`;
 
             productElement.innerHTML = `
-                <div class="slider">
-                    ${promoBadge}
-                    ${images}
-                    <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
-                    <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
-                </div>
-                <h2>${product.name}</h2>
-                <div class="price-container">${priceDisplay}</div>
+            <div class="slider">
+                ${promoBadge}
+                ${images}
+                <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
+                <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
+            </div>
+            <h2>${product.name}</h2>
+            <div class="price-container">${priceDisplay}</div>
+            <div class="button-container">
                 <button class="cart-button" onclick="window.location.href='personalize.html?id=${product.id}'">🎨 Персонализирай</button>
                 <a href="product-template.html?id=${product.id}" class="button-see-more">Виж още</a>
-            `;
+            </div>
+        `;
+
 
             container.appendChild(productElement);
         });
