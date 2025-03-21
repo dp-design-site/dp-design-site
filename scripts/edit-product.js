@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
     }
 
+    window.getProductId = function () {
+        return productId;
+    };
+
     try {
         const response = await fetch(`https://api.dp-design.art/products/${productId}`);
         const product = await response.json();
@@ -33,18 +37,37 @@ document.addEventListener("DOMContentLoaded", async function () {
             product.images.forEach(image => {
                 const imgContainer = document.createElement("div");
                 imgContainer.classList.add("image-container");
+                imgContainer.style.position = "relative";
 
                 const img = document.createElement("img");
                 img.src = `https://api.dp-design.art/uploads/${image}`;
                 img.dataset.filename = image;
+                img.classList.add("thumbnail");
 
                 const deleteBtn = document.createElement("button");
                 deleteBtn.innerText = "🗑";
+                deleteBtn.style.position = "absolute";
+                deleteBtn.style.top = "5px";
+                deleteBtn.style.right = "5px";
+                deleteBtn.style.display = "none";
                 deleteBtn.onclick = () => deleteImage(productId, image, imgContainer);
 
                 const setMainBtn = document.createElement("button");
                 setMainBtn.innerText = "★";
+                setMainBtn.style.position = "absolute";
+                setMainBtn.style.bottom = "5px";
+                setMainBtn.style.right = "5px";
+                setMainBtn.style.display = "none";
                 setMainBtn.onclick = () => setMainImage(productId, image);
+
+                imgContainer.onmouseover = () => {
+                    deleteBtn.style.display = "block";
+                    setMainBtn.style.display = "block";
+                };
+                imgContainer.onmouseleave = () => {
+                    deleteBtn.style.display = "none";
+                    setMainBtn.style.display = "none";
+                };
 
                 imgContainer.appendChild(img);
                 imgContainer.appendChild(deleteBtn);
@@ -159,12 +182,10 @@ async function setMainImage(productId, imageName) {
         });
 
         const result = await response.json();
-        if (response.ok) {
-            alert("✅ Главната снимка е обновена!");
-            location.reload();
-        } else {
-            alert("❌ Неуспешно задаване на главна снимка.");
-        }
+        if (!response.ok) throw new Error(result.error || "Грешка при задаване на главна снимка");
+
+        alert("✅ Главната снимка е обновена!");
+        location.reload();
     } catch (error) {
         console.error("❌ Грешка:", error);
         alert("❌ Възникна грешка при задаване на главна снимка.");
