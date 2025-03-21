@@ -1,16 +1,26 @@
 document.addEventListener("DOMContentLoaded", async function () {
     console.log("🚀 Зареждане на продукта за редакция...");
 
-    // ✅ Свързваме бутона за качване със скрития input
-    document.getElementById("upload-btn").addEventListener("click", function () {
-        document.getElementById("image-upload").click();
-    });
+    const uploadBtn = document.getElementById("upload-btn");
+    const imageUpload = document.getElementById("image-upload");
 
-    // ✅ Когато потребителят избере файл, започваме качването
-    document.getElementById("image-upload").addEventListener("change", function () {
-        const productId = getProductId(); // Вземаме ID на продукта
-        uploadNewImages(productId);
-    });
+    // ✅ Проверяваме дали бутоните съществуват, преди да добавяме event listeners
+    if (uploadBtn && imageUpload) {
+        uploadBtn.addEventListener("click", function () {
+            imageUpload.click();
+        });
+
+        imageUpload.addEventListener("change", function () {
+            const productId = getProductId();
+            if (!productId) {
+                alert("❌ Проблем с ID на продукта!");
+                return;
+            }
+            uploadNewImages(productId);
+        });
+    } else {
+        console.error("❌ Бутонът за качване или input полето липсват!");
+    }
 
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get("id");
@@ -19,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         alert("❌ Липсва ID на продукта!");
         return;
     }
+
 
     window.getProductId = function () {
         return productId;
