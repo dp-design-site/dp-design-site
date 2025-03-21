@@ -1,28 +1,34 @@
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("🚀 Зареждане на редактора на продукта...");
+document.addEventListener("DOMContentLoaded", async function () {
+    console.log("🚀 Зареждане на продукта за редакция...");
 
     const uploadBtn = document.getElementById("upload-btn");
     const imageUpload = document.getElementById("image-upload");
 
-    if (!uploadBtn || !imageUpload) {
+    // ✅ Проверяваме дали бутоните съществуват, преди да добавяме event listeners
+    if (uploadBtn && imageUpload) {
+        uploadBtn.addEventListener("click", function () {
+            imageUpload.click();
+        });
+
+        imageUpload.addEventListener("change", function () {
+            const productId = getProductId();
+            if (!productId) {
+                alert("❌ Проблем с ID на продукта!");
+                return;
+            }
+            uploadNewImages(productId);
+        });
+    } else {
         console.error("❌ Бутонът за качване или input полето липсват!");
-        return;
     }
 
-    uploadBtn.addEventListener("click", function () {
-        console.log("📸 Отваряне на файловия диалог...");
-        imageUpload.click();
-    });
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get("id");
 
-    imageUpload.addEventListener("change", function () {
-        const productId = getProductId();
-        if (!productId) {
-            alert("❌ Проблем с ID на продукта!");
-            return;
-        }
-        console.log("📂 Избрани файлове за качване:", imageUpload.files);
-        uploadNewImages(productId);
-    });
+    if (!productId) {
+        alert("❌ Липсва ID на продукта!");
+        return;
+    }
 
 
     window.getProductId = function () {
