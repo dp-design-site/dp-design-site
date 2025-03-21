@@ -9,17 +9,18 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
     }
 
-    // ✅ При натискане на бутона, отваряме файловия диалог с малко изчакване
+    // ✅ Отваряме файловия прозорец САМО при клик
     uploadBtn.addEventListener("click", function () {
         console.log("📸 Отваряне на файловия диалог...");
         setTimeout(() => {
             imageUpload.click();
-        }, 100); // Изчакване 100ms, за да избегнем проблеми с браузърната обработка
+        }, 100); // Изчакване 100ms за стабилност
     });
 
+    // ✅ Качване се стартира САМО след като файловете са избрани
     imageUpload.addEventListener("change", function () {
         if (imageUpload.files.length === 0) {
-            alert("❌ Моля, изберете изображения за качване!");
+            console.warn("⚠ Няма избрани файлове, качването няма да стартира.");
             return;
         }
         const productId = getProductId();
@@ -113,6 +114,37 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
+// ✅ Функция за качване на снимки
+async function uploadNewImages(productId) {
+    const imageUpload = document.getElementById("image-upload");
+
+    if (!imageUpload || imageUpload.files.length === 0) {
+        console.error("❌ Няма избрани файлове за качване!");
+        alert("❌ Моля, изберете изображения за качване!");
+        return;
+    }
+
+    const formData = new FormData();
+    for (let i = 0; i < imageUpload.files.length; i++) {
+        formData.append("images", imageUpload.files[i]);
+    }
+
+    try {
+        const response = await fetch(`https://api.dp-design.art/products/${productId}/upload-images`, {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Грешка при качване");
+
+        alert("✅ Снимките са качени успешно!");
+        location.reload();
+    } catch (error) {
+        console.error("❌ Грешка при качване на изображения:", error);
+        alert("❌ Възникна грешка при качването.");
+    }
+}
 
 document.getElementById("save-btn").addEventListener("click", async function () {
     console.log("💾 Обновяване на продукта...");
@@ -164,38 +196,6 @@ async function deleteImage(productId, imageName, imgElement) {
     } catch (error) {
         console.error("❌ Грешка при изтриване на снимката:", error);
         alert("❌ Неуспешно изтриване на снимката.");
-    }
-}
-// ✅ Функция за качване на снимки
-async function uploadNewImages(productId) {
-    const imageUpload = document.getElementById("image-upload");
-
-    //if (!imageUpload || imageUpload.files.length === 0) {
-       // alert("❌ Моля, изберете изображения за качване!");
-        //return;
-   // }
-
-    const formData = new FormData();
-    for (let i = 0; i < imageUpload.files.length; i++) {
-        formData.append("images", imageUpload.files[i]);
-    }
-
-    try {
-        const response = await fetch(`https://api.dp-design.art/products/${productId}/upload-images`, {
-            method: "POST",
-            body: formData
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-            alert("✅ Снимките са качени успешно!");
-            location.reload(); // Презареждаме страницата, за да се покажат новите снимки
-        } else {
-            alert("❌ Грешка при качване на снимките.");
-        }
-    } catch (error) {
-        console.error("❌ Грешка при качване на изображения:", error);
-        alert("❌ Възникна грешка при качването.");
     }
 }
 
