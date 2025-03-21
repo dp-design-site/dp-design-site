@@ -1,6 +1,17 @@
 document.addEventListener("DOMContentLoaded", async function () {
     console.log("🚀 Зареждане на продукта за редакция...");
 
+    // ✅ Свързваме бутона за качване със скрития input
+    document.getElementById("upload-btn").addEventListener("click", function () {
+        document.getElementById("image-upload").click();
+    });
+
+    // ✅ Когато потребителят избере файл, започваме качването
+    document.getElementById("image-upload").addEventListener("change", function () {
+        const productId = getProductId(); // Вземаме ID на продукта
+        uploadNewImages(productId);
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get("id");
 
