@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (!productId) {
         alert("❌ Липсва ID на продукта!");
-        window.location.href = "admin.html"; 
         return;
     }
 
@@ -30,27 +29,43 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (product.images && product.images.length > 0) {
             previewImage.src = `https://api.dp-design.art/uploads/${product.images[0]}`;
+
             product.images.forEach(image => {
+                const imgContainer = document.createElement("div");
+                imgContainer.classList.add("image-container");
+
                 const img = document.createElement("img");
                 img.src = `https://api.dp-design.art/uploads/${image}`;
-                img.style.width = "80px";
-                img.style.height = "80px";
-                img.style.cursor = "pointer";
+                img.dataset.filename = image;
 
-                img.addEventListener("click", function () {
-                    if (confirm("Сигурни ли сте, че искате да изтриете тази снимка?")) {
-                        deleteImage(productId, image, img);
-                    }
-                });
+                const deleteBtn = document.createElement("button");
+                deleteBtn.innerText = "🗑";
+                deleteBtn.onclick = () => deleteImage(productId, image, imgContainer);
 
-                thumbnailContainer.appendChild(img);
+                const setMainBtn = document.createElement("button");
+                setMainBtn.innerText = "★";
+                setMainBtn.onclick = () => setMainImage(productId, image);
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteBtn);
+                imgContainer.appendChild(setMainBtn);
+                thumbnailContainer.appendChild(imgContainer);
             });
         }
+
+        new Sortable(thumbnailContainer, {
+            animation: 150,
+            onEnd: function () {
+                console.log("✅ Подредени снимки!");
+            }
+        });
+
     } catch (error) {
         console.error("❌ Грешка при зареждане на продукта:", error);
         alert("❌ Грешка при зареждане на продукта.");
     }
 });
+
 
 document.getElementById("save-btn").addEventListener("click", async function () {
     console.log("💾 Обновяване на продукта...");
