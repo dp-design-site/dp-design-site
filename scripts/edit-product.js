@@ -9,12 +9,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
     }
 
-    // ✅ Отваряме файловия прозорец САМО при клик
+    // ✅ Отваряме файловия прозорец при клик, но не качваме веднага
     uploadBtn.addEventListener("click", function () {
         console.log("📸 Отваряне на файловия диалог...");
-        setTimeout(() => {
-            imageUpload.click();
-        }, 100); // Изчакване 100ms за стабилност
+        imageUpload.value = ""; // Изчистваме предишния избор
+        imageUpload.click();
     });
 
     // ✅ Качване се стартира САМО след като файловете са избрани
@@ -114,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
-// ✅ Функция за качване на снимки
+// ✅ Функция за качване на снимки (фиксирана)
 async function uploadNewImages(productId) {
     const imageUpload = document.getElementById("image-upload");
 
@@ -145,6 +144,7 @@ async function uploadNewImages(productId) {
         alert("❌ Възникна грешка при качването.");
     }
 }
+
 
 document.getElementById("save-btn").addEventListener("click", async function () {
     console.log("💾 Обновяване на продукта...");
