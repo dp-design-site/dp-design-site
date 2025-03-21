@@ -173,6 +173,13 @@ async function uploadNewImages(productId) {
         alert("❌ Възникна грешка при качването.");
     }
 }
+
+// ✅ Свързваме бутона "Качи нови снимки" с функцията
+document.getElementById("upload-btn").addEventListener("click", function () {
+    const productId = getProductId();
+    uploadNewImages(productId);
+});
+
 async function setMainImage(productId, imageName) {
     try {
         const response = await fetch(`https://api.dp-design.art/products/${productId}/set-main-image`, {
