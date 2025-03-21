@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     imageUpload.addEventListener("change", function () {
         if (imageUpload.files.length === 0) {
-            //alert("❌ Моля, изберете изображения за качване!");
+            alert("❌ Моля, изберете изображения за качване!");
             return;
         }
         const productId = getProductId();
@@ -170,10 +170,10 @@ async function deleteImage(productId, imageName, imgElement) {
 async function uploadNewImages(productId) {
     const imageUpload = document.getElementById("image-upload");
 
-    if (!imageUpload || imageUpload.files.length === 0) {
-        alert("❌ Моля, изберете изображения за качване!");
-        return;
-    }
+    //if (!imageUpload || imageUpload.files.length === 0) {
+       // alert("❌ Моля, изберете изображения за качване!");
+        //return;
+   // }
 
     const formData = new FormData();
     for (let i = 0; i < imageUpload.files.length; i++) {
