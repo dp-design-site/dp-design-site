@@ -104,3 +104,101 @@ async function deleteImage(productId, imageName, imgElement) {
         alert("❌ Неуспешно изтриване на снимката.");
     }
 }
+async function uploadNewImages(productId) {
+    const imageUpload = document.getElementById("image-upload").files;
+
+    if (imageUpload.length === 0) {
+        alert("❌ Моля, изберете изображения за качване!");
+        return;
+    }
+
+    const formData = new FormData();
+    for (let i = 0; i < imageUpload.length; i++) {
+        formData.append("images", imageUpload[i]);
+    }
+
+    try {
+        const response = await fetch(`https://api.dp-design.art/products/${productId}/upload-images`, {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert("✅ Снимките са качени успешно!");
+            location.reload(); // Презареждаме страницата, за да се покажат новите снимки
+        } else {
+            alert("❌ Грешка при качване на снимките.");
+        }
+    } catch (error) {
+        console.error("❌ Грешка при качване на изображения:", error);
+        alert("❌ Възникна грешка при качването.");
+    }
+}
+async function setMainImage(productId, imageName) {
+    try {
+        const response = await fetch(`https://api.dp-design.art/products/${productId}/set-main-image`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image: imageName })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert("✅ Главната снимка е обновена!");
+            location.reload();
+        } else {
+            alert("❌ Неуспешно задаване на главна снимка.");
+        }
+    } catch (error) {
+        console.error("❌ Грешка:", error);
+        alert("❌ Възникна грешка при задаване на главна снимка.");
+    }
+}
+product.images.forEach(image => {
+    const imgContainer = document.createElement("div");
+    imgContainer.style.position = "relative";
+    imgContainer.style.display = "inline-block";
+
+    const img = document.createElement("img");
+    img.src = `/uploads/${image}`;
+    img.classList.add("thumbnail");
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "🗑";
+    deleteBtn.style.position = "absolute";
+    deleteBtn.style.top = "5px";
+    deleteBtn.style.right = "5px";
+    deleteBtn.style.background = "red";
+    deleteBtn.style.color = "white";
+    deleteBtn.style.border = "none";
+    deleteBtn.style.cursor = "pointer";
+    deleteBtn.onclick = () => deleteImage(productId, image, imgContainer);
+
+    const setMainBtn = document.createElement("button");
+    setMainBtn.innerText = "★";
+    setMainBtn.style.position = "absolute";
+    setMainBtn.style.bottom = "5px";
+    setMainBtn.style.right = "5px";
+    setMainBtn.style.background = "gold";
+    setMainBtn.style.border = "none";
+    setMainBtn.style.cursor = "pointer";
+    setMainBtn.onclick = () => setMainImage(productId, image);
+
+    imgContainer.appendChild(img);
+    imgContainer.appendChild(deleteBtn);
+    imgContainer.appendChild(setMainBtn);
+    thumbnailContainer.appendChild(imgContainer);
+});
+
+const sortable = new Sortable(document.getElementById("thumbnail-container"), {
+    animation: 150,
+    onEnd: async function () {
+        const newOrder = Array.from(document.querySelectorAll(".thumbnail")).map(img => img.dataset.filename);
+        await fetch(`https://api.dp-design.art/products/${productId}/update-order`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ images: newOrder })
+        });
+    }
+});
