@@ -23,6 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("📂 Избрани файлове за качване:", imageUpload.files);
         uploadNewImages(productId);
     });
+});
+
 
 
     window.getProductId = function () {
