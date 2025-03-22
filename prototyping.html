@@ -243,8 +243,9 @@
     </p>
 
     <div class="project-gallery" id="project-gallery">
-    <!-- Тук ще се зареждат автоматично проектите от категория 'prototyping' -->
+  <!-- Продуктите ще се заредят тук -->
 </div>
+
 
     <div class="faq-section">
       <div class="faq-question" onclick="toggleFAQ(this)">
@@ -282,49 +283,69 @@
 
   <script>
 async function loadProducts() {
-    const category = "prototyping";
+  const category = "prototyping";
 
-    try {
-        const response = await fetch(`https://api.dp-design.art/products`);
-        const products = await response.json();
+  try {
+    const response = await fetch("https://api.dp-design.art/products");
+    const products = await response.json();
 
-        if (!response.ok) throw new Error("Грешка при зареждане на продуктите");
+    if (!response.ok) throw new Error("Грешка при зареждане на продуктите");
 
-        const container = document.getElementById("project-gallery");
-        container.innerHTML = "";
+    const container = document.getElementById("project-gallery");
+    container.innerHTML = "";
 
-        const filteredProducts = products.filter(p => p.category === category);
+    const filtered = products.filter(p => p.category === category);
 
-        if (filteredProducts.length === 0) {
-            container.innerHTML = "<p>Няма налични проекти в тази категория.</p>";
-            return;
-        }
-
-        filteredProducts.forEach(product => {
-            const productEl = document.createElement("div");
-            productEl.classList.add("gallery-item");
-
-            const imagesHtml = product.images.map((img, i) => `
-                <img src="https://api.dp-design.art/uploads/${img}" alt="${product.name} снимка ${i + 1}" onclick="openFullScreen(this.src)">
-            `).join("");
-
-            productEl.innerHTML = `
-                <div class="gallery-images">
-                    ${imagesHtml}
-                </div>
-                <div class="gallery-caption">
-                    <h3>${product.name}</h3>
-                    <button class="contact-button" onclick="window.location.href='personalize.html?id=${product.id}'">📩 Запитване</button>
-                </div>
-            `;
-
-            container.appendChild(productEl);
-        });
-
-    } catch (error) {
-        console.error("❌ Грешка при зареждане на продуктите:", error);
+    if (filtered.length === 0) {
+      container.innerHTML = "<p>Няма налични проекти в тази категория.</p>";
+      return;
     }
+
+    filtered.forEach(product => {
+      const el = document.createElement("div");
+      el.classList.add("project-card");
+
+      let images = product.images.length > 0
+        ? product.images.map((img, i) => `<img src="https://api.dp-design.art/uploads/${img}" class="${i === 0 ? 'active' : ''}" alt="${product.name}">`).join("")
+        : `<img src="images/placeholder.png" class="active" alt="Няма изображение">`;
+
+      el.innerHTML = `
+        <div class="project-slider">
+          ${images}
+          <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
+          <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
+        </div>
+        <div class="project-info">
+          <h3>${product.name}</h3>
+          <p>${product.description || "Без описание."}</p>
+          <a href="personalize.html?id=${product.id}" class="inquiry-button">📩 Запитване</a>
+        </div>
+      `;
+
+      container.appendChild(el);
+    });
+
+  } catch (error) {
+    console.error("❌ Грешка при зареждане:", error);
+  }
 }
+
+function nextSlide(button) {
+  const slider = button.parentElement;
+  const images = slider.querySelectorAll("img");
+  let index = Array.from(images).findIndex(img => img.classList.contains("active"));
+  images[index].classList.remove("active");
+  images[(index + 1) % images.length].classList.add("active");
+}
+
+function prevSlide(button) {
+  const slider = button.parentElement;
+  const images = slider.querySelectorAll("img");
+  let index = Array.from(images).findIndex(img => img.classList.contains("active"));
+  images[index].classList.remove("active");
+  images[(index - 1 + images.length) % images.length].classList.add("active");
+}
+</script>
 
 function openFullScreen(src) {
     const fullView = document.createElement("div");
