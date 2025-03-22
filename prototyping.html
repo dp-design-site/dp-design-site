@@ -290,7 +290,7 @@ async function loadProducts() {
 
         if (!response.ok) throw new Error("Грешка при зареждане на продуктите");
 
-        const container = document.getElementById("gallery-container");
+        const container = document.getElementById("project-gallery");
         container.innerHTML = "";
 
         const filteredProducts = products.filter(p => p.category === category);
