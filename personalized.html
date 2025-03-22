@@ -33,11 +33,14 @@
             margin: auto;
         }
         .product {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             padding: 15px;
             text-align: center;
             position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
         }
         .promo-badge {
             position: absolute;
@@ -54,15 +57,21 @@
         .slider {
             position: relative;
             overflow: hidden;
-            max-width: 250px;
+            height: 250px; /* фиксирана височина */
             margin: auto;
             display: flex;
             align-items: center;
-        }
+                justify-content: center;
+                    }
         .slider img {
-            width: 100%;
+            /*width: 100%;*/
             display: none;
             border-radius: 10px;
+                height: 100%;
+                width: auto;
+                max-width: 100%;
+                object-fit: contain;
+                
         }
         .slider img.active {
             display: block;
@@ -71,12 +80,13 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
             color: white;
             border: none;
-            padding: 8px;
+            padding: 6px;
             cursor: pointer;
-            opacity: 0.7;
+            opacity: 0.8;                   
+                    z-index: 2;
         }
         .slider-btn.left { left: 5px; }
         .slider-btn.right { right: 5px; }
@@ -86,9 +96,11 @@
             padding: 10px;
             margin-top: 10px;
             border-radius: 5px;
-            display: inline-block;
+            /*display: inline-block;*/
             text-decoration: none;
             transition: transform 0.3s;
+                display: block;
+                width: 100%;
         }
         .button-see-more:hover, .cart-button:hover {
             transform: scale(1.05);
