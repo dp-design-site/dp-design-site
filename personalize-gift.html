@@ -153,22 +153,6 @@
       font-style: italic;
     }
 
-    /* ✅ Две колони на десктоп */
-.two-column-layout {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-}
-
-.two-column-layout .product-info {
-  flex: 1 1 45%;
-  text-align: center;
-}
-
-.two-column-layout .form-wrapper {
-  flex: 1 1 50%;
-}
-
 /* 🖼 Изображение стил */
 .product-info img {
   max-height: 280px;
@@ -192,45 +176,41 @@
 <body onload="loadComponents(); loadProductDetails()">
   <div id="header"></div>
 
-  <div class="content-wrapper two-column-layout">
-  <div class="product-info" id="product-info">
-    <!-- Тук ще се зареди снимка и име -->
-  </div>
+  <div class="content-wrapper">
+  <div class="personalization-container">
+    <div class="product-image" id="product-info">
+      <!-- Снимка и заглавие ще се заредят тук -->
+    </div>
 
-  
-    <div class="personalization-container">
-  <div class="product-image" id="product-info">
-    <!-- Снимка и заглавие се зареждат динамично тук -->
-  </div>
-      <div class="form-wrapper">
-    <form id="personalization-form">
-      <!-- формата е същата както досега -->
-      <label for="name">Вашето име:</label>
-      <input type="text" id="name" required placeholder="Име и фамилия" />
+    <div class="form-wrapper">
+      <form id="personalization-form">
+        <label for="name">Вашето име:</label>
+        <input type="text" id="name" required placeholder="Име и фамилия" />
 
-      <label for="email">Имейл за връзка:</label>
-      <input type="email" id="email" required placeholder="example@email.com" />
+        <label for="email">Имейл за връзка:</label>
+        <input type="email" id="email" required placeholder="example@email.com" />
 
-      <label for="color">Избор на цвят:</label>
-      <select id="color">
-        <option value="">-- Изберете --</option>
-        <option value="Черен">Черен</option>
-        <option value="Бял">Бял</option>
-        <option value="Червен">Червен</option>
-        <option value="Син">Син</option>
-      </select>
+        <label for="color">Избор на цвят:</label>
+        <select id="color">
+          <option value="">-- Изберете --</option>
+          <option value="Черен">Черен</option>
+          <option value="Бял">Бял</option>
+          <option value="Червен">Червен</option>
+          <option value="Син">Син</option>
+        </select>
 
-      <label for="message">Текст за гравиране / съобщение:</label>
-      <textarea id="message" rows="3" placeholder="Напишете вашето послание..."></textarea>
+        <label for="message">Текст за гравиране / съобщение:</label>
+        <textarea id="message" rows="3" placeholder="Напишете вашето послание..."></textarea>
 
-      <label for="attachment">Качи снимка / чертеж:</label>
-      <input type="file" id="attachment" accept="image/*,.pdf" />
+        <label for="attachment">Качи снимка / чертеж:</label>
+        <input type="file" id="attachment" accept="image/*,.pdf" />
 
-      <label for="description">Допълнително описание:</label>
-      <textarea id="description" rows="4" placeholder="Опишете вашата идея, размери или специални изисквания..."></textarea>
+        <label for="description">Допълнително описание:</label>
+        <textarea id="description" rows="4" placeholder="Опишете вашата идея, размери или специални изисквания..."></textarea>
 
-      <button type="submit">📩 Изпрати запитване</button>
-    </form>
+        <button type="submit">📩 Изпрати запитване</button>
+      </form>
+    </div>
   </div>
 </div>
 
