@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Дом и декорация | DP Design</title>
-
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (document.title === "" || document.title === "Заглавие") {
-                document.title = "Дом и декорация | DP Design";
+                document.title = "Категория | DP Design";
             }
         });
     </script>
@@ -24,169 +23,221 @@
             text-align: center;
             overflow-x: hidden;
         }
-         .content p {
-            font-size: 24px;
-            margin: 20px 0;
-            opacity: 0;
-            animation: fadeIn 2s ease-in-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .nav-menu a.active {
-            font-size: 16px;
-            font-weight: bold;
-            color: #ffcc99;
-        }
-
-        .category-header {
-            background: url('images/header-background.jpg') no-repeat center center/cover;
-            height: 260px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            box-shadow: inset 0 -50px 50px rgba(18, 18, 18, 1);
-            margin-top: 0px;
-        }
-
         .products-wrapper {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             padding: 20px;
             justify-content: center;
+            max-width: 1200px;
+            margin: auto;
         }
-
         .product {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             padding: 15px;
             text-align: center;
-            transition: transform 0.3s;
+            position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
         }
-
-        .product img {
-            width: 100%;
-            max-width: 250px;
-            height: auto;
-            border-radius: 10px;
+        .promo-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background-color: #e60000;
+            color: #fff;
+            padding: 3px 8px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            z-index: 2;
         }
-
-        .product:hover {
-            transform: scale(1.05);
-        }
-
         .slider {
             position: relative;
             overflow: hidden;
-            max-width: 250px;
+            height: 250px; /* фиксирана височина */
             margin: auto;
-        }
-
+            display: flex;
+            align-items: center;
+                justify-content: center;
+                    }
         .slider img {
-            width: 100%;
+            /*width: 100%;*/
             display: none;
+            border-radius: 10px;
+                height: 100%;
+                width: auto;
+                max-width: 100%;
+                object-fit: contain;
+                
         }
-
         .slider img.active {
             display: block;
         }
-
         .slider-btn {
             position: absolute;
             top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
+            transform: translateY(-60%);
+            background: rgba(0, 0, 0, 0.3);
             color: white;
+            border-radius: 2px;
             border: none;
-            padding: 10px;
+            padding: 6px;
             cursor: pointer;
+            opacity: 0.8;                   
+                    z-index: 2;
         }
+        .slider-btn.left { left: 5px; }
+        .slider-btn.right { right: 5px; }
+        .button-see-more, .cart-button {
+            background-color: #fce5cd;
+            color: #000;
+            padding: 10px 20px;
+            margin: 5px auto;
+            border-radius: 5px;
+            display: inline-block;
+            text-decoration: none;
+            transition: transform 0.3s;
+            width: auto; /* адаптивна широчина */
+            /*min-width: 120px; /* по желание – минимална ширина */
+            text-align: center;
 
-        .slider-btn.left {
-            left: 0;
         }
-
-        .slider-btn.right {
-            right: 0;
+        .button-see-more:hover, .cart-button:hover {
+            transform: scale(1.05);
+        }
+        .price-container p {
+            margin: 5px 0;
+        }
+        .price-container p del {
+            color: red;
+        }
+        .price-container p:last-child {
+            font-weight: bold;
+            font-size: 130%;
         }
     </style>
 </head>
-<body onload="loadComponents()">
+<body onload="loadComponents(); loadProducts()">
     <div id="header"></div>
 
     <div class="content">
         <p>Практични и елегантни 3D проекти за вашия дом. Разнообразие от декорации и функционални елементи.</p>
     </div>
 
-    <div class="products-wrapper">
-        <div class="product">
-            <div class="slider">
-                <img src="images/key-holder.jpg" class="active" alt="Закачалка за ключове">
-                <img src="images/key-holder-2.jpg" alt="Закачалка за ключове алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">&#10094;</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">&#10095;</button>
-            </div>
-            <h2>Закачалка за ключове</h2>
-            <p>Стилна 3D принтирана закачалка за ключове.</p>
-            <button>Виж повече</button>
-        </div>
-
-        <div class="product">
-            <div class="slider">
-                <img src="images/cable-organizer.jpg" class="active" alt="Органайзер за кабели">
-                <img src="images/cable-organizer-2.jpg" alt="Органайзер за кабели алтернативна">
-                <button class="slider-btn left" onclick="prevSlide(this)">&#10094;</button>
-                <button class="slider-btn right" onclick="nextSlide(this)">&#10095;</button>
-            </div>
-            <h2>Органайзер за кабели</h2>
-            <p>Функционален органайзер за подреждане на кабели.</p>
-            <button>Виж повече</button>
-        </div>
+    <div class="products-wrapper" id="products-container">
+        <!-- Тук ще се зареждат динамично продуктите -->
     </div>
 
     <div id="footer"></div>
 
     <script>
-        function nextSlide(button) {
-            let slider = button.parentElement;
-            let images = slider.querySelectorAll("img");
-            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
-            images[index].classList.remove("active");
-            images[(index + 1) % images.length].classList.add("active");
+    async function loadProducts() {
+    const category = "home_decor"; // Категорията е фиксирана, защото тази страница е само за персонализирани продукти
+
+    try {
+        const response = await fetch(`https://api.dp-design.art/products`);
+        const products = await response.json();
+
+        if (!response.ok) throw new Error("Грешка при зареждане на продуктите");
+
+        const container = document.getElementById("products-container");
+        container.innerHTML = "";
+
+        // 🔹 Филтрираме само продуктите от "Персонализирани продукти"
+        const filteredProducts = products.filter(product => product.category === category);
+
+        if (filteredProducts.length === 0) {
+            container.innerHTML = "<p>Няма налични продукти в тази категория.</p>";
+            return;
         }
 
-        function prevSlide(button) {
-            let slider = button.parentElement;
-            let images = slider.querySelectorAll("img");
-            let index = Array.from(images).findIndex(img => img.classList.contains("active"));
-            images[index].classList.remove("active");
-            images[(index - 1 + images.length) % images.length].classList.add("active");
-        }
-    </script>
+        filteredProducts.forEach(product => {
+            const productElement = document.createElement("div");
+            productElement.classList.add("product");
+
+            let promoBadge = product.promo_price ? `<span class="promo-badge">Промо</span>` : "";
+            let priceDisplay = product.promo_price
+                ? `<p><del>${product.price} лв.</del></p><p>${product.promo_price} лв.</p>`
+                : `<p>${product.price} лв.</p>`;
+
+            let images = product.images.length > 0
+                ? product.images.map((img, index) => `<img src="https://api.dp-design.art/uploads/${img}" class="${index === 0 ? 'active' : ''}" alt="${product.name}">`).join("")
+                : `<img src="images/placeholder.png" class="active" alt="Няма изображение">`;
+
+            productElement.innerHTML = `
+                <div class="slider">
+                    ${promoBadge}
+                    ${images}
+                    <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
+                    <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
+                </div>
+                <h2>${product.name}</h2>
+                <div class="price-container">${priceDisplay}</div>
+                <button class="cart-button" onclick="addToCart('Продукт 2', 130)">🛒 Добави в количката</button>
+                <a href="product-template.html?id=${product.id}" class="button-see-more">Виж още</a>
+            `;
+
+            container.appendChild(productElement);
+        });
+
+    } catch (error) {
+        console.error("❌ Грешка при зареждане на продуктите:", error);
+    }
+}
+
+
+    function nextSlide(button) {
+        const slider = button.parentElement;
+        const images = slider.querySelectorAll('img');
+        let index = Array.from(images).findIndex(img => img.classList.contains('active'));
+        images[index].classList.remove('active');
+        images[(index + 1) % images.length].classList.add('active');
+    }
+
+    function prevSlide(button) {
+        const slider = button.parentElement;
+        const images = slider.querySelectorAll('img');
+        let index = Array.from(images).findIndex(img => img.classList.contains('active'));
+        images[index].classList.remove('active');
+        images[(index - 1 + images.length) % images.length].classList.add('active');
+    }
 
     <script>
-        function loadComponents() {
-            fetch('header.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('header').innerHTML = data;
-                });
-
-            fetch('footer.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('footer').innerHTML = data;
-                });
+    function addToCart(name, price) {
+        let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    
+        let normalizedName = name.trim();
+        let found = false;
+    
+        // Обновяване на количката – ако продуктът вече съществува, увеличаваме quantity
+        cartItems = cartItems.map(item => {
+            if (item.name.trim() === normalizedName) {
+                item.quantity = (item.quantity || 1) + 1;
+                found = true;
+            }
+            return item;
+        });
+    
+        // Ако не е намерен, добавяме нов продукт
+        if (!found) {
+            cartItems.push({ name: normalizedName, price: price || 0, quantity: 1 });
         }
+    
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+        console.log("Обновена количка:", cartItems); // Проверяваме съдържанието
+    
+        alert(`${normalizedName} добавен в количката!`);
+    }
 
-        loadComponents();
     </script>
-    <script src="script.js" defer></script>
+
+    function loadComponents() {
+        fetch('header.html').then(response => response.text()).then(data => document.getElementById('header').innerHTML = data);
+        fetch('footer.html').then(response => response.text()).then(data => document.getElementById('footer').innerHTML = data);
+    }
+    </script>
 </body>
 </html>
