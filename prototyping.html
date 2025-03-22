@@ -203,6 +203,62 @@
   <div id="footer"></div>
 
   <script>
+    async function loadProducts() {
+    const category = "prototyping"; // Категорията е фиксирана, защото тази страница е само за персонализирани продукти
+
+    try {
+        const response = await fetch(`https://api.dp-design.art/products`);
+        const products = await response.json();
+
+        if (!response.ok) throw new Error("Грешка при зареждане на продуктите");
+
+        const container = document.getElementById("products-container");
+        container.innerHTML = "";
+
+        // 🔹 Филтрираме само продуктите от "Персонализирани продукти"
+        const filteredProducts = products.filter(product => product.category === category);
+
+        if (filteredProducts.length === 0) {
+            container.innerHTML = "<p>Няма налични продукти в тази категория.</p>";
+            return;
+        }
+
+        filteredProducts.forEach(product => {
+            const productElement = document.createElement("div");
+            productElement.classList.add("product");
+
+            let promoBadge = product.promo_price ? `<span class="promo-badge">Промо</span>` : "";
+            let priceDisplay = product.promo_price
+                ? `<p><del>${product.price} лв.</del></p><p>${product.promo_price} лв.</p>`
+                : `<p>${product.price} лв.</p>`;
+
+            let images = product.images.length > 0
+                ? product.images.map((img, index) => `<img src="https://api.dp-design.art/uploads/${img}" class="${index === 0 ? 'active' : ''}" alt="${product.name}">`).join("")
+                : `<img src="images/placeholder.png" class="active" alt="Няма изображение">`;
+
+            productElement.innerHTML = `
+                <div class="slider">
+                    ${promoBadge}
+                    ${images}
+                    <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
+                    <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
+                </div>
+                <h2>${product.name}</h2>
+                <div class="price-container">${priceDisplay}</div>
+                <button class="cart-button" onclick="window.location.href='personalize.html?id=${product.id}'">🎨 Персонализирай</button>
+                <a href="product-template.html?id=${product.id}" class="button-see-more">Виж още</a>
+            `;
+
+            container.appendChild(productElement);
+        });
+
+    } catch (error) {
+        console.error("❌ Грешка при зареждане на продуктите:", error);
+    }
+}
+ </script>
+
+  <script>
     function loadComponents() {
       fetch("header.html")
         .then((res) => res.text())
