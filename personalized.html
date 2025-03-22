@@ -94,15 +94,16 @@
         .button-see-more, .cart-button {
             background-color: #fce5cd;
             color: #000;
-            padding: 10px;
-            margin-top: 10px;
+            padding: 10px 20px;
+            margin: 5px auto;
             border-radius: 5px;
             display: inline-block;
             text-decoration: none;
             transition: transform 0.3s;
-            align-items: center;
-                /*display: block;*/
-                width: 70%;
+            width: auto; /* адаптивна широчина */
+            min-width: 120px; /* по желание – минимална ширина */
+            text-align: center;
+
         }
         .button-see-more:hover, .cart-button:hover {
             transform: scale(1.05);
