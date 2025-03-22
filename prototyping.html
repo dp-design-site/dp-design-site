@@ -1,1 +1,198 @@
-1
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>3D прототипиране | DP Design</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+  <style>
+    body {
+      background-color: #101010;
+      color: #d0d0d0;
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .content-wrapper {
+      max-width: 1200px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    .content-wrapper h2 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #eeeeee;
+    }
+
+    .intro-text {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 50px;
+      line-height: 1.6;
+      color: #bbbbbb;
+    }
+
+    .grid-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .image-box {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .image-box:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 10px #444;
+    }
+
+    .image-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .image-box p {
+      margin: 10px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .faq-section {
+      margin-top: 60px;
+    }
+
+    .faq-question {
+      background: #222;
+      color: #eee;
+      padding: 15px;
+      margin: 10px 0;
+      cursor: pointer;
+      font-weight: bold;
+      border: 1px solid #444;
+    }
+
+    .faq-answer {
+      display: none;
+      background: #181818;
+      color: #aaa;
+      padding: 15px;
+      border-left: 3px solid #666;
+    }
+
+    .contact-form {
+      margin-top: 60px;
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 8px;
+      color: #ddd;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #444;
+      background: #111;
+      color: #eee;
+      border-radius: 4px;
+    }
+
+    .contact-form button {
+      background-color: #ffcc00;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .contact-form button:hover {
+      background-color: #e6b800;
+    }
+
+    /* Променяме фоновото изображение на хедъра само за тази страница */
+    .header-wrapper {
+      background-image: url('images/header-industrial.jpg') !important;
+    }
+  </style>
+</head>
+<body onload="loadComponents()">
+  <div id="header"></div>
+
+  <div class="content-wrapper">
+    <h2>3D прототипиране и индустриално моделиране</h2>
+    <p class="intro-text">
+      Търсите сигурен партньор за бързо изработване на прототипи, функционални макети или работещи елементи за производство? DP Design предлага професионални CAD услуги, 3D печат и дребносерийно производство, съобразени с вашите изисквания.
+    </p>
+
+    <div class="grid-gallery" id="prototype-gallery">
+      <!-- Галерия със снимки ще се зарежда тук -->
+    </div>
+
+    <div class="faq-section">
+      <div class="faq-question" onclick="toggleFAQ(this)">
+        📌 Как да поръчам 3D прототип?
+      </div>
+      <div class="faq-answer">
+        Свържете се с нас чрез формата по-долу. Можете да приложите чертеж или да опишете проекта си. Ще ви върнем отговор с предложение и срок.
+      </div>
+
+      <div class="faq-question" onclick="toggleFAQ(this)">
+        ⚙ Какви материали използвате?
+      </div>
+      <div class="faq-answer">
+        Работим с PLA, PETG, ASA, ABS и гъвкави материали. Предлагаме и технически полимери при заявка.
+      </div>
+
+      <div class="faq-question" onclick="toggleFAQ(this)">
+        🚚 Колко време отнема изпълнението?
+      </div>
+      <div class="faq-answer">
+        Повечето поръчки се изпълняват в рамките на 2-5 работни дни, в зависимост от обема и сложността.
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h3>Свържете се с нас</h3>
+      <input type="text" placeholder="Вашето име" required />
+      <input type="email" placeholder="Имейл за връзка" required />
+      <textarea rows="4" placeholder="Описание на вашия проект или въпрос"></textarea>
+      <button>Изпрати запитване</button>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+
+  <script>
+    function loadComponents() {
+      fetch("header.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header").innerHTML = data;
+        });
+      fetch("footer.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("footer").innerHTML = data;
+        });
+    }
+
+    function toggleFAQ(element) {
+      const answer = element.nextElementSibling;
+      answer.style.display = answer.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>
