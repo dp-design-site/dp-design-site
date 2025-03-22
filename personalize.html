@@ -89,6 +89,20 @@
     .form-wrapper button:hover {
       background-color: #ffcc99;
     }
+    input, textarea {
+      border: 1px solid #555; /* фин сив бордер */
+      background: #1e1e1e;
+      color: #fce5cd;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    
+    input::placeholder,
+    textarea::placeholder {
+      color: #999;
+      font-style: italic;
+    }
+
   </style>
 </head>
 <body onload="loadComponents(); loadProductDetails()">
