@@ -6,7 +6,6 @@
   <title>Персонализирай продукт | DP Design</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="script.js" defer></script>
-
   <style>
     body {
       background-color: #121212;
@@ -14,242 +13,184 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
     }
 
-    /* Контейнер за подредба в две колони */
-.personalization-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #444;
-  border-radius: 12px;
-  padding: 30px;
-  align-items: flex-start;
-}
-
-/* Секцията със снимка */
-.product-image {
-  flex: 1 1 300px;
-  max-width: 300px;
-  text-align: center;
-}
-
-.product-image img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 204, 153, 0.3);
-}
-
-.product-image h2 {
-  margin-top: 15px;
-  font-size: 22px;
-  color: #fce5cd;
-}
-
-/* Формата */
-.form-wrapper {
-  flex: 2 1 400px;
-}
-
-/* Отзивчивост */
-@media (max-width: 768px) {
-  .personalization-container {
-    flex-direction: column;
-    padding: 20px;
-  }
-
-  .product-image, .form-wrapper {
-    max-width: 100%;
-  }
-}
-
-
-    .content-wrapper {
-      max-width: 1000px;
-      margin: auto;
-      padding: 40px 20px;
+    .product-container {
+      display: flex;
+      flex-direction: row;
+      padding: 20px;
+      gap: 20px;
+      align-items: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
-    .product-info {
-      text-align: center;
-      margin-bottom: 40px;
+    .product-image {
+      flex: 0 0 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .product-info img {
-      max-height: 250px;
-      width: auto;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 204, 153, 0.3);
-      margin-bottom: 15px;
-    }
-
-    .product-info h2 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .form-wrapper {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 30px;
+    .product-image img {
+      width: 100%;
+      max-width: 250px;
       border-radius: 10px;
     }
 
-    .form-wrapper label {
-      display: block;
-      margin-top: 20px;
-      margin-bottom: 5px;
-      font-weight: bold;
+    .thumbnails {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
-    .form-wrapper input,
-    .form-wrapper select,
-    .form-wrapper textarea {
+    .thumbnails img {
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: transform 0.3s;
+    }
+
+    .thumbnails img:hover {
+      transform: scale(1.1);
+    }
+
+    .form-fields {
+      flex: 1;
+      max-width: 500px;
+    }
+
+    .input-field, .dropdown, textarea {
       width: 100%;
       padding: 12px;
+      margin: 10px 0;
+      background: #1e1e1e;
+      border: 1px solid #555;
+      color: #fce5cd;
       border-radius: 5px;
-      border: none;
-      background: #1e1e1e;
-      color: #fce5cd;
+      font-size: 16px;
     }
 
-    .form-wrapper input::file-selector-button {
-      background-color: #fce5cd;
-      color: #000;
-      padding: 8px 12px;
-      border: none;
-      margin-right: 10px;
-      cursor: pointer;
-      border-radius: 4px;
+    .file-input {
+      display: none;
     }
 
-    .form-wrapper button {
-      margin-top: 30px;
-      background-color: #fce5cd;
-      color: #000;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .form-wrapper button:hover {
+    .upload-btn {
       background-color: #ffcc99;
-    }
-    input, textarea {
-      border: 1px solid #555; /* фин сив бордер */
-      background: #1e1e1e;
-      color: #fce5cd;
+      color: #000;
+      border: none;
       padding: 10px;
       border-radius: 5px;
-    }
-    
-    input::placeholder,
-    textarea::placeholder {
-      color: #999;
-      font-style: italic;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
     }
 
-/* 🖼 Изображение стил */
-.product-info img {
-  max-height: 280px;
-  width: auto;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 204, 153, 0.3);
-  margin-bottom: 15px;
-}
+    .order-btn {
+      background-color: #fce5cd;
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      font-weight: bold;
+      width: 100%;
+      margin-top: 20px;
+      cursor: pointer;
+    }
 
-/* 📱 Мобилен изглед – една под друга */
-@media (max-width: 768px) {
-  .two-column-layout {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
+    .order-btn:hover {
+      background-color: #ffcc99;
+    }
 
+    @media (max-width: 600px) {
+      .product-container {
+        flex-direction: column;
+        align-items: center;
+      }
 
+      .product-image {
+        width: 80%;
+      }
+    }
   </style>
 </head>
-<body onload="loadComponents(); loadProductDetails()">
+<body onload="loadComponents();">
   <div id="header"></div>
 
-  <div class="content-wrapper">
-  <div class="personalization-container">
-    <div class="product-image" id="product-info">
-      <!-- Снимка и заглавие ще се заредят тук -->
+  <div class="product-container">
+    <!-- Секция за снимка -->
+    <div class="product-image">
+      <img id="product-preview" src="images/placeholder.png" alt="Снимка на продукта">
+      <input type="file" id="image-upload" class="file-input" accept="image/*" multiple />
+      <button class="upload-btn" id="upload-btn">Качи снимки</button>
+      <div class="thumbnails" id="thumbnail-container"></div>
     </div>
 
-    <div class="form-wrapper">
-      <form id="personalization-form">
-        <label for="name">Вашето име:</label>
-        <input type="text" id="name" required placeholder="Име и фамилия" />
+    <!-- Секция за форма -->
+    <div class="form-fields">
+      <input type="text" class="input-field" placeholder="Вашето име">
+      <input type="email" class="input-field" placeholder="Имейл за връзка">
+      
+      <label for="color">Избор на цвят:</label>
+      <select id="color" class="dropdown">
+        <option value="">-- Изберете --</option>
+        <option value="Черен">Черен</option>
+        <option value="Бял">Бял</option>
+        <option value="Червен">Червен</option>
+        <option value="Син">Син</option>
+      </select>
 
-        <label for="email">Имейл за връзка:</label>
-        <input type="email" id="email" required placeholder="example@email.com" />
-
-        <label for="color">Избор на цвят:</label>
-        <select id="color">
-          <option value="">-- Изберете --</option>
-          <option value="Черен">Черен</option>
-          <option value="Бял">Бял</option>
-          <option value="Червен">Червен</option>
-          <option value="Син">Син</option>
-        </select>
-
-        <label for="message">Текст за гравиране / съобщение:</label>
-        <textarea id="message" rows="3" placeholder="Напишете вашето послание..."></textarea>
-
-        <label for="attachment">Качи снимка / чертеж:</label>
-        <input type="file" id="attachment" accept="image/*,.pdf" />
-
-        <label for="description">Допълнително описание:</label>
-        <textarea id="description" rows="4" placeholder="Опишете вашата идея, размери или специални изисквания..."></textarea>
-
-        <button type="submit">📩 Изпрати запитване</button>
-      </form>
+      <textarea class="input-field" rows="3" placeholder="Текст за гравиране / съобщение..."></textarea>
+      <textarea class="input-field" rows="4" placeholder="Допълнително описание: идея, размери, изисквания..."></textarea>
+      
+      <button class="order-btn">📩 Изпрати запитване</button>
     </div>
   </div>
-</div>
-
 
   <div id="footer"></div>
 
   <script>
-    function loadProductDetails() {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("upload-btn").addEventListener("click", () => {
+        document.getElementById("image-upload").click();
+      });
 
-      if (!id) return;
+      document.getElementById("image-upload").addEventListener("change", function(event) {
+        const fileList = event.target.files;
+        const preview = document.getElementById("product-preview");
+        const thumbnails = document.getElementById("thumbnail-container");
+        thumbnails.innerHTML = "";
 
-      fetch(`https://api.dp-design.art/products/${id}`)
-        .then(res => res.json())
-        .then(product => {
-          const container = document.getElementById("product-info");
+        if (fileList.length > 0) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            preview.src = e.target.result;
+          };
+          reader.readAsDataURL(fileList[0]);
 
-          const imageUrl = product.images && product.images.length > 0
-            ? `https://api.dp-design.art/uploads/${product.images[0]}`
-            : 'images/placeholder.png';
-
-          container.innerHTML = `
-            <img src="${imageUrl}" alt="${product.name}">
-            <h2>${product.name}</h2>
-            <p>${product.description || ""}</p>
-          `;
-        })
-        .catch(err => {
-          console.error("❌ Грешка при зареждане на продукта:", err);
-        });
-    }
+          for (let i = 0; i < fileList.length; i++) {
+            const thumbReader = new FileReader();
+            thumbReader.onload = function(e) {
+              const img = document.createElement("img");
+              img.src = e.target.result;
+              thumbnails.appendChild(img);
+            };
+            thumbReader.readAsDataURL(fileList[i]);
+          }
+        }
+      });
+    });
 
     function loadComponents() {
-      fetch("header.html").then(res => res.text()).then(data => {
-        document.getElementById("header").innerHTML = data;
+      fetch('header.html').then(res => res.text()).then(data => {
+        document.getElementById('header').innerHTML = data;
       });
-      fetch("footer.html").then(res => res.text()).then(data => {
-        document.getElementById("footer").innerHTML = data;
+      fetch('footer.html').then(res => res.text()).then(data => {
+        document.getElementById('footer').innerHTML = data;
       });
     }
   </script>
