@@ -16,6 +16,56 @@
       padding: 0;
     }
 
+    /* Контейнер за подредба в две колони */
+.personalization-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #444;
+  border-radius: 12px;
+  padding: 30px;
+  align-items: flex-start;
+}
+
+/* Секцията със снимка */
+.product-image {
+  flex: 1 1 300px;
+  max-width: 300px;
+  text-align: center;
+}
+
+.product-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 204, 153, 0.3);
+}
+
+.product-image h2 {
+  margin-top: 15px;
+  font-size: 22px;
+  color: #fce5cd;
+}
+
+/* Формата */
+.form-wrapper {
+  flex: 2 1 400px;
+}
+
+/* Отзивчивост */
+@media (max-width: 768px) {
+  .personalization-container {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .product-image, .form-wrapper {
+    max-width: 100%;
+  }
+}
+
+
     .content-wrapper {
       max-width: 1000px;
       margin: auto;
@@ -147,8 +197,14 @@
     <!-- Тук ще се зареди снимка и име -->
   </div>
 
-  <div class="form-wrapper">
+  
+    <div class="personalization-container">
+  <div class="product-image" id="product-info">
+    <!-- Снимка и заглавие се зареждат динамично тук -->
+  </div>
+      <div class="form-wrapper">
     <form id="personalization-form">
+      <!-- формата е същата както досега -->
       <label for="name">Вашето име:</label>
       <input type="text" id="name" required placeholder="Име и фамилия" />
 
