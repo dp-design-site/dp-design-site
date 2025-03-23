@@ -147,7 +147,8 @@
       <textarea class="input-field" rows="3" placeholder="Текст за гравиране / съобщение..."></textarea>
       <textarea class="input-field" rows="4" placeholder="Допълнително описание: идея, размери, изисквания..."></textarea>
       
-      <button class="order-btn">📩 Изпрати запитване</button>
+      <!--<button class="order-btn">📩 Изпрати запитване</button>-->
+      <button type="button" onclick="addToCartFromForm()">🛒 Добави в количката</button>
     </div>
   </div>
 
@@ -193,6 +194,44 @@
         document.getElementById('footer').innerHTML = data;
       });
     }
+
+    function addToCartFromForm() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get('id');
+  const name = document.querySelector('#product-info h2')?.innerText || "Персонализиран продукт";
+  const color = document.getElementById('color').value;
+  const message = document.getElementById('message').value;
+  const description = document.getElementById('description').value;
+  const quantity = 1;
+
+  const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+
+  // Проверка за съществуващ същия персонализиран продукт
+  const existingItem = cartItems.find(item =>
+    item.id === productId &&
+    item.color === color &&
+    item.message === message &&
+    item.description === description
+  );
+
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    cartItems.push({
+      id: productId,
+      name,
+      color,
+      message,
+      description,
+      quantity,
+      isCustom: true
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cartItems));
+  alert("🎉 Продуктът е добавен в количката!");
+}
+
   </script>
 </body>
 </html>
