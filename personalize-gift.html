@@ -107,7 +107,8 @@
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
       margin-top: 20px;
-      width: 100%;
+      width: auto;
+      text-align: center;
     }
 
     .cart-submit-button:hover {
@@ -115,7 +116,7 @@
       transform: scale(1.03);
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
       .product-container {
         flex-direction: column;
         align-items: center;
@@ -124,14 +125,10 @@
       .product-image {
         width: 80%;
       }
-
-      .form-fields {
-        width: 90%;
-      }
     }
   </style>
 </head>
-<body onload="loadComponents()">
+<body onload="loadComponents(); loadProductDetails();">
   <div id="header"></div>
 
   <div class="product-container">
@@ -141,13 +138,12 @@
       <input type="file" id="image-upload" class="file-input" accept="image/*" multiple />
       <button class="upload-btn" id="upload-btn">Качи снимки</button>
       <div class="thumbnails" id="thumbnail-container"></div>
-      <h2 id="product-title"></h2>
     </div>
 
     <!-- Секция за форма -->
     <div class="form-fields">
-      <input type="text" id="name" class="input-field" placeholder="Вашето име" />
-      <input type="email" id="email" class="input-field" placeholder="Имейл за връзка" />
+      <input type="text" class="input-field" id="customer-name" placeholder="Вашето име">
+      <input type="email" class="input-field" id="customer-email" placeholder="Имейл за връзка">
       
       <label for="color">Избор на цвят:</label>
       <select id="color" class="dropdown">
@@ -160,7 +156,7 @@
 
       <textarea id="message" class="input-field" rows="3" placeholder="Текст за гравиране / съобщение..."></textarea>
       <textarea id="description" class="input-field" rows="4" placeholder="Допълнително описание: идея, размери, изисквания..."></textarea>
-      
+
       <button type="button" class="cart-submit-button">🛒 Добави в количката</button>
     </div>
   </div>
@@ -168,30 +164,33 @@
   <div id="footer"></div>
 
   <script>
-    let productId = null;
-    let productName = "Персонализиран продукт";
-    let productPrice = 0;
+    function loadComponents() {
+      fetch('header.html').then(res => res.text()).then(data => {
+        document.getElementById('header').innerHTML = data;
+      });
+      fetch('footer.html').then(res => res.text()).then(data => {
+        document.getElementById('footer').innerHTML = data;
+      });
+    }
+
+    function loadProductDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      if (!id) return;
+
+      fetch(`https://api.dp-design.art/products/${id}`)
+        .then(res => res.json())
+        .then(product => {
+          const container = document.querySelector(".product-container");
+          container.setAttribute("data-product-name", product.name || "Персонализиран продукт");
+          container.setAttribute("data-product-price", product.promo_price || product.price || 0);
+        })
+        .catch(err => {
+          console.error("❌ Грешка при зареждане на продукта:", err);
+        });
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
-      const params = new URLSearchParams(window.location.search);
-      productId = params.get("id");
-
-      if (productId) {
-        fetch(`https://api.dp-design.art/products/${productId}`)
-          .then((res) => res.json())
-          .then((product) => {
-            productName = product.name || "Персонализиран продукт";
-            productPrice = product.promo_price || product.price || 0;
-
-            document.getElementById("product-title").innerText = productName;
-
-            const preview = document.getElementById("product-preview");
-            if (product.images?.length > 0) {
-              preview.src = `https://api.dp-design.art/uploads/${product.images[0]}`;
-            }
-          });
-      }
-
       document.getElementById("upload-btn").addEventListener("click", () => {
         document.getElementById("image-upload").click();
       });
@@ -204,7 +203,9 @@
 
         if (fileList.length > 0) {
           const reader = new FileReader();
-          reader.onload = (e) => (preview.src = e.target.result);
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+          };
           reader.readAsDataURL(fileList[0]);
 
           for (let i = 0; i < fileList.length; i++) {
@@ -219,52 +220,42 @@
         }
       });
 
-      document.querySelector(".cart-submit-button").addEventListener("click", addToCartFromForm);
-    });
+      document.querySelector(".cart-submit-button").addEventListener("click", function () {
+        const container = document.querySelector(".product-container");
+        const name = container.getAttribute("data-product-name") || "Персонализиран продукт";
+        const price = parseFloat(container.getAttribute("data-product-price")) || 0;
 
-    function addToCartFromForm() {
-      const color = document.getElementById("color").value;
-      const message = document.getElementById("message").value;
-      const description = document.getElementById("description").value;
-      const quantity = 1;
+        const color = document.getElementById("color").value;
+        const message = document.getElementById("message").value;
+        const description = document.getElementById("description").value;
 
-      const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+        const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
 
-      const existingItem = cartItems.find(
-        (item) =>
-          item.id === productId &&
+        const existingItem = cartItems.find(item =>
+          item.name === name &&
           item.color === color &&
           item.message === message &&
           item.description === description
-      );
+        );
 
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        cartItems.push({
-          id: productId,
-          name: productName,
-          price: productPrice,
-          color,
-          message,
-          description,
-          quantity,
-          isCustom: true
-        });
-      }
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cartItems.push({
+            name,
+            price,
+            color,
+            message,
+            description,
+            quantity: 1,
+            isCustom: true
+          });
+        }
 
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-      alert("🎉 Продуктът е добавен в количката!");
-    }
-
-    function loadComponents() {
-      fetch("header.html")
-        .then((res) => res.text())
-        .then((data) => (document.getElementById("header").innerHTML = data));
-      fetch("footer.html")
-        .then((res) => res.text())
-        .then((data) => (document.getElementById("footer").innerHTML = data));
-    }
+        localStorage.setItem("cart", JSON.stringify(cartItems));
+        alert("🎉 Продуктът е добавен в количката!");
+      });
+    });
   </script>
 </body>
 </html>
