@@ -88,6 +88,16 @@
 </script>
 
 <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    const totalCount = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const counter = document.getElementById("cart-count");
+    if (counter) counter.textContent = totalCount;
+  });
+</script>
+
+
+<script>
     function updateHeader() {
         const userAuth = document.getElementById('userAuth');
         const user = JSON.parse(localStorage.getItem('user'));
