@@ -2,10 +2,15 @@
 <html lang="bg">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D Прототипиране | DP Design</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>3D прототипиране | DP Design</title>
   <link rel="stylesheet" href="styles.css" />
-  <script src="script.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init("YOUR_PUBLIC_KEY"); // 🔁 Замени с твоя Public Key
+    })();
+  </script>
   <style>
     body {
       background-color: #121212;
@@ -13,90 +18,35 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
     }
 
-    .product-container {
-      display: flex;
-      flex-direction: row;
-      padding: 20px;
-      gap: 20px;
-      align-items: flex-start;
-      justify-content: center;
-      flex-wrap: wrap;
+    .wrapper {
+      max-width: 900px;
+      margin: 40px auto;
+      background: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 12px;
     }
 
-    .product-image {
-      flex: 0 0 30%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #ffcc99;
     }
 
-    .product-image img {
+    form input, form select, form textarea {
       width: 100%;
-      max-width: 250px;
-      border-radius: 10px;
-    }
-
-    .thumbnails {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .thumbnails img {
-      width: 60px;
-      height: 60px;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: transform 0.3s;
-    }
-
-    .thumbnails img:hover {
-      transform: scale(1.1);
-    }
-
-    .form-fields {
-      flex: 1;
-      max-width: 500px;
-    }
-
-    .input-field, .dropdown, textarea {
       padding: 12px;
       margin: 10px 0;
-      background: #1e1e1e;
       border: 1px solid #555;
+      background: #1e1e1e;
       color: #fce5cd;
-      border-radius: 5px;
+      border-radius: 6px;
       font-size: 16px;
-      width: 100%;
       box-sizing: border-box;
     }
 
-    .file-input {
-      display: none;
-    }
-
-    .upload-btn {
-      background-color: #fce5cd;
-      color: #000;
-      border: none;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .upload-btn:hover {
-      background-color: #ffcc99;
-      transform: scale(1.03);
-    }
-
-    .cart-submit-button {
+    form button {
       background-color: #fce5cd;
       color: #000;
       padding: 12px 25px;
@@ -104,122 +54,97 @@
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
       margin-top: 20px;
-      width: auto;
-      text-align: center;
     }
 
-    .cart-submit-button:hover {
+    form button:hover {
       background-color: #ffcc99;
-      transform: scale(1.03);
     }
 
-    @media (max-width: 768px) {
-      .product-container {
-        flex-direction: column;
-        align-items: center;
-      }
+    .note {
+      font-size: 14px;
+      color: #aaa;
     }
   </style>
 </head>
-<body onload="loadComponents();">
+<body onload="loadComponents()">
   <div id="header"></div>
 
-  <div class="product-container">
-    <!-- Секция за снимка -->
-    <div class="product-image">
-      <img id="product-preview" src="images/placeholder.png" alt="Снимка на продукта">
-      <input type="file" id="image-upload" class="file-input" accept=".jpg,.jpeg,.png,.pdf,.stl,.dwg" multiple />
-      <button class="upload-btn" id="upload-btn">Качи файлове</button>
-      <div class="thumbnails" id="thumbnail-container"></div>
-    </div>
+  <div class="wrapper">
+    <h1>Запитване за 3D прототипиране</h1>
 
-    <!-- Секция за форма -->
-    <div class="form-fields">
-      <input type="text" class="input-field" id="name" placeholder="Вашето име" />
-      <input type="email" class="input-field" id="email" placeholder="Имейл за връзка" />
+    <form id="protoForm">
+      <input type="text" name="name" placeholder="Вашето име" required />
+      <input type="email" name="email" placeholder="Имейл за връзка" required />
 
-      <label for="color">Избор на цвят на материала:</label>
-      <select id="color" class="dropdown">
+      <label for="material">Изберете материал:</label>
+      <select name="material" required>
+        <option value="">-- Изберете --</option>
+        <option value="PLA">PLA</option>
+        <option value="HITPLA">HITPLA</option>
+        <option value="ULTRAHITPLA">ULTRAHITPLA</option>
+        <option value="PETG">PETG</option>
+        <option value="ASA">ASA</option>
+        <option value="ABS">ABS</option>
+        <option value="TPU">TPU</option>
+      </select>
+
+      <label for="color">Изберете цвят:</label>
+      <select name="color">
         <option value="">-- Изберете --</option>
         <option value="Черен">Черен</option>
         <option value="Бял">Бял</option>
-        <option value="Червен">Червен</option>
         <option value="Сив">Сив</option>
+        <option value="Прозрачен">Прозрачен</option>
       </select>
 
-      <textarea class="input-field" id="message" rows="3" placeholder="Описание на идеята или функционалността..."></textarea>
-      <textarea class="input-field" id="description" rows="4" placeholder="Размери, материал, приложение, изисквания..."></textarea>
+      <textarea name="description" rows="5" placeholder="Описание на проекта: размери, функция, срок и др."></textarea>
 
-      <button type="submit" class="cart-submit-button" onclick="addToCartFromForm()">📩 Запитване</button>
-    </div>
+      <label for="file">Качи файл (.stl, .dwg, .pdf, .jpg):</label>
+      <input type="file" id="file" name="file" multiple accept=".pdf,.jpg,.jpeg,.png,.stl,.dwg" />
+
+      <p class="note">📎 Можете да прикачите няколко файла.</p>
+
+      <button type="submit">📩 Изпрати запитване</button>
+    </form>
   </div>
 
   <div id="footer"></div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      document.getElementById("upload-btn").addEventListener("click", () => {
-        document.getElementById("image-upload").click();
-      });
-
-      document.getElementById("image-upload").addEventListener("change", function(event) {
-        const fileList = event.target.files;
-        const thumbnails = document.getElementById("thumbnail-container");
-        thumbnails.innerHTML = "";
-
-        for (let i = 0; i < fileList.length; i++) {
-          const file = fileList[i];
-          if (file.type.startsWith("image/")) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              const img = document.createElement("img");
-              img.src = e.target.result;
-              thumbnails.appendChild(img);
-              if (i === 0) {
-                document.getElementById("product-preview").src = e.target.result;
-              }
-            };
-            reader.readAsDataURL(file);
-          }
-        }
-      });
-    });
-
     function loadComponents() {
-      fetch("header.html").then(res => res.text()).then(data => {
+      fetch('header.html').then(res => res.text()).then(data => {
         document.getElementById("header").innerHTML = data;
       });
-      fetch("footer.html").then(res => res.text()).then(data => {
+      fetch('footer.html').then(res => res.text()).then(data => {
         document.getElementById("footer").innerHTML = data;
       });
     }
 
-    function addToCartFromForm() {
-      const name = "3D Прототипиране";
-      const color = document.getElementById("color").value;
-      const message = document.getElementById("message").value;
-      const description = document.getElementById("description").value;
-      const quantity = 1;
+    document.getElementById("protoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-      const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+      const form = this;
+      const formData = new FormData(form);
+      const files = document.getElementById("file").files;
 
-      cartItems.push({
-        id: "custom-proto-" + Date.now(),
-        name,
-        color,
-        message,
-        description,
-        quantity,
-        isCustom: true,
-        price: 0
+      // EmailJS не поддържа директно прикачени файлове – трябва да използваме външен хостинг или линкове.
+      // За сега изпращаме данните без файловете (ще добавим линк или backend по-късно).
+      emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        material: formData.get("material"),
+        color: formData.get("color"),
+        description: formData.get("description"),
+      }).then(function(response) {
+        console.log("✅ Изпратено:", response.status, response.text);
+        alert("✅ Запитването е изпратено успешно!");
+        form.reset();
+      }, function(error) {
+        console.error("❌ Грешка:", error);
+        alert("❌ Възникна грешка при изпращането.");
       });
-
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-      alert("📩 Запитването е добавено в количката!");
-    }
+    });
   </script>
 </body>
 </html>
-
