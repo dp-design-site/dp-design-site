@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -24,6 +25,8 @@
       align-items: flex-start;
       justify-content: center;
       flex-wrap: wrap;
+      max-width: 1200px;
+      margin: auto;
     }
 
     .product-image {
@@ -64,8 +67,10 @@
       max-width: 500px;
     }
 
-    .input-field, .dropdown, textarea {
-      /*width: 100%;*/
+    .input-field,
+    .dropdown,
+    textarea {
+      width: 100%;
       padding: 12px;
       margin: 10px 0;
       background: #1e1e1e;
@@ -73,6 +78,7 @@
       color: #fce5cd;
       border-radius: 5px;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
     .file-input {
@@ -91,81 +97,44 @@
     }
 
     .upload-btn:hover {
-          background-color: #ffcc99;
-          transform: scale(1.03);
-        }
+      background-color: #ffcc99;
+      transform: scale(1.03);
+    }
 
-    .order-btn {
+    .cart-submit-button {
       background-color: #fce5cd;
       color: #000;
+      padding: 12px 25px;
       border: none;
-      padding: 12px;
-      border-radius: 5px;
+      border-radius: 6px;
       font-weight: bold;
-      width: 100%;
-      margin-top: 20px;
       cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 20px;
+      width: 100%;
+      text-align: center;
     }
 
-    .order-btn:hover {
+    .cart-submit-button:hover {
       background-color: #ffcc99;
+      transform: scale(1.03);
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       .product-container {
         flex-direction: column;
         align-items: center;
       }
-
       .product-image {
         width: 80%;
       }
     }
-
-            /* 🔁 Уеднаквяване на широчината */
-        .form-wrapper form input,
-        .form-wrapper form select,
-        .form-wrapper form textarea {
-          width: 100%;
-          max-width: 100%; /* важно за адаптивност */
-          box-sizing: border-box;
-          margin-bottom: 15px;
-        }
-        
-        /* ✅ Стил за бутона "Добави в количката" */
-        .cart-submit-button {
-          background-color: #fce5cd;
-          color: #000;
-          padding: 12px 25px;
-          border: none;
-          border-radius: 6px;
-          font-weight: bold;
-          cursor: pointer;
-          transition: background-color 0.3s ease, transform 0.2s ease;
-          margin-top: 20px;
-          width: auto;
-          text-align: center;
-        }
-        
-        .cart-submit-button:hover {
-          background-color: #ffcc99;
-          transform: scale(1.03);
-        }
-        
-        /* 📱 Леко прибиране от ръбовете в мобилен режим */
-        @media (max-width: 768px) {
-          .form-wrapper {
-            padding: 20px;
-          }
-        }
-
   </style>
 </head>
 <body onload="loadComponents();">
   <div id="header"></div>
 
   <div class="product-container">
-    <!-- Секция за снимка -->
     <div class="product-image">
       <img id="product-preview" src="images/placeholder.png" alt="Снимка на продукта">
       <input type="file" id="image-upload" class="file-input" accept="image/*" multiple />
@@ -173,11 +142,10 @@
       <div class="thumbnails" id="thumbnail-container"></div>
     </div>
 
-    <!-- Секция за форма -->
     <div class="form-fields">
-      <input type="text" class="input-field" placeholder="Вашето име">
-      <input type="email" class="input-field" placeholder="Имейл за връзка">
-      
+      <input type="text" class="input-field" id="user-name" placeholder="Вашето име">
+      <input type="email" class="input-field" id="user-email" placeholder="Имейл за връзка">
+
       <label for="color">Избор на цвят:</label>
       <select id="color" class="dropdown">
         <option value="">-- Изберете --</option>
@@ -187,23 +155,31 @@
         <option value="Син">Син</option>
       </select>
 
-      <textarea class="input-field" rows="3" placeholder="Текст за гравиране / съобщение..."></textarea>
-      <textarea class="input-field" rows="4" placeholder="Допълнително описание: идея, размери, изисквания..."></textarea>
-      
-      <!--<button class="order-btn">📩 Изпрати запитване</button>-->
-      <button type="submit" class="cart-submit-button">🛒 Добави в количката</button>
+      <textarea class="input-field" id="message" rows="3" placeholder="Текст за гравиране / съобщение..."></textarea>
+      <textarea class="input-field" id="description" rows="4" placeholder="Допълнително описание: идея, размери, изисквания..."></textarea>
+
+      <button type="button" class="cart-submit-button" onclick="addToCartFromForm()">🛒 Добави в количката</button>
     </div>
   </div>
 
   <div id="footer"></div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    function loadComponents() {
+      fetch('header.html').then(res => res.text()).then(data => {
+        document.getElementById('header').innerHTML = data;
+      });
+      fetch('footer.html').then(res => res.text()).then(data => {
+        document.getElementById('footer').innerHTML = data;
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("upload-btn").addEventListener("click", () => {
         document.getElementById("image-upload").click();
       });
 
-      document.getElementById("image-upload").addEventListener("change", function(event) {
+      document.getElementById("image-upload").addEventListener("change", function (event) {
         const fileList = event.target.files;
         const preview = document.getElementById("product-preview");
         const thumbnails = document.getElementById("thumbnail-container");
@@ -211,14 +187,14 @@
 
         if (fileList.length > 0) {
           const reader = new FileReader();
-          reader.onload = function(e) {
+          reader.onload = function (e) {
             preview.src = e.target.result;
           };
           reader.readAsDataURL(fileList[0]);
 
           for (let i = 0; i < fileList.length; i++) {
             const thumbReader = new FileReader();
-            thumbReader.onload = function(e) {
+            thumbReader.onload = function (e) {
               const img = document.createElement("img");
               img.src = e.target.result;
               thumbnails.appendChild(img);
@@ -229,52 +205,33 @@
       });
     });
 
-    function loadComponents() {
-      fetch('header.html').then(res => res.text()).then(data => {
-        document.getElementById('header').innerHTML = data;
-      });
-      fetch('footer.html').then(res => res.text()).then(data => {
-        document.getElementById('footer').innerHTML = data;
-      });
-    }
-
     function addToCartFromForm() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const productId = urlParams.get('id');
-  const name = document.querySelector('#product-info h2')?.innerText || "Персонализиран продукт";
-  const color = document.getElementById('color').value;
-  const message = document.getElementById('message').value;
-  const description = document.getElementById('description').value;
-  const quantity = 1;
+      const name = "Персонализиран продукт";
+      const color = document.getElementById("color").value;
+      const message = document.getElementById("message").value;
+      const description = document.getElementById("description").value;
+      const quantity = 1;
 
-  const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // Проверка за съществуващ същия персонализиран продукт
-  const existingItem = cartItems.find(item =>
-    item.id === productId &&
-    item.color === color &&
-    item.message === message &&
-    item.description === description
-  );
+      cart.push({
+        name,
+        color,
+        message,
+        description,
+        quantity,
+        isCustom: true
+      });
 
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    cartItems.push({
-      id: productId,
-      name,
-      color,
-      message,
-      description,
-      quantity,
-      isCustom: true
-    });
-  }
+      localStorage.setItem("cart", JSON.stringify(cart));
 
-  localStorage.setItem("cart", JSON.stringify(cartItems));
-  alert("🎉 Продуктът е добавен в количката!");
-}
+      // 🔄 Обновяване на броя в количката
+      const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+      const countEl = document.getElementById("cart-count");
+      if (countEl) countEl.textContent = cartCount;
 
+      alert("🎉 Продуктът е добавен в количката!");
+    }
   </script>
 </body>
 </html>
