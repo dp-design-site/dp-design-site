@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Тестова форма за имейл</title>
+</head>
+<body>
+  <h2>📬 Изпращане на тестово запитване</h2>
+  <form id="emailForm" enctype="multipart/form-data">
+    <input type="text" name="name" placeholder="Име" required><br><br>
+    <input type="email" name="email" placeholder="Имейл" required><br><br>
+    <input type="text" name="material" placeholder="Материал"><br><br>
+    <input type="text" name="color" placeholder="Цвят"><br><br>
+    <textarea name="message" placeholder="Съобщение" rows="4"></textarea><br><br>
+    <input type="file" name="files" multiple><br><br>
+    <button type="submit">Изпрати</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    const form = document.getElementById('emailForm');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('http://localhost:3000/send-email', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        status.innerText = result.message;
+        status.style.color = result.success ? 'green' : 'red';
+      } catch (err) {
+        console.error(err);
+        status.innerText = '⚠️ Възникна грешка при изпращане.';
+        status.style.color = 'red';
+      }
+    });
+  </script>
+</body>
+</html>
