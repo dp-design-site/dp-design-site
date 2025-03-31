@@ -241,6 +241,12 @@
                 console.log("📦 Продуктовата секция е заредена, изпълняваме loadProductScripts()");
                 setTimeout(loadProductScripts, 300); // Малко забавяне за безопасност
             }
+
+            if (section === "orders") {
+                console.log("📦 Поръчковата секция е заредена, изпълняваме loadOrderScripts()");
+                setTimeout(loadOrderScripts, 300);
+            }
+
         })
         .catch(error => console.error("❌ Грешка при зареждане на съдържанието:", error));
 }
@@ -253,6 +259,15 @@ function loadProductScripts() {
     document.body.appendChild(script);
     console.log("📜 Зареден е products.js");
 }
+
+         function loadOrderScripts() {
+    const script = document.createElement("script");
+    script.src = "scripts/orders.js";
+    script.defer = true;
+    document.body.appendChild(script);
+    console.log("📜 Зареден е orders.js");
+}
+
 
 </script>
 
