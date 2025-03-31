@@ -1,17 +1,28 @@
 // scripts/orders.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("orders-table")) {
+  const table = document.getElementById("orders-table");
+  if (table) {
     loadOrders();
   }
 });
 
 function loadOrders() {
+  const loader = document.getElementById("loading-message");
+  if (loader) loader.textContent = "🔄 Зареждане на поръчки...";
+
   fetch("https://api.dp-design.art/api/orders")
     .then(response => response.json())
     .then(data => {
       const tbody = document.querySelector("#orders-table tbody");
       tbody.innerHTML = "";
+
+      if (loader) loader.style.display = "none";
+
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10">❌ Няма поръчки</td></tr>`;
+        return;
+      }
 
       data.forEach(order => {
         const row = document.createElement("tr");
@@ -31,22 +42,21 @@ function loadOrders() {
             <button onclick="changeStatus(${order.id})">🔄</button>
           </td>
         `;
-
         tbody.appendChild(row);
       });
     })
     .catch(err => {
-      console.error("❌ Грешка при зареждане на поръчките:", err);
+      console.error("❌ Грешка при зареждане:", err);
+      if (loader) loader.textContent = "⚠️ Грешка при зареждане на поръчките";
     });
 }
 
 function viewOrder(id) {
-  alert(`📦 Виж поръчката с ID: ${id}`);
-  // TODO: Редирект към order.html?id=...
+  window.location.href = `order.html?id=${id}`;
 }
 
 function changeStatus(id) {
-  const newStatus = prompt("Въведете нов статус за поръчка #" + id);
+  const newStatus = prompt("📝 Въведете нов статус за поръчка #" + id);
   if (newStatus) {
     fetch(`https://api.dp-design.art/api/orders/${id}/status`, {
       method: "PUT",
