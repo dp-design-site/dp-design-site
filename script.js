@@ -343,7 +343,6 @@ document.getElementById("save-product-btn").addEventListener("click", function(e
     window.location.href = "admin.html?section=products";
 });
 
-
 console.log("🔥 script.js е зареден успешно!");
 
 window.addEventListener("popstate", updatePageState);
