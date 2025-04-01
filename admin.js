@@ -1,20 +1,47 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const menuButtons = document.querySelectorAll(".menu-button");
     const contentContainer = document.getElementById("admin-content");
     const addProductButton = document.getElementById("add-product-btn");
 
     function loadContent(section) {
         fetch(`admin-sections/${section}.html`)
-            .then(response => response.text())
-            .then(data => {
-                contentContainer.innerHTML = data;
+            .then(response => {
+                if (!response.ok) throw new Error("Грешка при зареждане на HTML");
+                return response.text();
             })
-            .catch(error => console.error("Грешка при зареждане на съдържанието:", error));
+            .then(html => {
+                contentContainer.innerHTML = html;
+                console.log(`✅ Заредено съдържание: ${section}.html`);
+
+                // 👉 Зареждаме свързания JS скрипт, ако има
+                if (section === "orders") {
+                    loadScript("scripts/orders.js");
+                } else if (section === "products") {
+                    loadScript("scripts/products.js");
+                } else if (section === "dashboard") {
+                    // тук можеш да добавиш скрипт за таблото ако имаш
+                }
+            })
+            .catch(error => console.error("❌ Грешка при зареждане на съдържание:", error));
     }
 
-    // Клик на меню бутон
+    // 👉 Зарежда JS скриптове динамично
+    function loadScript(src) {
+        const existing = document.querySelector(`script[src="${src}"]`);
+        if (existing) {
+            console.log(`ℹ️ Скриптът вече е зареден: ${src}`);
+            return;
+        }
+        const script = document.createElement("script");
+        script.src = src;
+        script.defer = true;
+        document.body.appendChild(script);
+        console.log(`📜 Зареден е скриптът: ${src}`);
+    }
+
+    // 👉 Клик на меню бутон
     menuButtons.forEach(button => {
-        button.addEventListener("click", function() {
+        button.addEventListener("click", function () {
             menuButtons.forEach(btn => btn.classList.remove("active"));
             this.classList.add("active");
             const section = this.getAttribute("data-section");
@@ -22,30 +49,13 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Бутон "Добави продукт"
+    // 👉 Бутон "Добави продукт"
     if (addProductButton) {
-        addProductButton.addEventListener("click", function() {
+        addProductButton.addEventListener("click", function () {
             loadContent("add-product");
         });
     }
 
-    // Зареждаме "Табло" по подразбиране
+    // 👉 Зареждаме началната секция по подразбиране
     loadContent("dashboard");
 });
-
-    if (section === "orders") {
-        fetch("admin-sections/orders.html")
-            .then(res => res.text())
-            .then(html => {
-                const container = document.getElementById("admin-content");
-                container.innerHTML = html;
-                console.log("✅ Заредено съдържание: admin-sections/orders.html");
-    
-                // ✅ Създаваме нов <script> таг за orders.js
-                const script = document.createElement("script");
-                script.src = "scripts/orders.js";
-                script.defer = true;
-                container.appendChild(script); // Добавяме го директно в контейнера
-            });
-    }
-
