@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ Панел | DP Design</title>
-    
     <link rel="stylesheet" href="styles/products.css"> <!-- Основен стил -->
 
     <style>
-        /* Основни стилове */
         body {
             background-color: #121212;
             color: #fce5cd;
@@ -18,7 +16,6 @@
             display: flex;
         }
 
-        /* Лява странична навигация */
         .sidebar {
             width: 250px;
             min-height: 100vh;
@@ -37,21 +34,25 @@
             text-align: center;
         }
 
-        .sidebar a {
+        .sidebar a, .menu-button {
             display: block;
             color: #fce5cd;
             padding: 12px 20px;
             text-decoration: none;
             font-size: 18px;
             transition: 0.3s;
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: transparent;
+            cursor: pointer;
         }
 
-        .sidebar a:hover {
+        .sidebar a:hover, .menu-button:hover, .menu-button.active {
             background: #ffcc99;
             color: #121212;
         }
 
-        /* Основно съдържание */
         .main-content {
             margin-left: 250px;
             padding: 20px;
@@ -66,36 +67,12 @@
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
         }
 
-        /* Бутони */
-        .menu-button {
-            display: block;
-            width: 100%;
-            text-align: left;
-            padding: 12px;
-            border: none;
-            background: transparent;
-            color: #fce5cd;
-            font-size: 18px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .menu-button:hover, .menu-button.active {
-            background: #ffcc99;
-            color: #121212;
-        }
-
-        .special {
-            font-weight: bold;
-        }
-
-        /* Фиксиране на футъра */
         html, body {
             height: 100%;
             display: flex;
             flex-direction: column;
         }
-        
+
         .admin-content {
             flex: 1;
         }
@@ -110,7 +87,7 @@
 </head>
 <body>
 
-    <!-- Динамичен хедър -->
+    <!-- Хедър -->
     <div id="header"></div>
 
     <!-- Лява навигация -->
@@ -119,7 +96,6 @@
         <button class="menu-button active" data-section="dashboard">🏠 Табло</button>
         <button class="menu-button" data-section="orders">📜 Поръчки</button>
         <button class="menu-button" data-section="products">📦 Продукти</button>
-        <!--<button id="add-product-btn" class="menu-button special" data-section="add-product">➕ Добави продукт</button>-->
         <button class="menu-button" data-section="recycle-bin">🗑️ Кошче</button>
         <button class="menu-button" data-section="stats">📊 Статистика</button>
         <button class="menu-button" data-section="settings">⚙️ Настройки</button>
@@ -128,13 +104,14 @@
     <!-- Основно съдържание -->
     <main class="main-content">
         <div id="admin-content">
-            <!-- Тук ще се зарежда съдържанието динамично -->
+            <!-- Тук ще се зарежда динамично съдържание -->
         </div>
     </main>
 
+    <!-- Футър -->
     <div id="footer"></div>
 
-    <!-- Зареждане на хедър и футър -->
+    <!-- Зареждане на header и footer -->
     <script>
         function loadComponents() {
             fetch('header.html')
@@ -150,27 +127,28 @@
                     document.getElementById('footer').innerHTML = data;
                 });
         }
+
         document.addEventListener('DOMContentLoaded', loadComponents);
     </script>
 
-    <!-- Логика за динамично зареждане на съдържание -->
+    <!-- Зареждане на динамични секции -->
     <script>
-               document.addEventListener("DOMContentLoaded", function() {
-            console.log("🚀 Админ панелът е зареден!"); // Дебъгване
-        
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("🚀 Админ панелът е зареден!");
+
             const menuButtons = document.querySelectorAll(".menu-button");
             const contentContainer = document.getElementById("admin-content");
-        
+
             function loadContent(section) {
                 let sectionPath = `admin-sections/${section}.html`;
-        
-                // Ако сме вътре в admin-sections/, коригираме пътя
+
+                // Ако сме вече в поддиректория, коригираме пътя
                 if (window.location.pathname.includes("admin-sections")) {
                     sectionPath = `../admin-sections/${section}.html`;
                 }
-        
+
                 console.log(`🛠 Опит за зареждане на: ${sectionPath}`);
-        
+
                 fetch(sectionPath)
                     .then(response => {
                         if (!response.ok) throw new Error(`❌ Грешка: ${sectionPath} не е намерен`);
@@ -179,97 +157,41 @@
                     .then(data => {
                         contentContainer.innerHTML = data;
                         console.log(`✅ Заредено съдържание: ${sectionPath}`);
-        
-                        // Ако сме заредили секцията с продукти, зареждаме scripts/products.js
+
+                        // Динамично зареждане на съответния JS скрипт
                         if (section === "products") {
-                            console.log("📦 Продуктовата секция е заредена, изпълняваме loadProductScripts()");
-                            loadProductScripts();
+                            loadScript("scripts/products.js", "📦 Зареден е products.js");
+                        }
+
+                        if (section === "orders") {
+                            loadScript("scripts/orders.js", "📜 Зареден е orders.js");
                         }
                     })
-                    .catch(error => console.error("❌ Грешка при зареждане:", error));
+                    .catch(error => console.error("❌ Грешка при зареждане на съдържанието:", error));
             }
-        
-            // ✅ Функция за динамично зареждане на JS файлове
-            function loadProductScripts() {
+
+            function loadScript(src, logMessage) {
                 const script = document.createElement("script");
-                script.src = "scripts/products.js";
+                script.src = src;
                 script.defer = true;
                 document.body.appendChild(script);
-                console.log("📜 Зареден е products.js");
+                console.log(logMessage);
             }
-        
-            // ✅ Добавяме слушатели за всички бутони в менюто
+
             menuButtons.forEach(button => {
-                button.addEventListener("click", function() {
-                    console.log(`🟢 Натиснат бутон: ${this.dataset.section}`); // ✅ Дебъгване
-        
+                button.addEventListener("click", function () {
                     menuButtons.forEach(btn => btn.classList.remove("active"));
                     this.classList.add("active");
-        
+
                     const section = this.getAttribute("data-section");
                     loadContent(section);
                 });
             });
-        
-            // ✅ Зареждаме "Табло" по подразбиране
+
+            // Зареждаме таблото по подразбиране
             loadContent("dashboard");
         });
-
     </script>
-    
-     <script>
-          function loadContent(section) {
-    let sectionPath = `admin-sections/${section}.html`;
-
-    if (window.location.pathname.includes("admin-sections")) {
-        sectionPath = `../admin-sections/${section}.html`;
-    }
-
-    console.log(`🛠 Опит за зареждане на: ${sectionPath}`);
-
-    fetch(sectionPath)
-        .then(response => {
-            if (!response.ok) throw new Error("Файлът не е намерен.");
-            return response.text();
-        })
-        .then(data => {
-            document.getElementById("admin-content").innerHTML = data;
-            console.log(`✅ Заредено съдържание: ${sectionPath}`);
-
-            // 📦 Ако зареждаме `products.html`, принудително стартираме `products.js`
-            if (section === "products") {
-                console.log("📦 Продуктовата секция е заредена, изпълняваме loadProductScripts()");
-                setTimeout(loadProductScripts, 300); // Малко забавяне за безопасност
-            }
-
-            if (section === "orders") {
-                console.log("📦 Поръчковата секция е заредена, изпълняваме loadOrderScripts()");
-                setTimeout(loadOrderScripts, 300);
-            }
-
-        })
-        .catch(error => console.error("❌ Грешка при зареждане на съдържанието:", error));
-}
-
-// ✅ Функция за зареждане на `products.js`
-function loadProductScripts() {
-    const script = document.createElement("script");
-    script.src = "scripts/products.js";
-    script.defer = true;
-    document.body.appendChild(script);
-    console.log("📜 Зареден е products.js");
-}
-
-         function loadOrderScripts() {
-    const script = document.createElement("script");
-    script.src = "scripts/orders.js";
-    script.defer = true;
-    document.body.appendChild(script);
-    console.log("📜 Зареден е orders.js");
-}
-
-
-</script>
 
 </body>
 </html>
