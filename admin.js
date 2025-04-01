@@ -32,3 +32,20 @@ document.addEventListener("DOMContentLoaded", function() {
     // Зареждаме "Табло" по подразбиране
     loadContent("dashboard");
 });
+
+    if (section === "orders") {
+        fetch("admin-sections/orders.html")
+            .then(res => res.text())
+            .then(html => {
+                const container = document.getElementById("admin-content");
+                container.innerHTML = html;
+                console.log("✅ Заредено съдържание: admin-sections/orders.html");
+    
+                // ✅ Създаваме нов <script> таг за orders.js
+                const script = document.createElement("script");
+                script.src = "scripts/orders.js";
+                script.defer = true;
+                container.appendChild(script); // Добавяме го директно в контейнера
+            });
+    }
+
