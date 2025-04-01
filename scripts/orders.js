@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const tableBody = document.getElementById("orders-table-body");
-    const noOrdersMsg = document.getElementById("no-products");
+    const noOrdersMsg = document.getElementById("no-orders");
 
     fetch("https://api.dp-design.art/api/orders")
         .then(response => {
