@@ -26,18 +26,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // 👉 Зарежда JS скриптове динамично
-    function loadScript(src) {
-        const existing = document.querySelector(`script[src="${src}"]`);
-        if (existing) {
-            console.log(`ℹ️ Скриптът вече е зареден: ${src}`);
-            return;
+            function loadScript(src) {
+            const existing = document.querySelector(`script[src="${src}"]`);
+            if (existing) {
+                console.log(`ℹ️ Скриптът вече е зареден: ${src}`);
+                return;
+            }
+            const script = document.createElement("script");
+            script.src = src;
+            script.defer = true;
+            document.body.appendChild(script);
+            console.log(`📜 Зареден е скриптът: ${src}`);
         }
-        const script = document.createElement("script");
-        script.src = src;
-        script.defer = true;
-        document.body.appendChild(script);
-        console.log(`📜 Зареден е скриптът: ${src}`);
-    }
+
 
     // 👉 Клик на меню бутон
     menuButtons.forEach(button => {
