@@ -1,0 +1,54 @@
+/* ✅ Минимални стилове за таблици и бутони в админ панела */
+
+.products-container {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.products-table th,
+.products-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.products-table th {
+    background: #1c1c1c;
+    color: #ffcc99;
+}
+
+.products-table tbody tr:hover {
+    background-color: rgba(255, 204, 153, 0.1);
+}
+
+.btn-add-product {
+    background: #ffcc99;
+    color: #121212;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.btn-add-product:hover {
+    background: #f0b877;
+}
+
+.actions button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
