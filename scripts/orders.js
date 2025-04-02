@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("🚀 Зареждане на поръчки...");
+
     const tableBody = document.getElementById("orders-table-body");
     const noOrdersMsg = document.getElementById("no-orders");
 
     fetch("https://api.dp-design.art/api/orders")
         .then(response => {
-            if (!response.ok) {
-                throw new Error("Неуспешен отговор от сървъра");
-            }
+            if (!response.ok) throw new Error("Неуспешен отговор от сървъра");
             return response.json();
         })
         .then(orders => {
@@ -33,9 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 tableBody.appendChild(row);
             });
+
+            console.log("✅ Поръчките са заредени успешно!");
         })
         .catch(error => {
             console.error("❌ Грешка при зареждане на поръчките:", error);
-            noOrdersMsg.textContent = "⚠️ Грешка при зареждане на поръчките.";
+            noOrdersMsg.textContent = "⚠️ Грешка при зареждане.";
         });
 });
