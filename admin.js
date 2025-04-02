@@ -15,7 +15,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // 👉 Зареждаме свързания JS скрипт, ако има
                 if (section === "orders") {
-                    loadScript("scripts/orders.js");
+                    loadScript("scripts/orders.js").then(() => {
+                        console.log("▶️ Извикваме loadOrders() след зареждане на скрипта");
+                        if (typeof loadOrders === "function") loadOrders();
+                    });
+                }
+
                 } else if (section === "products") {
                     loadScript("scripts/products.js");
                 } else if (section === "dashboard") {
