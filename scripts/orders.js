@@ -1,13 +1,22 @@
 function loadOrders() {
-    const tableBody = document.getElementById("orders-table-body");
-    const noOrdersMsg = document.getElementById("no-orders");
+    const ordersTableBody = document.getElementById("orders-table-body");
+    const noOrders = document.getElementById("no-orders");
+
+    if (!ordersTableBody || !noOrders) {
+        console.warn("❌ Контейнерите за поръчки не са намерени.");
+        return;
+    }
 
     fetch("https://api.dp-design.art/api/orders")
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error("Неуспешна заявка към сървъра.");
+            return response.json();
+        })
         .then(orders => {
-            tableBody.innerHTML = "";
+            ordersTableBody.innerHTML = "";
+
             if (!orders || orders.length === 0) {
-                noOrdersMsg.textContent = "❌ Няма налични поръчки.";
+                noOrders.textContent = "❌ Няма направени поръчки.";
                 return;
             }
 
@@ -22,13 +31,20 @@ function loadOrders() {
                     <td>${order.status}</td>
                     <td>${order.category}</td>
                     <td>${new Date(order.created_at).toLocaleString("bg-BG")}</td>
-                    <td><button class="view-btn" data-id="${order.id}">👁️</button></td>
+                    <td>
+                        <button class="view-btn" data-id="${order.id}">👁️</button>
+                    </td>
                 `;
-                tableBody.appendChild(row);
+                ordersTableBody.appendChild(row);
             });
+
+            console.log("✅ Поръчките са заредени успешно!");
         })
         .catch(error => {
-            console.error("❌ Грешка при зареждане на поръчките:", error);
-            noOrdersMsg.textContent = "⚠️ Грешка при зареждане на поръчките.";
+            console.error("❌ Грешка при зареждане на поръчки:", error);
+            noOrders.textContent = "⚠️ Грешка при зареждане.";
         });
 }
+
+// 👉 Стартираме зареждането веднага след включване на скрипта
+loadOrders();
