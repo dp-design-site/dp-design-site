@@ -1,28 +1,24 @@
 console.log("📦 Зарежда се orders.js...");
 
 function loadOrders() {
-    console.log("🟢 Стартиране на loadOrders()");
+    console.log("📜 Стартиране на loadOrders...");
+    const tableBody = document.getElementById("orders-table-body");
+    const noOrdersMsg = document.getElementById("no-orders");
 
-    const ordersTableBody = document.getElementById("orders-table-body");
-    const noOrders = document.getElementById("no-orders");
-
-    if (!ordersTableBody || !noOrders) {
-        console.warn("❌ Контейнерите за поръчки не са намерени.");
+    if (!tableBody || !noOrdersMsg) {
+        console.warn("⚠️ Таблицата или съобщението липсват – отложено изпълнение.");
+        setTimeout(loadOrders, 200); // опитваме отново след малко
         return;
     }
 
     fetch("https://api.dp-design.art/api/orders")
-        .then(response => {
-            if (!response.ok) throw new Error("Неуспешна заявка към сървъра.");
-            return response.json();
-        })
+        .then(response => response.json())
         .then(orders => {
-            console.log("📥 Получени поръчки:", orders);
-
-            ordersTableBody.innerHTML = "";
+            console.log("✅ Поръчките са получени:", orders);
+            tableBody.innerHTML = "";
 
             if (!orders || orders.length === 0) {
-                noOrders.textContent = "❌ Няма направени поръчки.";
+                noOrdersMsg.textContent = "❌ Няма налични поръчки.";
                 return;
             }
 
@@ -41,16 +37,18 @@ function loadOrders() {
                         <button class="view-btn" data-id="${order.id}">👁️</button>
                     </td>
                 `;
-                ordersTableBody.appendChild(row);
+                tableBody.appendChild(row);
             });
-
-            console.log("✅ Поръчките са заредени успешно!");
         })
         .catch(error => {
             console.error("❌ Грешка при зареждане на поръчките:", error);
-            noOrders.textContent = "⚠️ Грешка при зареждане.";
+            noOrdersMsg.textContent = "⚠️ Грешка при зареждане на поръчките.";
         });
 }
+
+// Стартиране, когато DOM е готов
+document.addEventListener("DOMContentLoaded", loadOrders);
+
 
 // ✅ Уверяваме се, че DOM е зареден преди да стартираме
 if (document.readyState === "loading") {
