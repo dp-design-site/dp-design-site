@@ -1,4 +1,8 @@
+console.log("📦 Зарежда се orders.js...");
+
 function loadOrders() {
+    console.log("🟢 Стартиране на loadOrders()");
+
     const ordersTableBody = document.getElementById("orders-table-body");
     const noOrders = document.getElementById("no-orders");
 
@@ -13,6 +17,8 @@ function loadOrders() {
             return response.json();
         })
         .then(orders => {
+            console.log("📥 Получени поръчки:", orders);
+
             ordersTableBody.innerHTML = "";
 
             if (!orders || orders.length === 0) {
@@ -41,10 +47,14 @@ function loadOrders() {
             console.log("✅ Поръчките са заредени успешно!");
         })
         .catch(error => {
-            console.error("❌ Грешка при зареждане на поръчки:", error);
+            console.error("❌ Грешка при зареждане на поръчките:", error);
             noOrders.textContent = "⚠️ Грешка при зареждане.";
         });
 }
 
-// 👉 Стартираме зареждането веднага след включване на скрипта
-loadOrders();
+// ✅ Уверяваме се, че DOM е зареден преди да стартираме
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadOrders);
+} else {
+    loadOrders();
+}
