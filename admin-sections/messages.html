@@ -1,0 +1,76 @@
+<div class="products-container">
+  <h2>📨 Съобщения</h2>
+
+  <table class="products-table">
+    <thead>
+      <tr>
+        <th>Име</th>
+        <th>Имейл</th>
+        <th>Тип</th>
+        <th>Дата</th>
+        <th>Статус</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody id="messages-table-body">
+      <!-- Съобщенията ще се зареждат тук -->
+    </tbody>
+  </table>
+
+  <p id="no-messages">🔄 Зареждане на съобщения...</p>
+</div>
+
+<!-- ✅ Стилове -->
+<style>
+  .products-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .products-table th,
+  .products-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .products-table th {
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffcc99;
+  }
+
+  .products-table tbody tr:hover {
+    background: rgba(255, 204, 153, 0.3);
+    cursor: pointer;
+  }
+
+  /* ✅ Непрочетено съобщение */
+  .unread {
+    font-weight: bold;
+    background-color: rgba(100, 149, 237, 0.2); /* синкав фон */
+  }
+
+  .actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .actions button {
+    background: #ffcc99;
+    color: #121212;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .actions button:hover {
+    background: #f5b977;
+  }
+</style>
+
+<!-- ✅ Зареждаме JS -->
+<script src="scripts/messages.js" defer></script>
