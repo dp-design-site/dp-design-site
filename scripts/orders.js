@@ -1,20 +1,11 @@
-document.addEventListener("DOMContentLoaded", () => {
+function loadOrders() {
     const tableBody = document.getElementById("orders-table-body");
     const noOrdersMsg = document.getElementById("no-orders");
 
-    if (!tableBody || !noOrdersMsg) {
-        console.warn("⚠️ Таблицата за поръчки не е намерена.");
-        return;
-    }
-
     fetch("https://api.dp-design.art/api/orders")
-        .then(response => {
-            if (!response.ok) throw new Error("Неуспешен отговор от сървъра");
-            return response.json();
-        })
+        .then(response => response.json())
         .then(orders => {
             tableBody.innerHTML = "";
-
             if (!orders || orders.length === 0) {
                 noOrdersMsg.textContent = "❌ Няма налични поръчки.";
                 return;
@@ -31,17 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${order.status}</td>
                     <td>${order.category}</td>
                     <td>${new Date(order.created_at).toLocaleString("bg-BG")}</td>
-                    <td class="actions">
-                        <button class="view-btn" data-id="${order.id}">👁️</button>
-                    </td>
+                    <td><button class="view-btn" data-id="${order.id}">👁️</button></td>
                 `;
                 tableBody.appendChild(row);
             });
-
-            console.log("✅ Поръчките са заредени!");
         })
         .catch(error => {
             console.error("❌ Грешка при зареждане на поръчките:", error);
             noOrdersMsg.textContent = "⚠️ Грешка при зареждане на поръчките.";
         });
-});
+}
