@@ -24,7 +24,15 @@
 </div>
 
 <link rel="stylesheet" href="styles/products.css">
-<script src="scripts/orders.js" defer></script>
+<script>
+    // Зареждаме поръчките, след като скриптът е инжектиран
+    if (typeof loadOrders === "function") {
+        loadOrders();
+    } else {
+        console.error("❌ Функцията loadOrders не е дефинирана!");
+    }
+</script>
+
 
 
 <style>
