@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
     const menuButtons = document.querySelectorAll(".menu-button");
     const contentContainer = document.getElementById("admin-content");
