@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 } else if (section === "products") {
                     loadScript("scripts/products.js");
-                } else if (section === "dashboard") {
+                } else if (section === "dashboard") {;
                     // тук можеш да добавиш скрипт за таблото ако имаш
                 } else if (section === "messages") {
                     loadScript("scripts/messages.js");
