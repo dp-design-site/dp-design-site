@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             row.innerHTML = `
-                <td>${msg.customer_name || "—"}</td>
-                <td>${msg.customer_email || "—"}</td>
+                <td>${msg.name || "—"}</td>
+                <td>${msg.email || "—"}</td>
                 <td>${msg.type}</td>
                 <td>${new Date(msg.created_at).toLocaleString("bg-BG")}</td>
                 <td>${msg.is_read ? "Прочетено" : "Непрочетено"}</td>
