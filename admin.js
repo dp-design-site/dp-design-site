@@ -15,20 +15,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log(`✅ Заредено съдържание: ${section}.html`);
 
                 // 👉 Зареждаме свързания JS скрипт, ако има
+                // ✅ Правилно:
                 if (section === "orders") {
                     loadScript("scripts/orders.js").then(() => {
                         console.log("▶️ Извикваме loadOrders() след зареждане на скрипта");
                         if (typeof loadOrders === "function") loadOrders();
                     });
-                }
-
                 } else if (section === "products") {
                     loadScript("scripts/products.js");
-                } else if (section === "dashboard") {;
-                    // тук можеш да добавиш скрипт за таблото ако имаш
+                } else if (section === "dashboard") {
+                    // ...
                 } else if (section === "messages") {
                     loadScript("scripts/messages.js");
-            }
+                }
 
             })
             .catch(error => console.error("❌ Грешка при зареждане на съдържание:", error));
