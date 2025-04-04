@@ -3,8 +3,8 @@ function loadMessages() {
 
     const tableBody = document.getElementById("messages-table-body");
     const noMessages = document.getElementById("no-messages");
+    const filterSelect = document.getElementById("filter-type");
 
-    // 👉 МОКНАТИ СЪОБЩЕНИЯ
     const mockMessages = [
         {
             id: 1,
@@ -23,40 +23,46 @@ function loadMessages() {
             created_at: "2025-04-03T15:45:00Z",
             is_read: true,
             message: "Поздравления за дизайна! Бих искала консултация."
+        },
+        {
+            id: 3,
+            name: "Георги",
+            email: "geo@mail.bg",
+            type: "order",
+            created_at: "2025-04-02T09:00:00Z",
+            is_read: false,
+            message: "Поръчвам стойка за EV зарядно."
         }
     ];
 
-    try {
-        const messages = mockMessages;
-
-        if (!messages || messages.length === 0) {
+    function renderMessages(filteredMessages) {
+        tableBody.innerHTML = "";
+        if (!filteredMessages || filteredMessages.length === 0) {
             noMessages.textContent = "❌ Няма съобщения.";
             return;
+        } else {
+            noMessages.textContent = "";
         }
 
-        tableBody.innerHTML = ""; // Изчистваме таблицата
-
-        messages.forEach((msg) => {
+        filteredMessages.forEach((msg) => {
             const row = document.createElement("tr");
-
-            if (!msg.is_read) {
-                row.classList.add("unread");
-            }
+            if (!msg.is_read) row.classList.add("unread");
 
             row.innerHTML = `
-                <td>${msg.name || "—"}</td>
-                <td>${msg.email || "—"}</td>
+                <td>${msg.name}</td>
+                <td>${msg.email}</td>
                 <td>${msg.type}</td>
                 <td>${new Date(msg.created_at).toLocaleString("bg-BG")}</td>
                 <td>${msg.is_read ? "Прочетено" : "Непрочетено"}</td>
                 <td class="actions">
-                    <button class="view-btn" data-id="${msg.id}">👁️ Виж</button>
+                    <button class="view-btn">👁️ Виж</button>
+                    ${msg.type !== "order" ? `<button class="convert-btn">🛒 Превърни</button>` : ""}
                 </td>
             `;
 
-            // 👉 Бутон "Виж"
+            // 👉 Виж
             row.querySelector(".view-btn").addEventListener("click", () => {
-                alert(`📬 Съобщение от ${msg.name}\n\n${msg.message || "—"}`);
+                alert(`📬 Съобщение от ${msg.name}\n\n${msg.message}`);
                 if (!msg.is_read) {
                     msg.is_read = true;
                     row.classList.remove("unread");
@@ -64,10 +70,30 @@ function loadMessages() {
                 }
             });
 
+            // 👉 Превърни в поръчка
+            const convertBtn = row.querySelector(".convert-btn");
+            if (convertBtn) {
+                convertBtn.addEventListener("click", () => {
+                    msg.type = "order";
+                    alert(`✅ Съобщението от ${msg.name} е маркирано като поръчка.`);
+                    loadMessages(); // презареждане
+                });
+            }
+
             tableBody.appendChild(row);
         });
-    } catch (error) {
-        console.error("❌ Грешка при зареждане на съобщения:", error);
-        noMessages.textContent = "⚠️ Проблем при зареждане.";
     }
+
+    // 👉 Обработваме филтъра
+    filterSelect.addEventListener("change", () => {
+        const selected = filterSelect.value;
+        if (selected === "all") {
+            renderMessages(mockMessages);
+        } else {
+            const filtered = mockMessages.filter(msg => msg.type === selected);
+            renderMessages(filtered);
+        }
+    });
+
+    renderMessages(mockMessages); // начален рендер
 }
