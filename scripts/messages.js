@@ -1,14 +1,16 @@
 function loadMessages() {
-    console.log("📨 Зареждане на съобщения...");
+    console.log("📨 Стартиране на loadMessages()");
 
     const tableBody = document.getElementById("messages-table-body");
     const noMessages = document.getElementById("no-messages");
 
+    if (!tableBody || !noMessages) {
+        console.warn("⚠️ Не е намерен контейнер за съобщения.");
+        return;
+    }
+
     fetch("https://api.dp-design.art/api/messages")
-        .then(response => {
-            if (!response.ok) throw new Error("Грешка при извличане на съобщения");
-            return response.json();
-        })
+        .then(response => response.json())
         .then(messages => {
             if (!messages || messages.length === 0) {
                 noMessages.textContent = "❌ Няма съобщения.";
@@ -19,8 +21,9 @@ function loadMessages() {
 
             messages.forEach((msg) => {
                 const row = document.createElement("tr");
-
-                if (!msg.is_read) row.classList.add("unread");
+                if (!msg.is_read) {
+                    row.classList.add("unread");
+                }
 
                 row.innerHTML = `
                     <td>${msg.name || "—"}</td>
@@ -52,14 +55,15 @@ function loadMessages() {
         });
 }
 
-async function markAsRead(id) {
+// 🔧 Маркира съобщението като прочетено
+async function markAsRead(messageId) {
     try {
-        await fetch(`https://api.dp-design.art/api/messages/${id}/read`, {
+        await fetch(`https://api.dp-design.art/api/messages/${messageId}/read`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
         });
-        console.log(`✅ Съобщение ${id} е маркирано като прочетено`);
-    } catch (err) {
-        console.error("❌ Грешка при PATCH:", err);
+        console.log(`✅ Съобщение ${messageId} маркирано като прочетено`);
+    } catch (error) {
+        console.error("❌ Грешка при маркиране:", error);
     }
 }
