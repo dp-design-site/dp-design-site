@@ -35,17 +35,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 👉 Зарежда JS скриптове динамично
             function loadScript(src) {
-            const existing = document.querySelector(`script[src="${src}"]`);
-            if (existing) {
-                console.log(`ℹ️ Скриптът вече е зареден: ${src}`);
-                return;
-            }
-            const script = document.createElement("script");
-            script.src = src;
-            script.defer = true;
-            document.body.appendChild(script);
-            console.log(`📜 Зареден е скриптът: ${src}`);
+            return new Promise((resolve, reject) => {
+                const existing = document.querySelector(`script[src="${src}"]`);
+                if (existing) {
+                    console.log(`ℹ️ Скриптът вече е зареден: ${src}`);
+                    resolve();
+                    return;
+                }
+        
+                const script = document.createElement("script");
+                script.src = src;
+                script.defer = true;
+                script.onload = () => {
+                    console.log(`📜 Зареден е скриптът: ${src}`);
+                    resolve();
+                };
+                script.onerror = () => {
+                    console.error(`❌ Грешка при зареждане на: ${src}`);
+                    reject(new Error(`Failed to load script: ${src}`));
+                };
+        
+                document.body.appendChild(script);
+            });
         }
+
 
 
     // 👉 Клик на меню бутон
