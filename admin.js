@@ -3,8 +3,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const contentContainer = document.getElementById("admin-content");
     const addProductButton = document.getElementById("add-product-btn");
 
-    function loadContent(section) {
+    function loadContent(section, params = "") {
         console.log(`🛠️ Опит за зареждане на: admin-sections/${section}.html`);
+        const contentContainer = document.getElementById("admin-content");
+        const sectionPath = `admin-sections/${section}.html${params}`;
 
         fetch(`admin-sections/${section}.html`)
             .then(response => {
@@ -37,6 +39,11 @@ document.addEventListener("DOMContentLoaded", function () {
                             loadMessages();
                         }
                     });
+
+                } else if (section === "view-message") {
+                loadScript("scripts/view-message.js").then(() => {
+                    if (typeof loadViewMessage === "function") loadViewMessage();
+                });
                 }
             })
             .catch(error => console.error("❌ Грешка при зареждане на съдържание:", error));
