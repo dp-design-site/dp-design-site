@@ -65,7 +65,7 @@ function renderMessages(messages) {
 
         // 👁️ Виж
         row.querySelector(".view-btn").addEventListener("click", () => {
-            window.location.href = `view-message.html?id=${msg.id}`;
+            loadContent("view-message", `?id=${msg.id}`);
         });
 
         // 🛒 Превърни в поръчка
