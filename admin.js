@@ -25,9 +25,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     loadScript("scripts/products.js");
                 } else if (section === "dashboard") {
                     // ...
-                } else if (section === "messages") {
-                    loadScript("scripts/messages.js");
-                }
+                   else if (section === "messages") {
+            loadScript("scripts/messages.js").then(() => {
+                console.log("▶️ Извикваме loadMessages() след зареждане на скрипта");
+                if (typeof loadMessages === "function") loadMessages();
+            });
+        }
+
 
             })
             .catch(error => console.error("❌ Грешка при зареждане на съдържание:", error));
