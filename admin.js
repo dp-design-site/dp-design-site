@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-            })
+            
             .catch(error => console.error("❌ Грешка при зареждане на съдържание:", error));
     }
 
