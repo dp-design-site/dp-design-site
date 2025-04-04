@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async function () {
+function loadMessages() {
     console.log("📨 Стартиране с mock съобщения");
 
     const tableBody = document.getElementById("messages-table-body");
@@ -25,6 +25,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             message: "Поздравления за дизайна! Бих искала консултация."
         }
     ];
+
+    // 🔁 ... останалата логика остава същата (вече ти я дадохме)
+}
+
 
     try {
         const messages = mockMessages;
