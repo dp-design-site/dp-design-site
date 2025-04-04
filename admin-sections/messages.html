@@ -1,17 +1,16 @@
 <div class="products-container">
   <h2>📨 Съобщения</h2>
 
-    <!-- 🔍 Филтър по тип -->
-  <div style="margin-bottom: 10px;">
-    <label for="filter-type">Филтрирай по тип:</label>
-    <select id="filter-type">
+  <!-- 🔍 Филтър по тип съобщение -->
+  <div style="margin-bottom: 15px;">
+    <label for="filter-type" style="color: #ffcc99; font-weight: bold;">Филтрирай по тип:</label>
+    <select id="filter-type" style="padding: 6px; margin-left: 10px; border-radius: 5px;">
       <option value="all">Всички</option>
-      <option value="order">Поръчка</option>
-      <option value="inquiry">Запитване</option>
+      <option value="order">Поръчки</option>
+      <option value="inquiry">Запитвания</option>
       <option value="contact">Контакт</option>
     </select>
   </div>
-
 
   <table class="products-table">
     <thead>
@@ -59,10 +58,9 @@
     cursor: pointer;
   }
 
-  /* ✅ Непрочетено съобщение */
   .unread {
     font-weight: bold;
-    background-color: rgba(100, 149, 237, 0.2); /* синкав фон */
+    background-color: rgba(100, 149, 237, 0.2);
   }
 
   .actions {
@@ -77,12 +75,10 @@
     padding: 5px 8px;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
   }
 
   .actions button:hover {
     background: #f5b977;
   }
 </style>
-
-<!-- ✅ Зареждаме JS 
-<script src="scripts/messages.js" defer></script>-->
