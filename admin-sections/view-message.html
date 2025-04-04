@@ -1,0 +1,105 @@
+<div class="message-details-container">
+  <h2>📨 Детайли за съобщение</h2>
+
+  <div id="message-details">
+    <p><strong>Име:</strong> <span id="msg-name">Зареждане...</span></p>
+    <p><strong>Имейл:</strong> <span id="msg-email">Зареждане...</span></p>
+    <p><strong>Телефон:</strong> <span id="msg-phone">—</span></p>
+    <p><strong>Тип:</strong> <span id="msg-type">—</span></p>
+    <p><strong>Категория:</strong> <span id="msg-category">—</span></p>
+    <p><strong>Статус:</strong> <span id="msg-status">—</span></p>
+    <p><strong>Дата:</strong> <span id="msg-date">—</span></p>
+    <p><strong>Адрес за доставка:</strong> <span id="msg-address">—</span></p>
+    <p><strong>Начин на плащане:</strong> <span id="msg-payment">—</span></p>
+    <p><strong>Платено:</strong> <span id="msg-paid">—</span></p>
+    <p><strong>Съобщение:</strong></p>
+    <p id="msg-content" style="white-space: pre-wrap; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;"></p>
+
+    <div id="msg-attachments">
+      <strong>📎 Прикачени файлове:</strong>
+      <div id="msg-images" class="image-grid"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+.message-details-container {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 800px;
+  margin: auto;
+  color: #fce5cd;
+}
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+.image-grid img {
+  width: 100px;
+  height: auto;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.image-grid img:hover {
+  transform: scale(1.1);
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  if (!id) return alert("❌ Липсва ID на съобщението");
+
+  try {
+    const response = await fetch(`https://api.dp-design.art/api/messages/${id}`);
+    if (!response.ok) throw new Error("Грешка при зареждане");
+
+    const msg = await response.json();
+
+    document.getElementById("msg-name").textContent = msg.name || "—";
+    document.getElementById("msg-email").textContent = msg.email || "—";
+    document.getElementById("msg-phone").textContent = msg.phone || "—";
+    document.getElementById("msg-type").textContent = msg.type;
+    document.getElementById("msg-status").textContent = msg.status || "—";
+    document.getElementById("msg-date").textContent = new Date(msg.created_at).toLocaleString("bg-BG");
+    document.getElementById("msg-category").textContent = msg.category || "—";
+    document.getElementById("msg-address").textContent = msg.shipping_address || "—";
+    document.getElementById("msg-payment").textContent = msg.payment_method || "—";
+    document.getElementById("msg-paid").textContent = msg.is_paid ? "Да" : "Не";
+    document.getElementById("msg-content").textContent = msg.message || "—";
+
+    const imageGrid = document.getElementById("msg-images");
+    if (msg.attachments && msg.attachments.length > 0) {
+      msg.attachments.forEach(file => {
+        const img = document.createElement("img");
+        img.src = `/uploads/${file}`;
+        img.alt = "Прикачен файл";
+        img.addEventListener("click", () => {
+          window.open(`/uploads/${file}`, "_blank");
+        });
+        imageGrid.appendChild(img);
+      });
+    } else {
+      imageGrid.innerHTML = "❌ Няма прикачени изображения.";
+    }
+
+    // 🔁 Маркираме като прочетено
+    if (!msg.is_read) {
+      await fetch(`https://api.dp-design.art/api/messages/${id}/read`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+  } catch (err) {
+    console.error("❌ Грешка при визуализация на съобщението:", err);
+    alert("❌ Неуспешно зареждане на съобщението.");
+  }
+});
+</script>
