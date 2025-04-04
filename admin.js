@@ -1,10 +1,11 @@
-
 document.addEventListener("DOMContentLoaded", function () {
     const menuButtons = document.querySelectorAll(".menu-button");
     const contentContainer = document.getElementById("admin-content");
     const addProductButton = document.getElementById("add-product-btn");
 
     function loadContent(section) {
+        console.log(`🛠️ Опит за зареждане на: admin-sections/${section}.html`);
+
         fetch(`admin-sections/${section}.html`)
             .then(response => {
                 if (!response.ok) throw new Error("Грешка при зареждане на HTML");
@@ -14,56 +15,53 @@ document.addEventListener("DOMContentLoaded", function () {
                 contentContainer.innerHTML = html;
                 console.log(`✅ Заредено съдържание: ${section}.html`);
 
-                // 👉 Зареждаме свързания JS скрипт, ако има
-                // ✅ Правилно:
+                // 👉 Зареждаме съответния JS файл и функция
                 if (section === "orders") {
                     loadScript("scripts/orders.js").then(() => {
-                        console.log("▶️ Извикваме loadOrders() след зареждане на скрипта");
-                        if (typeof loadOrders === "function") loadOrders();
+                        if (typeof loadOrders === "function") {
+                            console.log("▶️ Извикваме loadOrders()");
+                            loadOrders();
+                        }
                     });
                 } else if (section === "products") {
-                    loadScript("scripts/products.js");
-                } else if (section === "dashboard") {
-                    // ...
-                if (section === "messages") {
-            loadScript("scripts/messages.js").then(() => {
-                console.log("▶️ Извикваме loadMessages() след зареждане на скрипта");
-                if (typeof loadMessages === "function") loadMessages();
-            });
-        }
-
-}
-            
+                    loadScript("scripts/products.js").then(() => {
+                        if (typeof loadProducts === "function") {
+                            console.log("▶️ Извикваме loadProducts()");
+                            loadProducts();
+                        }
+                    });
+                } else if (section === "messages") {
+                    loadScript("scripts/messages.js").then(() => {
+                        if (typeof loadMessages === "function") {
+                            console.log("▶️ Извикваме loadMessages()");
+                            loadMessages();
+                        }
+                    });
+                }
+            })
             .catch(error => console.error("❌ Грешка при зареждане на съдържание:", error));
     }
 
-    // 👉 Зарежда JS скриптове динамично
-            function loadScript(src) {
-            return new Promise((resolve, reject) => {
-                const existing = document.querySelector(`script[src="${src}"]`);
-                if (existing) {
-                    console.log(`ℹ️ Скриптът вече е зареден: ${src}`);
-                    resolve();
-                    return;
-                }
-        
-                const script = document.createElement("script");
-                script.src = src;
-                script.defer = true;
-                script.onload = () => {
-                    console.log(`📜 Зареден е скриптът: ${src}`);
-                    resolve();
-                };
-                script.onerror = () => {
-                    console.error(`❌ Грешка при зареждане на: ${src}`);
-                    reject(new Error(`Failed to load script: ${src}`));
-                };
-        
-                document.body.appendChild(script);
-            });
-        }
-
-
+    // 👉 Зарежда JS скриптове динамично и връща Promise
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            const existing = document.querySelector(`script[src="${src}"]`);
+            if (existing) {
+                console.log(`ℹ️ Скриптът вече е зареден: ${src}`);
+                resolve();
+                return;
+            }
+            const script = document.createElement("script");
+            script.src = src;
+            script.defer = true;
+            script.onload = () => {
+                console.log(`📜 Скриптът е зареден: ${src}`);
+                resolve();
+            };
+            script.onerror = () => reject(new Error(`Неуспешно зареждане на ${src}`));
+            document.body.appendChild(script);
+        });
+    }
 
     // 👉 Клик на меню бутон
     menuButtons.forEach(button => {
