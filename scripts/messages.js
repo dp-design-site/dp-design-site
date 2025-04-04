@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async function () {
-    console.log("📩 Стартиране с mock съобщения");
+    console.log("📨 Стартиране с mock съобщения");
 
     const tableBody = document.getElementById("messages-table-body");
     const noMessages = document.getElementById("no-messages");
@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 </td>
             `;
 
+            // 👉 Бутон "Виж"
             row.querySelector(".view-btn").addEventListener("click", () => {
                 alert(`📬 Съобщение от ${msg.name}\n\n${msg.message || "—"}`);
                 if (!msg.is_read) {
