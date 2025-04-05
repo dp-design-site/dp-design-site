@@ -20,6 +20,7 @@
   <div class="nav-right">
     <!-- 🔍 Търсачка -->
     <form class="search-form" onsubmit="handleSearch(event)">
+      <img src="icons/search-icon.svg" alt="🔍" class="search-icon" />
       <input type="text" id="searchInput" placeholder="🔍 Търси..." />
     </form>
 
@@ -272,10 +273,13 @@
     gap: 3px;
   }
 
-  .search-form {
-    display: flex;
-    align-items: center;
-  }
+  .search-form .search-icon {
+  position: absolute;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
 
   .search-form input[type="text"] {
     background: transparent;
