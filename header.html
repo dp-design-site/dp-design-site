@@ -205,7 +205,7 @@
     .nav-menu a:hover, .nav-right a:hover {
         color: #ffcc99;
         text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
-        transform: scale(1.1);
+        transform: scale(1);
     }
 
     /* ✅ Бутон за меню */
@@ -316,7 +316,7 @@
         .nav-right {
               display: flex;
               align-items: center;
-              gap: 10px;
+              gap: 5px;
             }
             
             .search-form {
@@ -324,19 +324,25 @@
               align-items: center;
             }
             
-            .search-form input {
-              padding: 4px 8px;
-              border: 1px solid #ccc;
-              border-radius: 20px;
-              font-size: 14px;
-              background-color: #fff;
-              outline: none;
-              min-width: 120px;
-            }
-            
-            .search-form input::placeholder {
-              color: #999;
-            }
+            /* Търсачка без фон */
+                .search-form input[type="text"] {
+                  background: transparent;
+                  border: none;
+                  border-bottom: 2px solid #fce5cd;
+                  color: #fce5cd;
+                  outline: none;
+                  padding: 5px 10px;
+                  font-size: 14px;
+                  transition: border-color 0.3s ease;
+                }
+                
+                .search-form input[type="text"]::placeholder {
+                  color: #fce5cd99; /* по-светъл текст за placeholder */
+                }
+                
+                .search-form input[type="text"]:focus {
+                  border-color: #ffcc99;
+                }
             
             @media (max-width: 768px) {
               .search-form input {
