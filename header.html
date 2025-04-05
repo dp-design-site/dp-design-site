@@ -1,35 +1,47 @@
-<!-- Навигационно меню -->
-<nav class="nav-bar">
-    <div class="nav-left">
-        <button class="hamburger" id="menuButton">☰</button>
-        <a href="index.html" class="nav-logo">dp | design</a>
-    </div>
-   
-       
-    </div>
-     <!--<div class="nav-right" style="display: flex; align-items: center; gap: 15px;">   style="display: flex; align-items: center; gap: 5px;"-->
-    <div class="nav-menu" id="menu" >
-        <a href="index.html">Начало</a>
-        <a href="personalized.html">Персонализирани продукти</a>
-        <a href="home_decor.html">Дом и декорация</a>
-        <a href="prototyping.html">3D прототипиране</a>
-        <a href="contacts.html">Контакти</a>
-    <a id="userAuth" href="login.html">🔑 Вход</a>
-        <li id="admin-panel-link" style="display: none;"><a href="admin.html">🔧 Админ Панел</a></li>
-      <!-- 🛒 Количка с линк към нова страница -->
-    <a href="cart.html" class="cart-icon">
-        🛒 (<span id="cart-count">0</span>)
-    </a>
-</nav>
+        <!-- Навигационно меню -->
+        <nav class="nav-bar">
+          <div class="nav-left">
+            <button class="hamburger" id="menuButton">☰</button>
+            <a href="index.html" class="nav-logo">dp | design</a>
+          </div>
+        
+          <div class="nav-menu" id="menu">
+            <a href="index.html">Начало</a>
+            <a href="personalized.html">Персонализирани продукти</a>
+            <a href="home_decor.html">Дом и декорация</a>
+            <a href="prototyping.html">3D прототипиране</a>
+            <a href="contacts.html">Контакти</a>
+            <a id="userAuth" href="login.html">🔑 Вход</a>
+            <li id="admin-panel-link" style="display: none;">
+              <a href="admin.html">🔧 Админ Панел</a>
+            </li>
+          </div>
+        
+          <div class="nav-right">
+            <!-- 🔍 Търсачка -->
+            <form class="search-form" onsubmit="handleSearch(event)">
+              <input type="text" id="searchInput" placeholder="🔍 Търси..." />
+            </form>
+        
+            <!-- 🛒 Количка -->
+            <a href="cart.html" class="cart-icon">
+              🛒 (<span id="cart-count">0</span>)
+            </a>
+          </div>
+        </nav>
+        
+        <!-- Фон за мобилното меню -->
+        <div class="menu-overlay" id="menuOverlay"></div>
+        
+        <!-- ✅ Хедър с фоново изображение -->
+        <header class="header-wrapper">
+          <h1 class="header-title"></h1>
+          <div class="header-gradient"></div>
+        </header>
+        
+        <!-- 🔁 Скриптовете си остават същите (ще добавим search.js отделно) -->
+        <script src="scripts/search.js" defer></script>
 
-<!-- Фон за мобилното меню -->
-<div class="menu-overlay" id="menuOverlay"></div>
-
-<!-- ✅ Хедър с фоново изображение -->
-<header class="header-wrapper">
-    <h1 class="header-title"></h1>
-    <div class="header-gradient"></div>
-</header>
 
 <script>
     console.log("🔥 Скриптът е зареден!");
@@ -300,4 +312,44 @@
         height: 100px;
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
     }
+
+        .nav-right {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            }
+            
+            .search-form {
+              display: flex;
+              align-items: center;
+            }
+            
+            .search-form input {
+              padding: 4px 8px;
+              border: 1px solid #ccc;
+              border-radius: 20px;
+              font-size: 14px;
+              background-color: #fff;
+              outline: none;
+              min-width: 120px;
+            }
+            
+            .search-form input::placeholder {
+              color: #999;
+            }
+            
+            @media (max-width: 768px) {
+              .search-form input {
+                display: none;
+              }
+            
+              .search-form::before {
+                content: "🔍";
+                font-size: 20px;
+                color: #fce5cd;
+                cursor: pointer;
+                padding: 4px;
+              }
+            }
+
 </style>
