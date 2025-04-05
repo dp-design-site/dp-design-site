@@ -49,25 +49,30 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("❌ Грешка при зареждане на съдържание:", error));
     }
 
-            async function updateMenuCounters() {
-            try {
-                // 👉 Взимаме непрочетени съобщения
-                const msgRes = await fetch("https://api.dp-design.art/api/messages");
-                const messages = await msgRes.json();
-                const unreadMessages = messages.filter(msg => !msg.is_read).length;
-        
-                // 👉 Взимаме непрочетени поръчки (по аналогия – добавихме `is_read` и на тях)
-                const ordersRes = await fetch("https://api.dp-design.art/api/orders");
-                const orders = await ordersRes.json();
-                const unreadOrders = orders.filter(order => !order.is_read).length;
-        
-                // 👉 Обновяваме визуално броячите в менюто
-                document.getElementById("msg-counter").textContent = unreadMessages > 0 ? unreadMessages : "";
-                document.getElementById("order-counter").textContent = unreadOrders > 0 ? unreadOrders : "";
-            } catch (error) {
-                console.error("❌ Грешка при зареждане на броячи:", error);
+            function updateMenuCounters() {
+              Promise.all([
+                fetch("https://api.dp-design.art/api/messages").then(res => res.json()),
+                fetch("https://api.dp-design.art/api/orders").then(res => res.json())
+              ])
+              .then(([messages, orders]) => {
+                const unreadMessages = messages.filter(m => !m.is_read).length;
+                const unreadOrders = orders.filter(o => !o.is_read).length;
+            
+                const msgCounter = document.getElementById("msg-counter");
+                const orderCounter = document.getElementById("order-counter");
+            
+                msgCounter.textContent = unreadMessages;
+                orderCounter.textContent = unreadOrders;
+            
+                // ✅ Скриваме броячите, ако стойността е 0
+                msgCounter.style.display = unreadMessages > 0 ? "inline-flex" : "none";
+                orderCounter.style.display = unreadOrders > 0 ? "inline-flex" : "none";
+            
+                console.log("🔄 Обновени броячи:", { unreadMessages, unreadOrders });
+              })
+              .catch(err => console.error("❌ Грешка при зареждане на броячи:", err));
             }
-        }
+
 
 
     // 👉 Зарежда JS скриптове динамично и връща Promise
