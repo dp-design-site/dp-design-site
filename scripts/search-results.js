@@ -4,22 +4,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("search-query").textContent = `Търсене по: "${query}"`;
 
-  // 🔧 Мокнати продукти (заменяме с API по-късно)
-  const mockProducts = [
-    { id: 1, name: "3D ключодържател", description: "Персонализиран подарък", image: "img1.jpg" },
-    { id: 2, name: "Декорация за дома", description: "Уникална 3D закачалка", image: "img2.jpg" },
-    { id: 3, name: "EV кабелна стойка", description: "Функционален аксесоар", image: "img3.jpg" },
-  ];
-
-  const filtered = mockProducts.filter(p =>
-    p.name.toLowerCase().includes(query) ||
-    p.description.toLowerCase().includes(query)
-  );
+  // 🔎 Вземаме резултатите от localStorage (реални продукти от API)
+  const searchResults = JSON.parse(localStorage.getItem("searchResults")) || [];
 
   const grid = document.getElementById("results-grid");
   const noResults = document.getElementById("no-results");
 
-  if (filtered.length === 0) {
+  if (searchResults.length === 0) {
     noResults.style.display = "block";
     return;
   }
@@ -27,15 +18,19 @@ document.addEventListener("DOMContentLoaded", function () {
   noResults.style.display = "none";
   grid.innerHTML = "";
 
-  filtered.forEach(p => {
+  searchResults.forEach(p => {
+    const imgSrc = (p.images && p.images.length > 0) ? `uploads/${p.images[0]}` : "images/no-image.jpg";
+
     const card = document.createElement("div");
     card.className = "product-card";
+
     card.innerHTML = `
-      <img src="${p.image}" alt="${p.name}" class="product-img"/>
+      <img src="${imgSrc}" alt="${p.name}" class="product-img"/>
       <h3>${p.name}</h3>
-      <p>${p.description}</p>
+      <p>${p.description || "Без описание."}</p>
       <a href="product-template.html?id=${p.id}" class="view-btn">🔎 Разгледай</a>
     `;
+
     grid.appendChild(card);
   });
 });
