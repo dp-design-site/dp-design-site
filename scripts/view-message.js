@@ -1,50 +1,75 @@
-// ✅ scripts/view-message.js
+document.addEventListener("DOMContentLoaded", function () {
+  const messageContainer = document.getElementById("message-details");
 
-function loadViewMessage() {
-    console.log("📬 Зареждаме детайли за съобщение...");
+  const messageId = localStorage.getItem("selectedMessageId");
+  if (!messageId) {
+    messageContainer.innerHTML = "<p>⚠️ Няма избрано съобщение.</p>";
+    return;
+  }
 
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+  console.log("📨 Зареждане на съобщение с ID:", messageId);
 
-    if (!id) {
-        document.getElementById("view-message-container").innerHTML = "<p>❌ Липсва ID на съобщението.</p>";
-        return;
+  // Мокнати съобщения (в реална среда ще се взимат чрез API)
+  const mockMessages = [
+    {
+      id: 1,
+      name: "Иван Тестов",
+      email: "ivan@abv.bg",
+      type: "inquiry",
+      created_at: "2025-04-04T10:20:00Z",
+      is_read: false,
+      message: "Здравейте! Интересувам се от 3D продуктите ви.",
+      attachments: ["test-image-1.jpg", "test-image-2.jpg"]
+    },
+    {
+      id: 2,
+      name: "Мария Петрова",
+      email: "maria@gmail.com",
+      type: "contact",
+      created_at: "2025-04-03T15:45:00Z",
+      is_read: true,
+      message: "Поздравления за дизайна! Бих искала консултация.",
+      attachments: []
     }
+  ];
 
-    fetch(`https://api.dp-design.art/api/messages/${id}`)
-        .then(res => res.json())
-        .then(msg => {
-            const container = document.getElementById("view-message-container");
-            container.innerHTML = `
-                <h2>📨 Съобщение от ${msg.name}</h2>
-                <p><strong>Имейл:</strong> ${msg.email}</p>
-                <p><strong>Телефон:</strong> ${msg.phone || "—"}</p>
-                <p><strong>Тип:</strong> ${msg.type}</p>
-                <p><strong>Статус:</strong> ${msg.status}</p>
-                <p><strong>Категория:</strong> ${msg.category || "—"}</p>
-                <p><strong>Дата:</strong> ${new Date(msg.created_at).toLocaleString("bg-BG")}</p>
-                <p><strong>Съобщение:</strong></p>
-                <div class="message-box">${msg.message || "<i>—</i>"}</div>
+  const msg = mockMessages.find((m) => m.id === parseInt(messageId));
+  if (!msg) {
+    messageContainer.innerHTML = "<p>❌ Съобщението не е намерено.</p>";
+    return;
+  }
 
-                ${msg.images?.length > 0 ? `<h4>📷 Прикачени снимки:</h4>
-                <div class="image-thumbnails">
-                    ${msg.images.map(img => `
-                        <img src="/uploads/${img}" class="thumbnail" onclick="openImage('/uploads/${img}')">
-                    `).join("")}
-                </div>` : ""}
+  // Генерираме съдържанието
+  messageContainer.innerHTML = `
+    <h2>📨 Детайли за съобщението</h2>
+    <p><strong>Име:</strong> ${msg.name}</p>
+    <p><strong>Имейл:</strong> ${msg.email}</p>
+    <p><strong>Тип:</strong> ${msg.type}</p>
+    <p><strong>Дата:</strong> ${new Date(msg.created_at).toLocaleString("bg-BG")}</p>
+    <p><strong>Съобщение:</strong><br>${msg.message}</p>
 
-                <div class="actions">
-                    <button onclick="loadContent('messages')">⬅️ Назад</button>
-                </div>
-            `;
-        })
-        .catch(err => {
-            console.error("❌ Грешка при зареждане на съобщението:", err);
-            document.getElementById("view-message-container").innerHTML = "⚠️ Грешка при зареждане.";
-        });
-}
+    <div class="attachments">
+      <strong>Прикачени файлове:</strong>
+      <div class="thumbnail-container">
+        ${
+          msg.attachments && msg.attachments.length > 0
+            ? msg.attachments
+                .map(
+                  (img) => `
+              <img src="uploads/${img}" alt="Attachment" class="thumbnail" onclick="openImage(this.src)">
+            `
+                )
+                .join("")
+            : "<p>— Няма прикачени файлове.</p>"
+        }
+      </div>
+    </div>
 
-// ✅ Функция за отваряне на снимка в нов прозорец
+    <br><button onclick="loadMessages()">⬅️ Назад към съобщенията</button>
+  `;
+});
+
+// Отваряне на снимка в нов таб (можеш да направиш модал по-късно)
 function openImage(src) {
-    window.open(src, "_blank");
+  window.open(src, "_blank");
 }
