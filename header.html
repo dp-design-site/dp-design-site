@@ -1,102 +1,84 @@
-        <!-- Навигационно меню -->
-        <nav class="nav-bar">
-          <div class="nav-left">
-            <button class="hamburger" id="menuButton">☰</button>
-            <a href="index.html" class="nav-logo">dp | design</a>
-          </div>
-        
-          <div class="nav-menu" id="menu">
-            <a href="index.html">Начало</a>
-            <a href="personalized.html">Персонализирани продукти</a>
-            <a href="home_decor.html">Дом и декорация</a>
-            <a href="prototyping.html">3D прототипиране</a>
-            <a href="contacts.html">Контакти</a>
-            <a id="userAuth" href="login.html">🔑 Вход</a>
-            <li id="admin-panel-link" style="display: none;">
-              <a href="admin.html">🔧 Админ Панел</a>
-            </li>
-          </div>
-        
-          <div class="nav-right">
-            <!-- 🔍 Търсачка -->
-            <form class="search-form" onsubmit="handleSearch(event)">
-              <input type="text" id="searchInput" placeholder="🔍 Търси..." />
-            </form>
-        
-            <!-- 🛒 Количка -->
-            <a href="cart.html" class="cart-icon">
-              🛒 (<span id="cart-count">0</span>)
-            </a>
-          </div>
-        </nav>
-        
-        <!-- Фон за мобилното меню -->
-        <div class="menu-overlay" id="menuOverlay"></div>
-        
-        <!-- ✅ Хедър с фоново изображение -->
-        <header class="header-wrapper">
-          <h1 class="header-title"></h1>
-          <div class="header-gradient"></div>
-        </header>
-        
-        <!-- 🔁 Скриптовете си остават същите (ще добавим search.js отделно) -->
-        <script src="scripts/search.js" defer></script>
+<!-- Навигационно меню -->
+<nav class="nav-bar">
+  <div class="nav-left">
+    <button class="hamburger" id="menuButton">☰</button>
+    <a href="index.html" class="nav-logo">dp | design</a>
+  </div>
 
+  <div class="nav-menu" id="menu">
+    <a href="index.html">Начало</a>
+    <a href="personalized.html">Персонализирани продукти</a>
+    <a href="home_decor.html">Дом и декорация</a>
+    <a href="prototyping.html">3D прототипиране</a>
+    <a href="contacts.html">Контакти</a>
+    <a id="userAuth" href="login.html">🔑 Вход</a>
+    <li id="admin-panel-link" style="display: none;">
+      <a href="admin.html">🔧 Админ Панел</a>
+    </li>
+  </div>
+
+  <div class="nav-right">
+    <!-- 🔍 Търсачка -->
+    <form class="search-form" onsubmit="handleSearch(event)">
+      <input type="text" id="searchInput" placeholder="🔍 Търси..." />
+    </form>
+
+    <!-- 🛒 Количка -->
+    <a href="cart.html" class="cart-icon">
+      🛒 (<span id="cart-count">0</span>)
+    </a>
+  </div>
+</nav>
+
+<!-- Фон за мобилното меню -->
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<!-- ✅ Хедър с фоново изображение -->
+<header class="header-wrapper">
+  <h1 class="header-title"></h1>
+  <div class="header-gradient"></div>
+</header>
+
+<!-- 🔁 Скриптовете си остават същите (ще добавим search.js отделно) -->
+<script src="scripts/search.js" defer></script>
 
 <script>
-    console.log("🔥 Скриптът е зареден!");
+  console.log("🔥 Скриптът е зареден!");
 
-    // ✅ Глобално задаване на toggleMenu
-    function toggleMenu() {
-        console.log("☰ Кликнато е върху бутона за меню!");
-
-        let menu = document.getElementById("menu");
-        let menuOverlay = document.getElementById("menuOverlay");
-
-        if (!menu || !menuOverlay) {
-            console.error("❌ Менюто или фонът не са намерени!");
-            return;
-        }
-
-        menu.classList.toggle("open");
-        menuOverlay.classList.toggle("visible");
-
-        console.log(menu.classList.contains("open") ? "✅ Менюто е отворено!" : "❌ Менюто е затворено!");
+  function toggleMenu() {
+    console.log("☰ Кликнато е върху бутона за меню!");
+    let menu = document.getElementById("menu");
+    let menuOverlay = document.getElementById("menuOverlay");
+    if (!menu || !menuOverlay) {
+      console.error("❌ Менюто или фонът не са намерени!");
+      return;
     }
+    menu.classList.toggle("open");
+    menuOverlay.classList.toggle("visible");
+    console.log(menu.classList.contains("open") ? "✅ Менюто е отворено!" : "❌ Менюто е затворено!");
+  }
 
-    // ✅ Присвояване на функцията към window
-    window.toggleMenu = toggleMenu;
+  window.toggleMenu = toggleMenu;
 
-    document.addEventListener("DOMContentLoaded", function () {
-        console.log("✅ Страницата е заредена!");
-
-        const menuButton = document.getElementById("menuButton");
-        const menuOverlay = document.getElementById("menuOverlay");
-
-        if (menuButton) {
-            menuButton.addEventListener("click", toggleMenu);
-        } else {
-            console.error("❌ Бутонът за меню не е намерен!");
-        }
-
-        if (menuOverlay) {
-            menuOverlay.addEventListener("click", toggleMenu);
-        } else {
-            console.error("❌ Фонът на менюто не е намерен!");
-        }
-
-        console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
-    });
-
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ Страницата е заредена!");
+    const menuButton = document.getElementById("menuButton");
+    const menuOverlay = document.getElementById("menuOverlay");
+    if (menuButton) menuButton.addEventListener("click", toggleMenu);
+    else console.error("❌ Бутонът за меню не е намерен!");
+    if (menuOverlay) menuOverlay.addEventListener("click", toggleMenu);
+    else console.error("❌ Фонът на менюто не е намерен!");
+    console.log("🚀 Проверка на window.toggleMenu:", window.toggleMenu);
+  });
 </script>
+
 <!-- ✅ Логика за количката -->
 <script>
-    let cart = [];
-
-    function addToCart(product) {
-        cart.push(product);
-        document.getElementById('cart-count').textContent = cart.length;
-    }
+  let cart = [];
+  function addToCart(product) {
+    cart.push(product);
+    document.getElementById('cart-count').textContent = cart.length;
+  }
 </script>
 
 <script>
@@ -108,254 +90,223 @@
   });
 </script>
 
-
 <script>
-    function updateHeader() {
-        const userAuth = document.getElementById('userAuth');
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user) {
-            userAuth.textContent = user.firstName;
-            userAuth.href = 'profile.html';
-        } else {
-            userAuth.textContent = 'Вход';
-            userAuth.href = 'login.html';
-        }
+  function updateHeader() {
+    const userAuth = document.getElementById('userAuth');
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      userAuth.textContent = `👤 ${user.firstName}`;
+      userAuth.setAttribute('href', 'profile.html');
+    } else {
+      userAuth.textContent = '🔑 Вход';
+      userAuth.setAttribute('href', 'login.html');
     }
-    document.addEventListener('DOMContentLoaded', updateHeader);
+  }
+  document.addEventListener('DOMContentLoaded', updateHeader);
 </script>
 
-<script>
-    function updateHeader() {
-        const userAuth = document.getElementById('userAuth');
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user) {
-            userAuth.textContent = `👤 ${user.firstName}`;
-            userAuth.setAttribute('href', 'profile.html');
-        } else {
-            userAuth.textContent = '🔑 Вход';
-            userAuth.setAttribute('href', 'login.html');
-        }
-    }
-    document.addEventListener('DOMContentLoaded', updateHeader);
-</script>
-
-<!-- ✅ CSS -->
 <style>
-    /* Основен стил на навигационния бар */
-    .nav-bar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 0 20px;
-        z-index: 1000;
-    }
+  .nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0 20px;
+    z-index: 1000;
+  }
 
-    .nav-left {
-        display: flex;
-        align-items: center;
-    }
-    <!-- ✅ CSS стил за количката -->
-     .cart-icon {
-        font-size: 16px;
-        color: #fce5cd;
-        cursor: pointer;
-        margin-left: 20px;
-        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-    }
-    .cart-icon:hover {
-        color: #ffcc99;
-        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
-        transform: scale(1.1);
-    }
+  .nav-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .cart-icon {
+    font-size: 16px;
+    color: #fce5cd;
+    cursor: pointer;
+    margin-left: 20px;
+    transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+  }
+
+  .cart-icon:hover {
+    color: #ffcc99;
+    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
+  }
+
+  .nav-menu {
+    display: flex;
+    gap: 3px;
+  }
+
+  .nav-logo {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fce5cd;
+    transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+  }
+
+  .nav-logo:hover {
+    transform: scale(1.05);
+    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
+  }
+
+  .nav-menu a,
+  .nav-right a {
+    color: #fce5cd;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 30px;
+    gap: 3px;
+    transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+  }
+
+  .nav-menu a:hover,
+  .nav-right a:hover {
+    color: #ffcc99;
+    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
+    transform: scale(1);
+  }
+
+  .hamburger {
+    display: block;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fce5cd;
+    background: none;
+    border: none;
+    padding: 10px;
+    margin-right: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  @media (max-width: 768px) {
     .nav-menu {
-        display: flex;
-        gap: 1px;
-    }
-
-    .nav-logo {
-        font-size: 18px;
-        font-weight: bold;
-        text-decoration: none;
-        color: #fce5cd;
-        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-    }
-
-    .nav-logo:hover {
-        transform: scale(1.05);
-        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6);
-    }
-
-    /* ✅ Ховър ефекти за линковете в навигацията */
-    .nav-menu a, .nav-right a {
-        color: #fce5cd;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: bold;
-        margin-right: 30px;
-        gap: 5px;
-        transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-    }
-
-    .nav-menu a:hover, .nav-right a:hover {
-        color: #ffcc99;
-        text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
-        transform: scale(1);
-    }
-
-    /* ✅ Бутон за меню */
-    .hamburger {
-        display: block;
-        font-size: 24px;
-        cursor: pointer;
-        color: #fce5cd;
-        background: none;
-        border: none;
-        padding: 10px;
-        margin-right: 10px;
-        transition: transform 0.3s ease-in-out;
-    }
-
-    /* ✅ Стилизация на мобилното меню */
-@media (max-width: 768px) {
-    .nav-menu {
-        display: none;
-        flex-direction: column;
-        position: fixed; /* За да покрива цялата височина */
-        top: 0;
-        left: 0;
-        width: 60%; /* 🔥 Намаляваме от 66% на 60%, за да пасва на всички устройства */
-        height: 100vh; /* Цялата височина */
-        background: rgba(0, 0, 0, 0.6); /* Черен фон с 40% прозрачност */
-        padding: 20px;
-        text-align: left;
-        z-index: 999;
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 60%;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      text-align: left;
+      z-index: 999;
     }
 
     .nav-menu.open {
-        display: flex;
+      display: flex;
     }
 
     .nav-menu a {
-        display: block;
-        padding: 20px;
-        font-size: 18px;
-        width: 100%;
-        text-align: left;
-        color: #fce5cd;
-        text-decoration: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Лека граница между елементите */
+      display: block;
+      padding: 15px;
+      font-size: 18px;
+      width: 100%;
+      text-align: left;
+      white-space: break-spaces;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      line-height: 1.4;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4); /* Полупрозрачен фон на останалата част */
-        z-index: 998;
-        display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 998;
+      display: none;
     }
 
     .menu-overlay.visible {
-        display: block;
+      display: block;
     }
-    .nav-menu a {
-        display: block;
-        padding: 15px;
-        font-size: 18px;
-        width: 100%;
-        text-align: left;
-        white-space: break-spaces; /* 🚀 Принудително пренасяне на дълги думи */
-        overflow-wrap: break-word; /* 📌 Работи за по-дълги думи */
-        word-break: break-word; /* 🔥 Още една защита, ако другото не сработи */
-        line-height: 1.4; /* 📌 Добавя повече въздух между редовете */
+  }
+
+  .header-wrapper {
+    position: relative;
+    height: 220px;
+    background: url('images/header-background.jpg') no-repeat center center/cover;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 20px;
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .header-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #fce5cd;
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    z-index: 2;
+  }
+
+  .header-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .search-form {
+    display: flex;
+    align-items: center;
+  }
+
+  .search-form input[type="text"] {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #fce5cd;
+    color: #fce5cd;
+    outline: none;
+    padding: 5px 10px;
+    font-size: 10px;
+    transition: border-color 0.3s ease;
+  }
+
+  .search-form input[type="text"]::placeholder {
+    color: #fce5cd;
+  }
+
+  .search-form input[type="text"]:focus {
+    border-color: #ffcc99;
+  }
+
+  @media (max-width: 768px) {
+    .search-form input {
+      display: none;
     }
-}
 
-
-    /* ✅ Хедър с фон */
-    .header-wrapper {
-        position: relative;
-        height: 220px;
-        background: url('images/header-background.jpg') no-repeat center center/cover;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-start;
-        padding: 20px;
-        text-align: left;
-        overflow: hidden;
+    .search-form::before {
+      content: "🔍";
+      font-size: 20px;
+      color: #fce5cd;
+      cursor: pointer;
+      padding: 4px;
     }
-
-    .header-title {
-        font-size: 32px;
-        font-weight: bold;
-        color: #fce5cd;
-        position: absolute;
-        bottom: 10px;
-        left: 20px;
-        z-index: 2;
-    }
-
-    /* ✅ Градиент под заглавието */
-    .header-gradient {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100px;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #121212 100%);
-    }
-
-        .nav-right {
-              display: flex;
-              align-items: center;
-              gap: 5px;
-            }
-            
-            .search-form {
-              display: flex;
-              align-items: center;
-            }
-            
-            /* Търсачка без фон */
-                .search-form input[type="text"] {
-                  background: transparent;
-                  border: none;
-                  border-bottom: 2px solid #fce5cd;
-                  color: #fce5cd;
-                  outline: none;
-                  padding: 5px 10px;
-                  font-size: 10px;
-                  transition: border-color 0.3s ease;
-                }
-                
-                .search-form input[type="text"]::placeholder {
-                  color: #fce5cd; /* по-светъл текст за placeholder */
-                }
-                
-                .search-form input[type="text"]:focus {
-                  border-color: #ffcc99;
-                }
-            
-            @media (max-width: 768px) {
-              .search-form input {
-                display: none;
-              }
-            
-              .search-form::before {
-                content: "🔍";
-                font-size: 20px;
-                color: #fce5cd;
-                cursor: pointer;
-                padding: 4px;
-              }
-            }
-
+  }
 </style>
