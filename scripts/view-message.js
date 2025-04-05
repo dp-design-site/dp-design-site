@@ -105,3 +105,43 @@ if (convertBtn) {
     });
 }
 
+          // ✅ scripts/view-message.js – добавяме логика за създаване на поръчка
+          
+          async function convertToOrder(message) {
+            const confirmed = confirm("✅ Сигурни ли сте, че искате да създадете поръчка от това съобщение?");
+            if (!confirmed) return;
+          
+            const payload = {
+              customer_name: message.name || "—",
+              customer_email: message.email || "—",
+              phone: message.phone || null,
+              shipping_address: message.shipping_address || null,
+              payment_method: message.payment_method || null,
+              is_paid: false,
+              status: "очаква",
+              category: message.category || null,
+              source: "from-message"
+            };
+          
+            try {
+              const res = await fetch("https://api.dp-design.art/api/orders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              });
+          
+              if (!res.ok) throw new Error("Грешка при създаване на поръчката");
+          
+              const result = await res.json();
+              alert("✅ Поръчката е създадена успешно!");
+              console.log("📦 Създадена поръчка:", result);
+          
+              // 👉 Опционално: маркираме съобщението като решено или препратено
+              document.getElementById("convert-btn").disabled = true;
+          
+            } catch (error) {
+              console.error("❌ Грешка при създаване на поръчка:", error);
+              alert("❌ Неуспешно създаване на поръчка.");
+            }
+          }
+
