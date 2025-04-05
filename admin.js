@@ -49,6 +49,27 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("❌ Грешка при зареждане на съдържание:", error));
     }
 
+            async function updateMenuCounters() {
+            try {
+                // 👉 Взимаме непрочетени съобщения
+                const msgRes = await fetch("https://api.dp-design.art/api/messages");
+                const messages = await msgRes.json();
+                const unreadMessages = messages.filter(msg => !msg.is_read).length;
+        
+                // 👉 Взимаме непрочетени поръчки (по аналогия – добавихме `is_read` и на тях)
+                const ordersRes = await fetch("https://api.dp-design.art/api/orders");
+                const orders = await ordersRes.json();
+                const unreadOrders = orders.filter(order => !order.is_read).length;
+        
+                // 👉 Обновяваме визуално броячите в менюто
+                document.getElementById("msg-counter").textContent = unreadMessages > 0 ? unreadMessages : "";
+                document.getElementById("order-counter").textContent = unreadOrders > 0 ? unreadOrders : "";
+            } catch (error) {
+                console.error("❌ Грешка при зареждане на броячи:", error);
+            }
+        }
+
+
     // 👉 Зарежда JS скриптове динамично и връща Promise
     function loadScript(src) {
         return new Promise((resolve, reject) => {
