@@ -1,120 +1,105 @@
 function loadMessages() {
-    console.log("📨 Стартиране на зареждане на съобщения...");
+  console.log("📨 Стартиране на loadMessages()");
 
-    const tableBody = document.getElementById("messages-table-body");
-    const noMessages = document.getElementById("no-messages");
+  const tableBody = document.getElementById("messages-table-body");
+  const noMessages = document.getElementById("no-messages");
+  const typeFilter = document.getElementById("filter-type");
 
-    // MOCK или реална заявка (тук ползваме реална, можеш да подмениш с mockMessages ако си offline)
-    fetch("https://api.dp-design.art/api/messages")
-        .then(response => response.json())
-        .then(messages => {
-            if (!messages || messages.length === 0) {
-                noMessages.textContent = "❌ Няма съобщения.";
-                return;
-            }
+  // 👉 МОКНАТИ СЪОБЩЕНИЯ
+  const mockMessages = [
+    {
+      id: 1,
+      name: "Иван Тестов",
+      email: "ivan@abv.bg",
+      type: "inquiry",
+      created_at: "2025-04-04T10:20:00Z",
+      is_read: false,
+      message: "Здравейте! Интересувам се от 3D продуктите ви.",
+    },
+    {
+      id: 2,
+      name: "Мария Петрова",
+      email: "maria@gmail.com",
+      type: "contact",
+      created_at: "2025-04-03T15:45:00Z",
+      is_read: true,
+      message: "Поздравления за дизайна! Бих искала консултация.",
+    },
+  ];
 
-            tableBody.innerHTML = "";
+  renderMessages(mockMessages);
 
-            messages.forEach(msg => {
-                const row = document.createElement("tr");
-                if (!msg.is_read) row.classList.add("unread");
-
-                row.innerHTML = `
-                    <td>${msg.name || "—"}</td>
-                    <td>${msg.email || "—"}</td>
-                    <td>${msg.type}</td>
-                    <td>${new Date(msg.created_at).toLocaleString("bg-BG")}</td>
-                    <td>${msg.is_read ? "Прочетено" : "Непрочетено"}</td>
-                    <td class="actions">
-                        <button class="view-btn" data-id="${msg.id}">👁️ Виж</button>
-                        <button class="convert-btn" data-id="${msg.id}">📦 Превърни в поръчка</button>
-                    </td>
-                `;
-
-                // 👁️ Виж
-                row.querySelector(".view-btn").addEventListener("click", async () => {
-                    if (!msg.is_read) {
-                        await markAsRead(msg.id);
-                        row.classList.remove("unread");
-                        row.querySelector("td:nth-child(5)").textContent = "Прочетено";
-                    }
-
-                    // 🔁 Зареждаме view-message.html вътре в admin-content
-                    const content = document.getElementById("admin-content");
-                    fetch("admin-sections/view-message.html")
-                        .then(res => res.text())
-                        .then(html => {
-                            content.innerHTML = html;
-
-                            // Добавяме параметъра ?id=...
-                            history.pushState({}, "", `#view-message-${msg.id}`);
-                            const script = document.createElement("script");
-                            script.src = "scripts/view-message.js";
-                            script.onload = () => {
-                                if (typeof loadViewMessage === "function") {
-                                    // ръчно добавяме ID към URL параметите
-                                    const fakeQuery = `?id=${msg.id}`;
-                                    history.replaceState({}, "", fakeQuery);
-                                    loadViewMessage();
-                                }
-                            };
-                            document.body.appendChild(script);
-                        });
-                });
-
-                // 📦 Превърни в поръчка
-                row.querySelector(".convert-btn").addEventListener("click", () => {
-                    if (confirm("❓ Сигурни ли сте, че искате да превърнете това съобщение в поръчка?")) {
-                        convertToOrder(msg);
-                    }
-                });
-
-                tableBody.appendChild(row);
-            });
-        })
-        .catch(error => {
-            console.error("❌ Грешка при зареждане на съобщения:", error);
-            noMessages.textContent = "⚠️ Проблем при зареждане.";
-        });
-}
-
-// ✅ Маркиране като прочетено
-async function markAsRead(id) {
-    try {
-        await fetch(`https://api.dp-design.art/api/messages/${id}/read`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-        });
-        console.log(`📬 Маркирано като прочетено: ID ${id}`);
-    } catch (err) {
-        console.error("❌ Неуспешно маркиране като прочетено:", err);
+  // 🎛️ Филтриране по тип
+  typeFilter.addEventListener("change", () => {
+    const selectedType = typeFilter.value;
+    if (selectedType === "all") {
+      renderMessages(mockMessages);
+    } else {
+      const filtered = mockMessages.filter((msg) => msg.type === selectedType);
+      renderMessages(filtered);
     }
-}
+  });
 
-// ✅ Превръщане в поръчка
-async function convertToOrder(msg) {
-    try {
-        const response = await fetch("https://api.dp-design.art/api/orders", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                customer_name: msg.name,
-                customer_email: msg.email,
-                phone: msg.phone,
-                shipping_address: msg.shipping_address || "—",
-                payment_method: msg.payment_method || "—",
-                is_paid: msg.is_paid || false,
-                status: msg.status || "Очаква потвърждение",
-                category: msg.category || "—"
-            }),
-        });
+  // 👉 Рендиране на таблицата
+  function renderMessages(messages) {
+    tableBody.innerHTML = "";
 
-        if (response.ok) {
-            alert("✅ Съобщението е превърнато в поръчка!");
-        } else {
-            alert("❌ Възникна грешка при създаване на поръчка.");
+    if (!messages || messages.length === 0) {
+      noMessages.textContent = "❌ Няма съобщения.";
+      return;
+    }
+
+    noMessages.textContent = "";
+
+    messages.forEach((msg) => {
+      const row = document.createElement("tr");
+      if (!msg.is_read) row.classList.add("unread");
+
+      row.innerHTML = `
+        <td>${msg.name || "—"}</td>
+        <td>${msg.email || "—"}</td>
+        <td>${msg.type}</td>
+        <td>${new Date(msg.created_at).toLocaleString("bg-BG")}</td>
+        <td>${msg.is_read ? "Прочетено" : "Непрочетено"}</td>
+        <td class="actions">
+          <button class="view-btn" data-id="${msg.id}">👁️ Виж</button>
+          ${
+            msg.type === "inquiry"
+              ? `<button class="convert-btn" data-id="${msg.id}">📦 Превърни в поръчка</button>`
+              : ""
+          }
+        </td>
+      `;
+
+      // 👉 Превръщане в поръчка
+      row.querySelector(".convert-btn")?.addEventListener("click", () => {
+        if (confirm("Сигурни ли сте, че искате да създадете поръчка от това запитване?")) {
+          alert("✅ Създадена е нова поръчка!");
         }
-    } catch (err) {
-        console.error("❌ Превръщане в поръчка:", err);
-    }
+      });
+
+      // 👉 Виж
+      row.querySelector(".view-btn").addEventListener("click", () => {
+        const container = document.getElementById("admin-content");
+        if (!container) return location.href = `view-message.html?id=${msg.id}`;
+
+        fetch("admin-sections/view-message.html")
+          .then((res) => res.text())
+          .then((html) => {
+            container.innerHTML = html;
+            const script = document.createElement("script");
+            script.src = "scripts/view-message.js";
+            script.defer = true;
+            container.appendChild(script);
+
+            localStorage.setItem("selectedMessageId", msg.id);
+          })
+          .catch((err) => {
+            console.error("❌ Грешка при зареждане на view-message.html:", err);
+          });
+      });
+
+      tableBody.appendChild(row);
+    });
+  }
 }
