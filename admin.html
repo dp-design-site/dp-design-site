@@ -83,6 +83,16 @@
             text-align: center;
             padding: 10px 0;
         }
+        .counter-badge {
+          background: #ff5e5e;
+          color: white;
+          font-size: 12px;
+          font-weight: bold;
+          padding: 2px 6px;
+          border-radius: 50%;
+          margin-left: 8px;
+        }
+
     </style>
 </head>
 <body>
@@ -94,8 +104,12 @@
     <nav class="sidebar">
         <h2>Админ Панел</h2>
         <button class="menu-button active" data-section="dashboard">🏠 Табло</button>
-        <button class="menu-button" data-section="messages">📨 Съобщения</button>
-        <button class="menu-button" data-section="orders">📜 Поръчки</button>
+        <button class="menu-button" data-section="messages">
+          📨 Съобщения <span id="msg-counter" class="counter-badge"></span>
+        </button>
+        <button class="menu-button" data-section="orders">
+          📜 Поръчки <span id="order-counter" class="counter-badge"></span>
+        </button>
         <button class="menu-button" data-section="products">📦 Продукти</button>
         <button class="menu-button" data-section="recycle-bin">🗑️ Кошче</button>
         <button class="menu-button" data-section="stats">📊 Статистика</button>
