@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Резултати от търсене | DP Design</title>
+  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/products.css" />
+
+  <style>
+    .search-header {
+      margin-top: 80px;
+      text-align: center;
+      color: #fce5cd;
+      font-size: 22px;
+    }
+
+    #results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .product-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+      transform: scale(1.03);
+    }
+
+    .product-img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .view-btn {
+      display: inline-block;
+      margin-top: 10px;
+      background: #ffcc99;
+      color: #121212;
+      padding: 6px 12px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .view-btn:hover {
+      background: #f5b977;
+    }
+
+    #no-results {
+      text-align: center;
+      color: #ccc;
+      font-size: 18px;
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Навигационен бар (ако имаш включен с include/header) -->
+  <div id="header-placeholder"></div>
+
+  <h2 class="search-header" id="search-query">Резултати от търсене</h2>
+
+  <div id="results-grid"></div>
+  <div id="no-results" style="display: none;">❌ Няма намерени резултати.</div>
+
+  <!-- Скриптове -->
+  <script src="scripts/search-results.js"></script>
+  <script>
+    // Ако използваш include за хедъра
+    fetch("header.html")
+      .then((res) => res.text())
+      .then((data) => {
+        document.getElementById("header-placeholder").innerHTML = data;
+      });
+  </script>
+</body>
+</html>
