@@ -23,6 +23,7 @@
       <form class="search-form" onsubmit="handleSearch(event)">
         <img src="icons/search-icon.svg" alt="🔍" width="20" height="20">
         <input type="text" id="searchInput" placeholder="Търси..." />
+        <button type="submit" class="search-btn">🔍</button>
       </form>
 
       <!-- 🛒 Количка -->
@@ -318,10 +319,26 @@
   }
 
 
-  @media (max-width: 768px) {
-    .search-form input {
-      display: none;
-    }
+  /* По-малък екран – скриваме полето първоначално */
+@media (max-width: 768px) {
+  .search-form input {
+    display: none;
+    width: 100%;
+    max-width: 200px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .search-form.active input {
+    display: inline-block;
+  }
+
+  .search-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+}
 
     .search-form::before {
       
