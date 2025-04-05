@@ -28,3 +28,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("search-form");
+  const input = document.getElementById("search-input");
+  const button = form?.querySelector(".search-btn");
+
+  if (button && window.innerWidth <= 768) {
+    button.addEventListener("click", (e) => {
+      // Ако input е скрит – покажи го
+      if (!form.classList.contains("active")) {
+        e.preventDefault();
+        form.classList.add("active");
+        input.style.display = "inline-block";
+        input.focus();
+      }
+    });
+  }
+});
+
