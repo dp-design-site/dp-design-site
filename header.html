@@ -288,6 +288,7 @@
     align-items: center;
   }
 
+  /* Търсачка без фон */
   .search-form input[type="text"] {
     background: transparent;
     border: none;
@@ -295,17 +296,18 @@
     color: #fce5cd;
     outline: none;
     padding: 5px 10px;
-    font-size: 10px;
+    font-size: 14px;
     transition: border-color 0.3s ease;
   }
-
+  
   .search-form input[type="text"]::placeholder {
-    color: #fce5cd;
+    color: #fce5cd99; /* по-светъл текст за placeholder */
   }
-
+  
   .search-form input[type="text"]:focus {
     border-color: #ffcc99;
   }
+
 
   @media (max-width: 768px) {
     .search-form input {
