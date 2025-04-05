@@ -21,9 +21,12 @@
     <div class="nav-right">
       <!-- 🔍 Търсачка -->
       <form id="search-form" class="search-form">
-        <img src="icons/search-icon.svg" alt="🔍" width="20" height="20" id="search-icon">
+        <button type="button" id="search-icon" class="search-icon">
+          <img src="icons/search-icon.svg" alt="🔍" width="20" height="20" />
+        </button>
         <input type="text" id="search-input" placeholder="Търси..." />
       </form>
+
 
 
       <!-- 🛒 Количка -->
@@ -317,6 +320,20 @@
   .search-form input[type="text"]:focus {
     border-color: #ffcc99;
   }
+
+  .search-icon {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.search-icon:hover img {
+  filter: brightness(1.2);
+  transform: scale(1.05);
+  transition: 0.2s ease-in-out;
+}
+
 
 
   /* По-малък екран – скриваме полето първоначално */
