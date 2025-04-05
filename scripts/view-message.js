@@ -73,3 +73,35 @@ document.addEventListener("DOMContentLoaded", function () {
 function openImage(src) {
   window.open(src, "_blank");
 }
+
+// 👉 Превръщане в поръчка
+const convertBtn = document.getElementById("convert-to-order-btn");
+if (convertBtn) {
+    convertBtn.addEventListener("click", async () => {
+        if (!confirm("Сигурни ли сте, че искате да превърнете това съобщение в поръчка?")) return;
+
+        try {
+            const response = await fetch(`https://api.dp-design.art/api/messages/${messageId}/convert-to-order`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("✅ Съобщението беше успешно превърнато в поръчка!");
+
+                // 👉 Обнови броячите
+                updateMenuCounters();
+            } else {
+                alert("❌ Грешка: " + (result.error || "Неуспешна заявка"));
+            }
+        } catch (error) {
+            console.error("❌ Грешка при превръщане в поръчка:", error);
+            alert("⚠️ Възникна грешка при свързване със сървъра.");
+        }
+    });
+}
+
