@@ -1,14 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("search-form");
   const input = document.getElementById("search-input");
-  const button = form?.querySelector(".search-btn");
+  const icon = document.getElementById("search-icon");
 
-  if (!form || !input) {
-    console.warn("❗️ Form или input не са намерени.");
-    return;
-  }
+  if (!form || !input || !icon) return;
 
-  // 👉 Поведение при submit (натискане на Enter)
+  // 👉 Подаване на заявка при Enter
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const query = input.value.trim();
@@ -17,16 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 👉 Поведение при натискане на иконата (в мобилен режим)
-  if (button && window.innerWidth <= 768) {
-    button.addEventListener("click", (e) => {
-      // Ако не е активна, само я отваряме
-      if (!form.classList.contains("active")) {
-        e.preventDefault();
-        form.classList.add("active");
-        input.style.display = "inline-block";
+  // 👉 Показване/скриване на полето при клик в мобилен режим
+  icon.addEventListener("click", () => {
+    if (window.innerWidth <= 768) {
+      input.classList.toggle("visible");
+      if (input.classList.contains("visible")) {
         input.focus();
       }
-    });
-  }
+    }
+  });
 });
