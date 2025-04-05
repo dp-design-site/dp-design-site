@@ -20,10 +20,11 @@
 
     <div class="nav-right">
       <!-- 🔍 Търсачка -->
-      <form class="search-form" onsubmit="handleSearch(event)">
-        <img src="icons/search-icon.svg" alt="🔍" width="20" height="20">
-        <input type="text" id="searchInput" placeholder="Търси..." />
+      <form id="search-form" class="search-form">
+        <img src="icons/search-icon.svg" alt="🔍" width="20" height="20" id="search-icon">
+        <input type="text" id="search-input" placeholder="Търси..." />
       </form>
+
 
       <!-- 🛒 Количка -->
       <a href="cart.html" class="cart-icon">
@@ -320,33 +321,41 @@
 
   /* По-малък екран – скриваме полето първоначално */
 @media (max-width: 768px) {
-  .search-form input {
+  .search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #search-input {
     display: none;
-    width: 100%;
-    max-width: 200px;
-    transition: all 0.3s ease-in-out;
-  }
-
-  .search-form.active input {
-    display: inline-block;
-  }
-
-  .search-btn {
-    background: none;
     border: none;
-    font-size: 18px;
-    cursor: pointer;
+    background: transparent;
+    border-bottom: 1px solid #ccc;
+    color: #fce5cd;
+    padding: 4px 6px;
+    transition: width 0.3s ease;
+  }
+
+  #search-input.visible {
+    display: block;
+    width: 120px;
+  }
+
+  #search-input::placeholder {
+    color: #fce5cd;
   }
 }
 
-    .search-form::before {
+
+   /* .search-form::before {
       
-      /*content: "🔍";*/
+      /*content: "🔍";
       content: <img src="icons/search-icon.svg" alt="🔍" width="24" height="24">;
       font-size: 20px;
       color: #fce5cd;
       cursor: pointer;
       padding: 4px;
     }
-  }
+  }*/
 </style>
