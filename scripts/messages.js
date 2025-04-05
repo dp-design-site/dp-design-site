@@ -62,10 +62,10 @@ function loadMessages() {
         <td>${new Date(msg.created_at).toLocaleString("bg-BG")}</td>
         <td>${msg.is_read ? "Прочетено" : "Непрочетено"}</td>
         <td class="actions">
-          <button class="view-btn" data-id="${msg.id}">👁️ Виж</button>
+          <button class="view-btn" data-id="${msg.id}">⋯ Виж</button>
           ${
             msg.type === "inquiry"
-              ? `<button class="convert-btn" data-id="${msg.id}">📦 Превърни в поръчка</button>`
+              ? `<button class="convert-btn" data-id="${msg.id}">➡️поръчка</button>`
               : ""
           }
         </td>
