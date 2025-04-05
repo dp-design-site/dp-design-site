@@ -55,23 +55,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 fetch("https://api.dp-design.art/api/orders").then(res => res.json())
               ])
               .then(([messages, orders]) => {
-                const unreadMessages = messages.filter(m => !m.is_read).length;
-                const unreadOrders = orders.filter(o => !o.is_read).length;
+                const unreadMessages = Array.isArray(messages) ? messages.filter(m => !m.is_read).length : 0;
+                const unreadOrders = Array.isArray(orders) ? orders.filter(o => !o.is_read).length : 0;
             
                 const msgCounter = document.getElementById("msg-counter");
                 const orderCounter = document.getElementById("order-counter");
             
-                msgCounter.textContent = unreadMessages;
-                orderCounter.textContent = unreadOrders;
+                // ✅ Обновяваме текстовете
+                msgCounter.textContent = unreadMessages > 0 ? unreadMessages : "";
+                orderCounter.textContent = unreadOrders > 0 ? unreadOrders : "";
             
-                // ✅ Скриваме броячите, ако стойността е 0
+                // ✅ Показваме/скриваме само при нужда
                 msgCounter.style.display = unreadMessages > 0 ? "inline-flex" : "none";
                 orderCounter.style.display = unreadOrders > 0 ? "inline-flex" : "none";
             
                 console.log("🔄 Обновени броячи:", { unreadMessages, unreadOrders });
               })
-              .catch(err => console.error("❌ Грешка при зареждане на броячи:", err));
+              .catch(err => {
+                console.error("❌ Грешка при зареждане на броячи:", err);
+                // Скриваме броячите при грешка
+                document.getElementById("msg-counter").style.display = "none";
+                document.getElementById("order-counter").style.display = "none";
+              });
             }
+
 
 
 
