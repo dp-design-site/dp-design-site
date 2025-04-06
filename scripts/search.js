@@ -3,7 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("search-input");
   const icon = document.getElementById("search-icon");
 
-  // 🔍 Покажи/скрий полето при клик на лупата (в мобилен изглед)
+  console.log("🔍 Скриптът за търсене е зареден!");
+
+  if (!form || !input) {
+    console.warn("⚠️ Търсачката не е намерена в DOM!");
+    return;
+  }
+
+  // Показване/скриване на търсачка в мобилен
   if (icon && input) {
     icon.addEventListener("click", () => {
       if (window.innerWidth <= 768) {
@@ -15,14 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔎 При Enter изпращаме към search-results.html?q=...
-  if (form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const query = input.value.trim();
-      if (query) {
-        window.location.href = `search-results.html?q=${encodeURIComponent(query)}`;
-      }
-    });
-  }
+  // Прехвърляне към search-results.html
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const query = input.value.trim();
+    console.log("📨 Изпращане на заявка:", query);
+    if (query) {
+      window.location.href = `search-results.html?q=${encodeURIComponent(query)}`;
+    }
+  });
 });
