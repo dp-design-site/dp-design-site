@@ -76,8 +76,10 @@ function loadComponents() {
         header.innerHTML = data;
         setTimeout(() => {
           updatePageState();
+          checkAdminPanelButton(); // ✅ Преместено тук!
         }, 100);
       }
+
     });
 
   fetch("footer.html")
@@ -97,7 +99,8 @@ function checkAdminPanelButton() {
   const userRole = localStorage.getItem("userRole");
 
   if (!adminPanelLink) {
-    console.warn("⚠️ admin-panel-link не е намерен!");
+    console.warn("⚠️ Admin бутонът още не е зареден – пробваме отново след 300ms");
+    setTimeout(checkAdminPanelButton, 300); // 🔁 Повторен опит
     return;
   }
 
