@@ -3,32 +3,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("search-input");
   const icon = document.getElementById("search-icon");
 
-  console.log("🔍 Скриптът за търсене е зареден!");
-
   if (!form || !input) {
-    console.warn("⚠️ Търсачката не е намерена в DOM!");
+    console.warn("❌ Търсачката не е намерена!");
     return;
   }
 
-  // Показване/скриване на търсачка в мобилен
-  if (icon && input) {
+  // ✅ Изпращане на формата при Enter
+  form.addEventListener("submit", (e) => {
+    e.preventDefault(); // ❗ Спираме стандартното поведение (презареждане)
+    const query = input.value.trim();
+    if (query.length === 0) return;
+
+    // 🔁 Пренасочваме към search-results.html?q=...
+    window.location.href = `search-results.html?q=${encodeURIComponent(query)}`;
+  });
+
+  // ✅ В мобилен режим – показване/скриване на полето при клик на лупата
+  if (icon) {
     icon.addEventListener("click", () => {
-      if (window.innerWidth <= 768) {
-        input.classList.toggle("visible");
-        if (input.classList.contains("visible")) {
-          input.focus();
-        }
+      input.classList.toggle("visible");
+
+      // Ако се показва – фокусираме го
+      if (input.classList.contains("visible")) {
+        input.focus();
       }
     });
   }
 
-  // Прехвърляне към search-results.html
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const query = input.value.trim();
-    console.log("📨 Изпращане на заявка:", query);
-    if (query) {
-      window.location.href = `search-results.html?q=${encodeURIComponent(query)}`;
-    }
-  });
+  console.log("🔍 Търсачката е активирана!");
 });
