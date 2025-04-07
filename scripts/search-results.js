@@ -1,58 +1,68 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
+  const resultsContainer = document.getElementById("search-results");
+  const searchTitle = document.getElementById("search-title");
+
   const urlParams = new URLSearchParams(window.location.search);
-  const query = urlParams.get("q") || "";
-  document.getElementById("search-query").textContent = `Търсене по: "${query}"`;
+  const query = urlParams.get("q");
 
-  const grid = document.getElementById("results-grid");
-  const noResults = document.getElementById("no-results");
-
-  if (!query.trim()) {
-    noResults.style.display = "block";
+  if (!query) {
+    searchTitle.textContent = "❌ Няма въведена заявка за търсене.";
     return;
   }
 
-  try {
-    const res = await fetch("https://api.dp-design.art/api/products");
-    const data = await res.json();
+  searchTitle.innerHTML = `Търсене по: "<strong>${query}</strong>"`;
 
-    const filtered = data.filter(p =>
-      (p.name && p.name.toLowerCase().includes(query.toLowerCase())) ||
-      (p.description && p.description.toLowerCase().includes(query.toLowerCase()))
-    );
+  fetch("/api/products")
+    .then((res) => {
+      if (!res.ok) throw new Error("Продуктите не бяха заредени.");
+      return res.json();
+    })
+    .then((products) => {
+      const results = products.filter((p) => {
+        const lowerQuery = query.toLowerCase();
+        return (
+          p.name?.toLowerCase().includes(lowerQuery) ||
+          p.description?.toLowerCase().includes(lowerQuery)
+        );
+      });
 
-    if (filtered.length === 0) {
-      noResults.style.display = "block";
-      return;
-    }
+      if (results.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="search-message">
+            <span class="no-results">❌ Няма намерени резултати.</span>
+          </div>`;
+        return;
+      }
 
-    noResults.style.display = "none";
-    grid.innerHTML = "";
+      resultsContainer.innerHTML = ""; // Изчистваме съдържанието
 
-    filtered.forEach(p => {
-      const container = document.createElement("div");
-      container.className = "search-result";
+      results.forEach((product) => {
+        const container = document.createElement("div");
+        container.classList.add("search-product");
 
-      container.innerHTML = `
-        <img src="${p.image}" alt="${p.name}" class="result-img">
-        <div class="result-details">
-          <h3>${p.name}</h3>
-          <p>${p.description}</p>
-          <div class="price-info">
-            ${
-              p.promo_price
-                ? `<span class="promo-price">${p.promo_price.toFixed(2)} лв.</span> <span class="old-price">${p.price.toFixed(2)} лв.</span>`
-                : `<span class="normal-price">${p.price.toFixed(2)} лв.</span>`
-            }
+        const image = product.images?.[0] || "images/placeholder.png";
+
+        const priceBlock = product.promo
+          ? `<div class="price"><span class="old-price">${product.price} лв.</span> <span class="promo-price">${product.promo} лв.</span></div>
+             <div class="promo-badge">ПРОМО</div>`
+          : `<div class="price">${product.price} лв.</div>`;
+
+        container.innerHTML = `
+          <div class="image-col">
+            <img src="${image}" alt="${product.name}" />
           </div>
-          <a href="product-template.html?id=${p.id}" class="view-btn">🔎 Виж още</a>
-        </div>
-      `;
+          <div class="info-col">
+            <h3>${product.name}</h3>
+            <p class="short-description">${product.description || "Без описание."}</p>
+            ${priceBlock}
+            <a href="product-template.html?id=${product.id}" class="view-btn">👁 Виж още</a>
+          </div>`;
 
-      grid.appendChild(container);
+        resultsContainer.appendChild(container);
+      });
+    })
+    .catch((err) => {
+      console.error("❌ Грешка при зареждане на продуктите:", err);
+      resultsContainer.innerHTML = `<div class="search-message">⚠️ Проблем при зареждане на резултатите.</div>`;
     });
-  } catch (error) {
-    console.error("❌ Грешка при зареждане на продуктите:", error);
-    noResults.style.display = "block";
-    noResults.textContent = "⚠️ Проблем при зареждане на резултатите.";
-  }
 });
