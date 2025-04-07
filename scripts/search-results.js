@@ -56,8 +56,10 @@ async function initSearchResults() {
     const query = params.get("q")?.trim();
     if (!query) return;
 
-    await waitForElement("#search-results-title");
-    document.getElementById("search-results-title").innerHTML = `Търсене по: "<strong>${query}</strong>"`;
+    const title = document.getElementById("search-results-title");
+    if (title) {
+      title.innerHTML = `Търсене по: "<strong>${query}</strong>"`;
+    }
 
     const res = await fetch("https://api.dp-design.art/api/products");
     if (!res.ok) throw new Error("Неуспешна заявка към API");
@@ -78,8 +80,11 @@ async function initSearchResults() {
 
     container.innerHTML = filtered.map(p => createProductCard(p, query)).join("");
     console.log(`✅ Намерени резултати: ${filtered.length}`);
-  } catch (err) {
-    console.error("❌ Грешка при зареждане на резултатите:", err);
+   .catch(err => {
+    console.warn("⚠️ Header не беше намерен навреме:", err);
+    setTimeout(() => initSearchResults(), 300); // ⚠ Втори опит със закъснение
+  });
+
     const container = document.getElementById("search-results-container");
     if (container) {
       container.innerHTML = `<p class="no-results">⚠️ Проблем при зареждане на резултатите.</p>`;
