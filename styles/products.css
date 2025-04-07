@@ -52,3 +52,111 @@
     font-size: 14px;
     cursor: pointer;
 }
+
+.search-results-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.product-result-card {
+  display: flex;
+  flex-direction: row;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #fce5cd22;
+  border-radius: 8px;
+  padding: 16px;
+  align-items: center;
+  gap: 20px;
+  transition: transform 0.2s ease;
+}
+
+.product-result-card:hover {
+  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.product-result-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #fce5cd33;
+}
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  color: #fce5cd;
+}
+
+.result-content h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.result-content p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #fce5cdcc;
+}
+
+.result-price {
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.result-old-price {
+  text-decoration: line-through;
+  color: #ccc;
+  margin-right: 10px;
+}
+
+.promo-badge {
+  background-color: #ff6347;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.view-btn {
+  margin-top: 10px;
+  background-color: transparent;
+  border: 1px solid #fce5cd;
+  color: #fce5cd;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  align-self: flex-start;
+  transition: background 0.3s;
+}
+
+.view-btn:hover {
+  background: #fce5cd;
+  color: #121212;
+}
+
+/* 📱 Мобилен изглед – подреждане една под друга */
+@media (max-width: 768px) {
+  .product-result-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-result-card img {
+    width: 100%;
+    height: auto;
+  }
+
+  .result-content {
+    width: 100%;
+  }
+}
+
