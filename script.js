@@ -12,10 +12,9 @@ function toggleMenu() {
 
   menu.classList.toggle("open");
   menuOverlay.classList.toggle("visible");
-
-  console.log(menu.classList.contains("open") ? "✅ Менюто е отворено!" : "❌ Менюто е затворено!");
 }
 
+// ✅ Инициализация на менюто
 function initMenu() {
   const menuButton = document.getElementById("menuButton");
   const menuOverlay = document.getElementById("menuOverlay");
@@ -33,7 +32,7 @@ function initMenu() {
   }
 }
 
-// ✅ Обновяване на заглавието и активната страница
+// ✅ Обновяване на заглавие и активна страница
 function updatePageState() {
   const titles = {
     "index.html": "DP Design",
@@ -54,11 +53,7 @@ function updatePageState() {
   const menuLinks = document.querySelectorAll(".nav-menu a");
   menuLinks.forEach(link => {
     const href = link.getAttribute("href").split("/").pop() || "index.html";
-    if (currentPage === href) {
-      link.classList.add("active");
-    } else {
-      link.classList.remove("active");
-    }
+    link.classList.toggle("active", currentPage === href);
   });
 
   initMenu();
@@ -74,12 +69,13 @@ function loadComponents() {
       const header = document.getElementById("header");
       if (header) {
         header.innerHTML = data;
+        console.log("✅ Хедърът е зареден!");
         setTimeout(() => {
           updatePageState();
-          checkAdminPanelButton(); // ✅ Преместено тук!
+          checkAdminPanelButton();
+          initSearch(); // 👈 Тук активираме търсачката
         }, 100);
       }
-
     });
 
   fetch("footer.html")
@@ -94,22 +90,22 @@ function loadComponents() {
 }
 
 // ✅ Проверка за админ бутон
-function checkAdminPanelButton() {
+function checkAdminPanelButton(retryCount = 0) {
   const adminPanelLink = document.getElementById("admin-panel-link");
   const userRole = localStorage.getItem("userRole");
 
   if (!adminPanelLink) {
-    console.warn("⚠️ Admin бутонът още не е зареден – пробваме отново след 300ms");
-    setTimeout(checkAdminPanelButton, 300); // 🔁 Повторен опит
+    if (retryCount < 5) {
+      console.warn(`⚠️ Admin бутонът още не е зареден – пробваме отново след 300ms`);
+      setTimeout(() => checkAdminPanelButton(retryCount + 1), 300);
+    } else {
+      console.error("❌ Admin бутонът не се зареди дори след 5 опита");
+    }
     return;
   }
 
-  if (userRole === "admin") {
-    adminPanelLink.style.display = "block";
-    console.log("✅ Потребителят е админ – показваме бутона");
-  } else {
-    adminPanelLink.style.display = "none";
-  }
+  adminPanelLink.style.display = userRole === "admin" ? "block" : "none";
+  console.log(`✅ Потребителят е ${userRole === "admin" ? "админ – показваме бутона" : "не е админ – скриваме бутона"}`);
 }
 
 // ✅ Банер за бисквитки
@@ -140,19 +136,10 @@ function handleCookieBanner() {
   }, 500);
 }
 
-// ✅ Основна инициализация
-document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("header")) {
-    loadComponents();
-  } else {
-    updatePageState();
-  }
+// ✅ Инициализация на търсачката
+function initSearch() {
+  console.log("🔍 Инициализация на търсачката!");
 
-  checkAdminPanelButton();
-  handleCookieBanner();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("search-form");
   const input = document.getElementById("search-input");
   const icon = document.getElementById("search-icon");
@@ -162,27 +149,34 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // ✅ Изпращане на формата при Enter
+  // ✅ При натискане на Enter
   form.addEventListener("submit", (e) => {
-    e.preventDefault(); // ❗ Спираме стандартното поведение (презареждане)
+    e.preventDefault();
     const query = input.value.trim();
     if (query.length === 0) return;
-
-    // 🔁 Пренасочваме към search-results.html?q=...
     window.location.href = `search-results.html?q=${encodeURIComponent(query)}`;
   });
 
-  // ✅ В мобилен режим – показване/скриване на полето при клик на лупата
+  // ✅ В мобилен режим: показване на полето
   if (icon) {
     icon.addEventListener("click", () => {
       input.classList.toggle("visible");
-
-      // Ако се показва – фокусираме го
       if (input.classList.contains("visible")) {
         input.focus();
       }
     });
   }
+}
 
-  console.log("🔍 Търсачката е активирана!");
+// ✅ Основна инициализация
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("header")) {
+    loadComponents();
+  } else {
+    updatePageState();
+    checkAdminPanelButton();
+    initSearch(); // ❗ Ако header.html не се зарежда динамично
+  }
+
+  handleCookieBanner();
 });
