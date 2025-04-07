@@ -17,7 +17,7 @@ async function waitForElement(selector, timeout = 1000) {
 }
 
 function highlightMatch(text, query) {
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape regex
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const regex = new RegExp(escaped, 'gi');
   return text.replace(regex, match => `<mark>${match}</mark>`);
 }
@@ -28,7 +28,6 @@ function createProductCard(product, query) {
   const price = product.promo
     ? `<span class="price old">${product.price.toFixed(2)} лв</span> <span class="price promo">${product.promo.toFixed(2)} лв</span>`
     : `<span class="price">${product.price.toFixed(2)} лв</span>`;
-
   const promoBadge = product.promo ? `<span class="promo-badge">Промо</span>` : "";
 
   return `
@@ -75,16 +74,13 @@ async function initSearchResults() {
 
     if (filtered.length === 0) {
       container.innerHTML = `<p class="no-results">❌ Няма намерени резултати.</p>`;
-      return;
+    } else {
+      container.innerHTML = filtered.map(p => createProductCard(p, query)).join("");
+      console.log(`✅ Намерени резултати: ${filtered.length}`);
     }
 
-    container.innerHTML = filtered.map(p => createProductCard(p, query)).join("");
-    console.log(`✅ Намерени резултати: ${filtered.length}`);
-   .catch(err => {
-    console.warn("⚠️ Header не беше намерен навреме:", err);
-    setTimeout(() => initSearchResults(), 300); // ⚠ Втори опит със закъснение
-  });
-
+  } catch (err) {
+    console.error("❌ Грешка при зареждане на резултатите:", err);
     const container = document.getElementById("search-results-container");
     if (container) {
       container.innerHTML = `<p class="no-results">⚠️ Проблем при зареждане на резултатите.</p>`;
@@ -92,7 +88,7 @@ async function initSearchResults() {
   }
 }
 
-// ✅ Изчакваме компоненти, след което стартираме
+// ✅ Изчакваме компонентите и стартираме
 document.addEventListener("DOMContentLoaded", () => {
   waitForElement("#header", 2000)
     .then(() => {
