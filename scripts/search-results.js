@@ -57,7 +57,7 @@ async function initSearchResults() {
 
     const title = document.getElementById("search-results-title");
     if (title) {
-      title.innerHTML = `Търсене по: "<strong>${query}</strong>"`;
+      title.innerHTML = `"<strong>${query}</strong>"`;
     }
 
     const res = await fetch("https://api.dp-design.art/products");
