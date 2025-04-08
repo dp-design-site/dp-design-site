@@ -60,7 +60,7 @@ async function initSearchResults() {
       title.innerHTML = `Търсене по: "<strong>${query}</strong>"`;
     }
 
-    const res = await fetch("https://api.dp-design.art/api/products");
+    const res = await fetch("https://api.dp-design.art/products");
     if (!res.ok) throw new Error("Неуспешна заявка към API");
     const products = await res.json();
 
