@@ -26,8 +26,8 @@ function createProductCard(product, query) {
   const name = highlightMatch(product.name, query);
   const short = highlightMatch(product.shortDescription || "", query);
   const price = product.promo
-    ? `<span class="price old">${product.price.toFixed(2)} лв</span> <span class="price promo">${product.promo.toFixed(2)} лв</span>`
-    : `<span class="price">${product.price.toFixed(2)} лв</span>`;
+    ? `<span class="price old">${parseFloat(product.price).toFixed(2)} лв</span> <span class="price promo">${parseFloat(product.promo).toFixed(2)} лв</span>`
+    : `<span class="price">${parseFloat(product.price).toFixed(2)} лв</span>`;
   const promoBadge = product.promo ? `<span class="promo-badge">Промо</span>` : "";
 
   return `
