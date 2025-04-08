@@ -1,3 +1,8 @@
+.search-highlight {
+  color: #ffd9a0;
+  font-weight: bold;
+}
+
 /* ✅ Минимални стилове за таблици и бутони в админ панела */
 
 .products-container {
