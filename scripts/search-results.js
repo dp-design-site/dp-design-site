@@ -25,9 +25,19 @@ function highlightMatch(text = "", query) {
 function createSlider(images) {
   if (!Array.isArray(images) || images.length === 0) return "";
 
-  const slides = images.map((img, idx) =>
-    `<img src="https://api.dp-design.art/uploads/${img}" class="slider-image${idx === 0 ? ' active' : ''}" alt="Снимка ${idx + 1}">`
-  ).join("");
+  const sliderImages = product.images.map((img, i) =>
+  `<img src="https://api.dp-design.art/uploads/${img}" 
+        class="${i === 0 ? 'active' : ''}" 
+        alt="${product.name}">`
+).join("");
+
+const slider = `
+  <div class="slider" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
+    ${sliderImages}
+    <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
+    <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
+  </div>`;
+
 
   return `
     <div class="slider" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
@@ -175,3 +185,46 @@ function startDrag(e, slider) {
   document.addEventListener("touchmove", move);
   document.addEventListener("touchend", end);
 }
+
+function prevSlide(btn) {
+  const slider = btn.parentElement;
+  const imgs = slider.querySelectorAll("img");
+  let idx = [...imgs].findIndex(img => img.classList.contains("active"));
+  imgs[idx].classList.remove("active");
+  imgs[(idx - 1 + imgs.length) % imgs.length].classList.add("active");
+}
+
+function nextSlide(btn) {
+  const slider = btn.parentElement;
+  const imgs = slider.querySelectorAll("img");
+  let idx = [...imgs].findIndex(img => img.classList.contains("active"));
+  imgs[idx].classList.remove("active");
+  imgs[(idx + 1) % imgs.length].classList.add("active");
+}
+
+let startX = 0;
+function startDrag(e, slider) {
+  const imgs = slider.querySelectorAll("img");
+  const isTouch = e.type === "touchstart";
+  startX = isTouch ? e.touches[0].clientX : e.clientX;
+
+  function onMove(ev) {
+    const x = isTouch ? ev.touches[0].clientX : ev.clientX;
+    const diff = x - startX;
+
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) prevSlide(slider.querySelector(".slider-btn.left"));
+      else nextSlide(slider.querySelector(".slider-btn.right"));
+      stopDrag();
+    }
+  }
+
+  function stopDrag() {
+    document.removeEventListener(isTouch ? "touchmove" : "mousemove", onMove);
+    document.removeEventListener(isTouch ? "touchend" : "mouseup", stopDrag);
+  }
+
+  document.addEventListener(isTouch ? "touchmove" : "mousemove", onMove);
+  document.addEventListener(isTouch ? "touchend" : "mouseup", stopDrag);
+}
+
