@@ -61,20 +61,17 @@ function createProductCard(product, query) {
   const promoBadge = promo ? `<span class="promo-badge">Промо</span>` : "";
   const sliderHTML = createSlider(product.images);
 
-  return `
-    <div class="search-card">
-      <div class="search-slider">${sliderHTML}</div>
-      <div class="search-card-info">
-        <h3>${name} ${promoBadge}</h3>
-        <p>${short}</p>
-        <div class="search-card-footer">
-          ${priceHTML}
-          <a class="search-view-btn" href="product-template.html?id=${product.id}">Виж още</a>
-        </div>
-      </div>
+  card.innerHTML = `
+  ${slider}
+  <div class="search-card-info">
+    <h3>${highlightText(product.name, term)}</h3>
+    <div class="search-card-footer">
+      ${priceHtml}
+      <a href="product-template.html?id=${product.id}" class="search-view-btn">Виж още</a>
     </div>
-  `;
-}
+  </div>
+`;
+
 
 // Сортиране: най-точни съвпадения най-отгоре
 function sortByRelevance(products, query) {
