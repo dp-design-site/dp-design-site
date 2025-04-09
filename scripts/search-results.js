@@ -34,6 +34,23 @@ function createProductCard(product, query) {
   `;
 }
 
+function waitForElement(selector, timeout = 2000) {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const interval = setInterval(() => {
+      const el = document.querySelector(selector);
+      if (el) {
+        clearInterval(interval);
+        resolve(el);
+      } else if (Date.now() - start >= timeout) {
+        clearInterval(interval);
+        reject(`⏱️ Timeout: ${selector} не се зареди навреме`);
+      }
+    }, 100);
+  });
+}
+
+
 async function initSearchResults() {
   console.log("🔎 Зареждане на резултатите от търсачката...");
 
