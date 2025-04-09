@@ -1,10 +1,10 @@
 .search-highlight {
-  color: #C7A97D;
+  color: #DEBEAC;
   font-weight: bold;
 }
 
 mark.search-highlight {
-  color: #C7A97D;
+  color: #DEBEAC;
   font-weight: bold;
   background: none;
   filter: brightness(0.85);
