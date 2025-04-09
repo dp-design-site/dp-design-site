@@ -1,4 +1,4 @@
-async function waitForElement(selector, timeout = 1500) {
+async function waitForElement(selector, timeout = 2000) {
   return new Promise((resolve, reject) => {
     const start = Date.now();
     const interval = setInterval(() => {
@@ -8,7 +8,7 @@ async function waitForElement(selector, timeout = 1500) {
         resolve(el);
       } else if (Date.now() - start > timeout) {
         clearInterval(interval);
-        reject(`⏱️ Timeout: ${selector} не се зареди навреме`);
+        reject(`⏱ Timeout: ${selector} не се зареди навреме`);
       }
     }, 50);
   });
@@ -20,17 +20,14 @@ function highlightMatch(text, query) {
   return text.replace(regex, match => `<span class="search-highlight">${match}</span>`);
 }
 
-function createImageSlider(images) {
-  if (!images || images.length === 0) return `<div class="slider">⚠️ Без снимка</div>`;
+function createSlider(images) {
   const slides = images.map((img, i) =>
-    `<img src="https://api.dp-design.art/uploads/${img}" class="${i === 0 ? "active" : ""}" alt="снимка">`
+    `<img src="https://api.dp-design.art/uploads/${img}" class="slide${i === 0 ? ' active' : ''}" alt="Продукт">`
   ).join("");
 
   return `
     <div class="slider" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
       ${slides}
-      <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
-      <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
     </div>
   `;
 }
@@ -39,16 +36,22 @@ function createProductCard(product, query) {
   const name = highlightMatch(product.name || "", query);
   const short = highlightMatch(product.shortDescription || "", query);
 
-  const priceHTML = product.promo
-    ? `<span class="price old">${Number(product.price).toFixed(2)} лв</span> <span class="price promo">${Number(product.promo).toFixed(2)} лв</span>`
-    : `<span class="price">${Number(product.price).toFixed(2)} лв</span>`;
+  const price = parseFloat(product.price);
+  const promo = parseFloat(product.promo_price);
 
-  const promoBadge = product.promo ? `<span class="promo-badge">Промо</span>` : "";
+  const priceHTML = !isNaN(promo)
+    ? `<span class="price old">${price.toFixed(2)} лв</span>
+       <span class="price promo">${promo.toFixed(2)} лв</span>`
+    : `<span class="price">${price.toFixed(2)} лв</span>`;
+
+  const promoBadge = !isNaN(promo) ? `<span class="promo-badge">Промо</span>` : "";
+
+  const imageSlider = createSlider(product.images || []);
 
   return `
     <div class="search-card">
       <div class="search-card-image">
-        ${createImageSlider(product.images)}
+        ${imageSlider}
       </div>
       <div class="search-card-info">
         <h3>${name} ${promoBadge}</h3>
@@ -63,33 +66,41 @@ function createProductCard(product, query) {
 }
 
 function sortByRelevance(products, query) {
+  const q = query.toLowerCase();
   return products.sort((a, b) => {
     const aName = a.name?.toLowerCase() || "";
     const bName = b.name?.toLowerCase() || "";
-    const q = query.toLowerCase();
-
-    const aScore = aName.startsWith(q) ? 2 : aName.includes(q) ? 1 : 0;
-    const bScore = bName.startsWith(q) ? 2 : bName.includes(q) ? 1 : 0;
-    return bScore - aScore;
+    const aExact = aName === q ? -1 : aName.includes(q) ? 0 : 1;
+    const bExact = bName === q ? -1 : bName.includes(q) ? 0 : 1;
+    return aExact - bExact;
   });
 }
 
 async function initSearchResults() {
-  console.log("🔎 Зареждане на резултатите от търсачката...");
+  console.log("🔍 Зареждане на резултатите от търсачката...");
 
   try {
     const params = new URLSearchParams(window.location.search);
     const query = params.get("q")?.trim();
     if (!query) return;
 
-    document.getElementById("search-term").textContent = `"${query}"`;
+    await waitForElement("#results-container");
+    await waitForElement("#search-term");
 
-    const container = document.getElementById("results-container");
-    if (!container) return console.error("❌ Контейнерът за резултати не е намерен!");
+    const container = document.querySelector("#results-container");
+    const termSpan = document.querySelector("#search-term");
+
+    if (!container || !termSpan) {
+      console.warn("❌ Контейнерът или заглавието не са налични.");
+      return;
+    }
+
+    termSpan.textContent = `"${query}"`;
 
     const res = await fetch("https://api.dp-design.art/products");
-    const products = await res.json();
+    if (!res.ok) throw new Error("Неуспешна заявка към API");
 
+    const products = await res.json();
     const filtered = products.filter(p =>
       (p.name && p.name.toLowerCase().includes(query.toLowerCase())) ||
       (p.shortDescription && p.shortDescription.toLowerCase().includes(query.toLowerCase()))
@@ -102,59 +113,47 @@ async function initSearchResults() {
 
     const sorted = sortByRelevance(filtered, query);
     container.innerHTML = sorted.map(p => createProductCard(p, query)).join("");
-
-    console.log(`✅ Намерени резултати: ${filtered.length}`);
+    console.log(`✅ Намерени резултати: ${sorted.length}`);
   } catch (err) {
-    console.error("❌ Грешка при зареждане на резултатите:", err);
-    document.getElementById("error-message").style.display = "block";
+    console.warn("⚠️ Грешка при зареждане на резултатите:", err);
+    const fallback = document.querySelector("#results-container");
+    if (fallback) fallback.innerHTML = `<p class="error-message">⚠️ Проблем при зареждане на резултатите.</p>`;
   }
 }
 
-// Drag слайдер
+// 🎯 Слайдване с мишка и пръст
 let isDragging = false, startX = 0, scrollLeft = 0;
-window.startDrag = function (e, slider) {
-  const sliderContainer = slider;
+
+window.startDrag = (e, el) => {
+  const slider = el;
   isDragging = true;
-  startX = (e.pageX || e.touches[0].pageX) - sliderContainer.offsetLeft;
-  scrollLeft = sliderContainer.scrollLeft;
+  startX = e.pageX || e.touches[0].pageX;
+  scrollLeft = slider.scrollLeft;
+  slider.classList.add("dragging");
 
-  function onMove(ev) {
+  const move = ev => {
     if (!isDragging) return;
-    const x = (ev.pageX || ev.touches[0].pageX) - sliderContainer.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    sliderContainer.scrollLeft = scrollLeft - walk;
-  }
+    const x = ev.pageX || ev.touches[0].pageX;
+    const walk = (startX - x);
+    slider.scrollLeft = scrollLeft + walk;
+  };
 
-  function stopDrag() {
+  const stop = () => {
     isDragging = false;
-    document.removeEventListener("mousemove", onMove);
-    document.removeEventListener("mouseup", stopDrag);
-    document.removeEventListener("touchmove", onMove);
-    document.removeEventListener("touchend", stopDrag);
-  }
+    slider.classList.remove("dragging");
+    window.removeEventListener("mousemove", move);
+    window.removeEventListener("mouseup", stop);
+    window.removeEventListener("touchmove", move);
+    window.removeEventListener("touchend", stop);
+  };
 
-  document.addEventListener("mousemove", onMove);
-  document.addEventListener("mouseup", stopDrag);
-  document.addEventListener("touchmove", onMove);
-  document.addEventListener("touchend", stopDrag);
+  window.addEventListener("mousemove", move);
+  window.addEventListener("mouseup", stop);
+  window.addEventListener("touchmove", move);
+  window.addEventListener("touchend", stop);
 };
 
-window.prevSlide = function (btn) {
-  const container = btn.closest(".slider");
-  container.scrollBy({ left: -300, behavior: "smooth" });
-};
-
-window.nextSlide = function (btn) {
-  const container = btn.closest(".slider");
-  container.scrollBy({ left: 300, behavior: "smooth" });
-};
-
-// Старт
+// ✅ Старт
 document.addEventListener("DOMContentLoaded", () => {
-  waitForElement("#results-container", 2000)
-    .then(() => initSearchResults())
-    .catch(err => {
-      console.warn("⚠️ Контейнерът за резултати не се зареди навреме:", err);
-      initSearchResults();
-    });
+  initSearchResults();
 });
