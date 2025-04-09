@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return 0;
       });
 
-    const container = document.getElementById("results-container");
+    const container = document.getElementById("search-results-container");
     if (!container) {
       console.error("❌ Контейнерът за резултати не е намерен!");
       return;
