@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Резултати от търсене | DP Design</title>
 
+  <!-- Стилове -->
   <link rel="stylesheet" href="styles/products.css" />
   <script src="script.js" defer></script>
   <script src="scripts/search-results.js" defer></script>
@@ -25,7 +26,6 @@
     }
 
     h2 {
-      color: #fce5cd;
       font-size: 26px;
       margin-bottom: 30px;
     }
@@ -37,12 +37,12 @@
 
     .results-container {
       display: flex;
-      max-width: 800px;
       flex-direction: column;
       gap: 25px;
+      max-width: 800px;
     }
 
-        .search-card {
+    .search-card {
       display: flex;
       background-color: #1e1e1e;
       border-radius: 12px;
@@ -52,11 +52,11 @@
       position: relative;
       max-height: 180px;
     }
-    
+
     .search-card:hover {
       transform: scale(1.01);
     }
-    
+
     .search-slider {
       display: flex;
       flex: 0 0 200px;
@@ -64,16 +64,18 @@
       overflow: hidden;
       position: relative;
       cursor: grab;
+      scroll-behavior: smooth;
     }
-    
+
     .search-slider img {
       height: 100%;
       width: auto;
-      object-fit: cover;
       flex-shrink: 0;
       border-right: 1px solid #333;
+      user-select: none;
+      pointer-events: none;
     }
-    
+
     .search-card-info {
       flex: 1;
       padding: 15px 20px;
@@ -81,47 +83,46 @@
       flex-direction: column;
       justify-content: space-between;
     }
-    
+
     .search-card-info h3 {
       font-size: 18px;
       font-weight: bold;
       margin: 0 0 10px;
-      color: #fce5cd;
     }
-    
-    .search-card-info .search-highlight {
-      color: #ffcc99;
+
+    .search-highlight {
+      color: #fca;
       font-weight: bold;
     }
-    
+
     .search-card-info p {
       font-size: 14px;
       color: #ccc;
       margin: 0;
     }
-    
+
     .search-card-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    
+
     .price {
       font-weight: bold;
       color: #2fff8d;
       font-size: 16px;
     }
-    
+
     .price.old {
       text-decoration: line-through;
       color: #ff9999;
       margin-right: 10px;
     }
-    
+
     .price.promo {
       color: #a2ffb5;
     }
-    
+
     .promo-badge {
       background-color: #ff5252;
       color: white;
@@ -130,7 +131,7 @@
       font-size: 12px;
       margin-left: 10px;
     }
-    
+
     .search-view-btn {
       padding: 8px 14px;
       background: #ffe4c4;
@@ -140,27 +141,35 @@
       text-decoration: none;
       transition: background 0.3s ease;
     }
-    
+
     .search-view-btn:hover {
       background: #ffcc99;
     }
-    
+
+    .no-results, .error-message {
+      font-size: 16px;
+      margin-top: 20px;
+      color: #ccc;
+    }
+
+    .error-message {
+      color: #ffc107;
+    }
+
     @media (max-width: 768px) {
       .search-card {
         flex-direction: column;
         max-height: unset;
       }
-    
+
       .search-slider {
         width: 100%;
         height: 200px;
       }
-    
+
       .search-card-info {
         padding: 10px;
       }
-    }
-
     }
   </style>
 </head>
