@@ -68,9 +68,15 @@ function createSlider(images = []) {
 function createProductCard(product, query) {
   const name = highlightMatch(product.name || "", query);
   const short = highlightMatch(product.shortDescription || "", query);
-  const price = product.promo
-    ? `<span class="price old">${product.price?.toFixed(2)} лв</span> <span class="price promo">${product.promo?.toFixed(2)} лв</span>`
-    : `<span class="price">${product.price?.toFixed(2)} лв</span>`;
+  const formatPrice = (value) => {
+  const num = parseFloat(value);
+  return isNaN(num) ? "—" : num.toFixed(2);
+};
+
+const price = product.promo
+  ? `<span class="price old">${formatPrice(product.price)} лв</span> <span class="price promo">${formatPrice(product.promo)} лв</span>`
+  : `<span class="price">${formatPrice(product.price)} лв</span>`;
+
   const badge = product.promo ? `<span class="promo-badge">Промо</span>` : "";
 
   const card = document.createElement("div");
