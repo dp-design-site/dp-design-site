@@ -37,6 +37,7 @@
 
     .results-container {
       display: flex;
+      max-width: 800px;
       flex-direction: column;
       gap: 25px;
     }
@@ -48,12 +49,13 @@
       border: 1px solid #333;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 0 12px rgba(255, 204, 153, 0.1);
+      border: 1px solid rgba(252, 229, 205, 0.3);
       transition: transform 0.3s ease;
     }
 
     .search-card:hover {
       transform: scale(1.015);
+      box-shadow: 0 0 8px rgba(255, 204, 153, 0.3);
     }
 
     .search-card-image {
@@ -129,7 +131,7 @@
     }
 
     .search-highlight {
-      color: #fff0cc;
+      color: #ff9224;
       font-weight: bold;
     }
 
