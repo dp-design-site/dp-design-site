@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Резултати от търсене | DP Design</title>
 
-  <!-- Стилове -->
   <link rel="stylesheet" href="styles/products.css" />
   <script src="script.js" defer></script>
   <script src="scripts/search-results.js" defer></script>
@@ -38,104 +37,103 @@
 
     .results-container {
       display: flex;
-      max-width: 800px;
       flex-direction: column;
-      gap: 20px;
+      gap: 25px;
     }
 
-    .result-item {
+    .search-card {
       display: flex;
+      flex-direction: row;
       background-color: #1e1e1e;
-      border-radius: 8px;
+      border: 1px solid #333;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 0 8px rgba(0,0,0,0.4);
-      border: 1px solid rgba(252, 229, 205, 0.1);
-      transition: transform 0.2s ease;
+      box-shadow: 0 0 12px rgba(255, 204, 153, 0.1);
+      transition: transform 0.3s ease;
     }
 
-    .result-item:hover {
-      transform: scale(1.01);
-      box-shadow: 0 0 8px rgba(252, 229, 205, 0.15);
-      
-
+    .search-card:hover {
+      transform: scale(1.015);
     }
 
-    .result-image {
-      flex: 0 0 160px;
-      height: 160px;
+    .search-card-image {
+      flex: 0 0 180px;
+      max-width: 180px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .search-card-image img {
+      width: 100%;
+      height: auto;
       object-fit: cover;
+      display: block;
     }
 
-    .result-details {
+    .search-card-info {
       flex: 1;
-      padding: 15px 20px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
-    .result-title {
+    .search-card h3 {
       font-size: 20px;
-      font-weight: bold;
-      color: #fce5cd;
       margin-bottom: 5px;
     }
 
-    .result-description {
-      font-size: 14px;
-      color: #ddd;
-      margin-bottom: 10px;
-    }
-
-    .result-footer {
+    .search-card-footer {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
+      align-items: center;
+      margin-top: auto;
     }
 
-    .result-price {
-      font-size: 16px;
+    .price {
       font-weight: bold;
-      color: #00e676;
+      color: #00ff99;
     }
 
-    .old-price {
+    .price.old {
       text-decoration: line-through;
-      color: #ff9999;
-      margin-right: 10px;
+      color: #888;
+      margin-right: 8px;
     }
 
     .promo-badge {
-      background-color: #ff5252;
+      background: #ff4444;
       color: white;
-      padding: 2px 8px;
-      border-radius: 4px;
+      padding: 2px 6px;
       font-size: 12px;
-      margin-left: 10px;
+      border-radius: 4px;
+      margin-left: 8px;
     }
 
-    .view-btn {
-      align-self: flex-start;
-      margin-top: 10px;
+    .search-view-btn {
       padding: 8px 15px;
-      font-size: 14px;
+      background-color: #ffe0c4;
+      color: #121212;
       font-weight: bold;
-      border: none;
-      background-color: #fce5cd;
-      color: #000;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      border-radius: 6px;
       text-decoration: none;
+      transition: background 0.3s ease;
     }
 
-    .view-btn:hover {
+    .search-view-btn:hover {
       background-color: #ffcc99;
     }
 
+    .search-highlight {
+      color: #fff0cc;
+      font-weight: bold;
+    }
+
     .no-results, .error-message {
-      color: #ccc;
       font-size: 16px;
       margin-top: 20px;
     }
@@ -144,21 +142,19 @@
       color: #ffc107;
     }
 
-    mark.search-highlight {
-      color: #ff9224;
-      font-weight: bold;
-      background: none;
-      filter: brightness(0.75);
-    }
-
     @media (max-width: 768px) {
-      .result-item {
+      .search-card {
         flex-direction: column;
       }
 
-      .result-image {
-        width: 100%;
-        height: auto;
+      .search-card-image {
+        max-width: 100%;
+      }
+
+      .search-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
       }
     }
   </style>
@@ -167,14 +163,11 @@
   <div id="header"></div>
 
   <main>
-    <h2>Търсене по: <span class="search-term" id="search-term"></span></h2>
+    <h2>Търсене по: <span id="search-results-title" class="search-term"></span></h2>
 
-    <div class="results-container" id="results-container">
-      <!-- Резултатите ще се заредят тук -->
-    </div>
-
-    <div class="no-results" id="no-results" style="display:none;">❌ Няма намерени резултати.</div>
-    <div class="error-message" id="error-message" style="display:none;">⚠️ Проблем при зареждане на резултатите.</div>
+    <div class="results-container" id="search-results-container"></div>
+    <p id="no-results" class="no-results" style="display: none;">❌ Няма намерени резултати.</p>
+    <p id="error-message" class="error-message" style="display: none;">⚠️ Проблем при зареждане на резултатите.</p>
   </main>
 
   <div id="footer"></div>
