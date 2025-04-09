@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Резултати от търсене | DP Design</title>
 
+  <!-- Стилове -->
   <link rel="stylesheet" href="styles/products.css" />
   <script src="script.js" defer></script>
   <script src="scripts/search-results.js" defer></script>
@@ -81,16 +82,23 @@
       margin-bottom: 10px;
     }
 
+    .result-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
     .result-price {
       font-size: 16px;
       font-weight: bold;
-      color: #a2ffb5;
+      color: #00e676;
     }
 
     .old-price {
       text-decoration: line-through;
       color: #ff9999;
-      margin-right: 8px;
+      margin-right: 10px;
     }
 
     .promo-badge {
@@ -131,6 +139,13 @@
       color: #ffc107;
     }
 
+    mark.search-highlight {
+      color: #fce5cd;
+      font-weight: bold;
+      background: none;
+      filter: brightness(0.75);
+    }
+
     @media (max-width: 768px) {
       .result-item {
         flex-direction: column;
@@ -147,9 +162,12 @@
   <div id="header"></div>
 
   <main>
-    <h2 id="search-results-title">Търсене по: <span id="search-term"></span></h2>
+    <h2>Търсене по: <span class="search-term" id="search-term"></span></h2>
 
-    <div class="results-container" id="results-container"></div>
+    <div class="results-container" id="results-container">
+      <!-- Резултатите ще се заредят тук -->
+    </div>
+
     <div class="no-results" id="no-results" style="display:none;">❌ Няма намерени резултати.</div>
     <div class="error-message" id="error-message" style="display:none;">⚠️ Проблем при зареждане на резултатите.</div>
   </main>
