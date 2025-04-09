@@ -21,7 +21,7 @@ function createProductCard(product, query) {
   return `
     <div class="search-card">
       <div class="search-card-image">
-        <img src="${product.images?.[0] || 'images/placeholder.png'}" alt="${product.name}">
+        <img src="https://dp-design.art/uploads/${product.images?.[0] || 'placeholder.png'}" alt="${product.name}">
       </div>
       <div class="search-card-info">
         <h3>${name} ${badge}</h3>
