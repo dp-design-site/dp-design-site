@@ -11,7 +11,7 @@ function createProductCard(product, query) {
 
   const price = hasPromo
     ? `<span class="old-price">${product.price.toFixed(2)} лв</span> <span class="result-price">${product.promo.toFixed(2)} лв</span>`
-    : `<span class="result-price">${(product.price || 0).toFixed(2)} лв</span>`;
+    : `<span class="result-price">${(Number(product.price) || 0).toFixed(2)} лв</span>`;
 
   const promoBadge = hasPromo ? `<span class="promo-badge">Промо</span>` : "";
 
