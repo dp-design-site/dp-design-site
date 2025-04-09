@@ -1,4 +1,4 @@
-function waitForElement(selector, timeout = 1000) {
+async function waitForElement(selector, timeout = 2000) {
   return new Promise((resolve, reject) => {
     const start = Date.now();
     const interval = setInterval(() => {
@@ -6,48 +6,59 @@ function waitForElement(selector, timeout = 1000) {
       if (el) {
         clearInterval(interval);
         resolve(el);
-      } else if (Date.now() - start > timeout) {
+      } else if (Date.now() - start >= timeout) {
         clearInterval(interval);
-        reject(`⏱ Timeout: ${selector} не се зареди навреме`);
+        console.warn(`⏱ Timeout: ${selector} не се зареди навреме`);
+        reject();
       }
     }, 50);
   });
 }
 
-function highlightMatch(text, query) {
+function highlightMatch(text = "", query) {
   if (!text || !query) return text;
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const regex = new RegExp(escaped, 'gi');
   return text.replace(regex, match => `<span class="search-highlight">${match}</span>`);
 }
 
+function createSlider(images) {
+  if (!Array.isArray(images) || images.length === 0) return "";
+
+  const slides = images.map((img, idx) =>
+    `<img src="https://api.dp-design.art/uploads/${img}" class="slider-image${idx === 0 ? ' active' : ''}" alt="Снимка ${idx + 1}">`
+  ).join("");
+
+  return `
+    <div class="slider" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
+      ${slides}
+      <button class="slider-btn left" onclick="prevSlide(this)">◀</button>
+      <button class="slider-btn right" onclick="nextSlide(this)">▶</button>
+    </div>
+  `;
+}
+
 function createProductCard(product, query) {
   const name = highlightMatch(product.name, query);
   const short = highlightMatch(product.shortDescription || "", query);
-  const price = product.price && typeof product.price === 'number' ? product.price.toFixed(2) : "0.00";
-  const promo = product.promo && typeof product.promo === 'number' ? product.promo.toFixed(2) : null;
+  const price = parseFloat(product.price) || 0;
+  const promo = parseFloat(product.promo) || null;
 
-  const priceHtml = promo
-    ? `<span class="price old">${price} лв</span> <span class="price promo">${promo} лв</span>`
-    : `<span class="price">${price} лв</span>`;
+  const priceHTML = promo
+    ? `<span class="price old">${price.toFixed(2)} лв</span> <span class="price promo">${promo.toFixed(2)} лв</span>`
+    : `<span class="price">${price.toFixed(2)} лв</span>`;
 
   const promoBadge = promo ? `<span class="promo-badge">Промо</span>` : "";
-
-  // 🔄 Слайдер с drag – показва се само една снимка
-  const images = (product.images || []).map((img, index) => `
-    <img src="https://api.dp-design.art/uploads/${img}" alt="${product.name}" class="${index === 0 ? 'active' : ''}">
-  `).join("");
+  const sliderHTML = createSlider(product.images);
 
   return `
     <div class="search-card">
-      <div class="search-slider" onmousedown="startDrag(event, this)" ontouchstart="startDrag(event, this)">
-        ${images}
-      </div>
+      <div class="search-slider">${sliderHTML}</div>
       <div class="search-card-info">
         <h3>${name} ${promoBadge}</h3>
         <p>${short}</p>
         <div class="search-card-footer">
-          ${priceHtml}
+          ${priceHTML}
           <a class="search-view-btn" href="product-template.html?id=${product.id}">Виж още</a>
         </div>
       </div>
@@ -55,84 +66,112 @@ function createProductCard(product, query) {
   `;
 }
 
-// 🔄 Drag логика за слайдване
-let isDragging = false;
-let startX = 0;
-let scrollLeft = 0;
-
-function startDrag(e, slider) {
-  isDragging = true;
-  slider.classList.add("dragging");
-  startX = e.pageX || e.touches[0].pageX;
-  scrollLeft = slider.scrollLeft;
-
-  function move(e) {
-    if (!isDragging) return;
-    const x = e.pageX || e.touches[0].pageX;
-    const walk = (startX - x);
-    slider.scrollLeft = scrollLeft + walk;
-  }
-
-  function stop() {
-    isDragging = false;
-    slider.classList.remove("dragging");
-    window.removeEventListener("mousemove", move);
-    window.removeEventListener("mouseup", stop);
-    window.removeEventListener("touchmove", move);
-    window.removeEventListener("touchend", stop);
-  }
-
-  window.addEventListener("mousemove", move);
-  window.addEventListener("mouseup", stop);
-  window.addEventListener("touchmove", move);
-  window.addEventListener("touchend", stop);
+// Сортиране: най-точни съвпадения най-отгоре
+function sortByRelevance(products, query) {
+  const q = query.toLowerCase();
+  return products.sort((a, b) => {
+    const aName = a.name?.toLowerCase() || "";
+    const bName = b.name?.toLowerCase() || "";
+    const aIndex = aName.indexOf(q);
+    const bIndex = bName.indexOf(q);
+    if (aIndex === bIndex) return 0;
+    if (aIndex === -1) return 1;
+    if (bIndex === -1) return -1;
+    return aIndex - bIndex;
+  });
 }
 
 async function initSearchResults() {
-  console.log("🔍 Инициализация на търсачката!");
   try {
-    const termEl = document.getElementById("search-results-title");
-    const container = await waitForElement("#results-container", 2000);
-
     const params = new URLSearchParams(window.location.search);
     const query = params.get("q")?.trim();
     if (!query) return;
 
-    if (termEl) {
-      termEl.innerHTML = `"${query}"`;
+    await waitForElement("#results-container");
+
+    const title = document.getElementById("search-results-title");
+    if (title) {
+      title.textContent = `"${query}"`;
     }
 
     const res = await fetch("https://api.dp-design.art/products");
-    if (!res.ok) throw new Error("API заявката не е успешна");
-    const products = await res.json();
+    const all = await res.json();
 
-    const filtered = products.filter(p =>
+    const results = all.filter(p =>
       (p.name && p.name.toLowerCase().includes(query.toLowerCase())) ||
       (p.shortDescription && p.shortDescription.toLowerCase().includes(query.toLowerCase()))
     );
 
-    // 🔠 Подреждаме по най-точно съвпадение
-    filtered.sort((a, b) => {
-      const aIndex = a.name?.toLowerCase().indexOf(query.toLowerCase()) ?? 9999;
-      const bIndex = b.name?.toLowerCase().indexOf(query.toLowerCase()) ?? 9999;
-      return aIndex - bIndex;
-    });
+    const sorted = sortByRelevance(results, query);
+    const container = document.getElementById("results-container");
 
-    if (filtered.length === 0) {
-      container.innerHTML = `<p class="no-results">❌ Няма намерени резултати.</p>`;
+    if (!container) return;
+
+    if (sorted.length === 0) {
+      document.getElementById("no-results").style.display = "block";
       return;
     }
 
-    container.innerHTML = filtered.map(p => createProductCard(p, query)).join("");
-    console.log(`✅ Намерени резултати: ${filtered.length}`);
+    container.innerHTML = sorted.map(p => createProductCard(p, query)).join("");
+    console.log(`✅ Намерени резултати: ${sorted.length}`);
   } catch (err) {
-    console.warn("⚠️ Грешка при зареждане на резултатите:", err);
-    const fallback = document.getElementById("error-message");
-    if (fallback) fallback.style.display = "block";
+    console.error("❌ Грешка при зареждане на резултатите:", err);
+    document.getElementById("error-message").style.display = "block";
   }
 }
 
-// ✅ Стартираме след зареждане на DOM
-document.addEventListener("DOMContentLoaded", () => {
-  initSearchResults();
-});
+document.addEventListener("DOMContentLoaded", initSearchResults);
+
+// Слайдване с бутони
+function nextSlide(btn) {
+  const slider = btn.closest(".slider");
+  const images = slider.querySelectorAll("img");
+  const current = slider.querySelector("img.active");
+  const index = Array.from(images).indexOf(current);
+  images[index].classList.remove("active");
+  const next = (index + 1) % images.length;
+  images[next].classList.add("active");
+}
+
+function prevSlide(btn) {
+  const slider = btn.closest(".slider");
+  const images = slider.querySelectorAll("img");
+  const current = slider.querySelector("img.active");
+  const index = Array.from(images).indexOf(current);
+  images[index].classList.remove("active");
+  const prev = (index - 1 + images.length) % images.length;
+  images[prev].classList.add("active");
+}
+
+// Drag (мишка/пръст)
+let startX = 0;
+let isDragging = false;
+
+function startDrag(e, slider) {
+  isDragging = true;
+  startX = (e.touches?.[0] || e).clientX;
+
+  const move = ev => {
+    if (!isDragging) return;
+    const currentX = (ev.touches?.[0] || ev).clientX;
+    const diff = currentX - startX;
+    if (Math.abs(diff) > 50) {
+      isDragging = false;
+      if (diff > 0) prevSlide(slider.querySelector(".slider-btn.left"));
+      else nextSlide(slider.querySelector(".slider-btn.right"));
+    }
+  };
+
+  const end = () => {
+    isDragging = false;
+    document.removeEventListener("mousemove", move);
+    document.removeEventListener("mouseup", end);
+    document.removeEventListener("touchmove", move);
+    document.removeEventListener("touchend", end);
+  };
+
+  document.addEventListener("mousemove", move);
+  document.addEventListener("mouseup", end);
+  document.addEventListener("touchmove", move);
+  document.addEventListener("touchend", end);
+}
