@@ -42,122 +42,125 @@
       gap: 25px;
     }
 
-    .search-card {
+        .search-card {
       display: flex;
-      flex-direction: row;
       background-color: #1e1e1e;
-      border: 1px solid #333;
       border-radius: 12px;
       overflow: hidden;
-      border: 1px solid rgba(252, 229, 205, 0.3);
-      transition: transform 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease;
+      position: relative;
+      max-height: 180px;
     }
-
+    
     .search-card:hover {
-      transform: scale(1.015);
-      box-shadow: 0 0 8px rgba(255, 204, 153, 0.3);
+      transform: scale(1.01);
     }
-
-    .search-card-image {
-      flex: 0 0 180px;
-      max-width: 180px;
-      height: 100%;
+    
+    .search-slider {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex: 0 0 200px;
+      height: 180px;
       overflow: hidden;
-      background: #000;
+      position: relative;
+      cursor: grab;
     }
-
-    .search-card-image img {
-      width: 100%;
-      height: auto;
+    
+    .search-slider img {
+      height: 100%;
+      width: auto;
       object-fit: cover;
-      display: block;
+      flex-shrink: 0;
+      border-right: 1px solid #333;
     }
-
+    
     .search-card-info {
       flex: 1;
-      padding: 20px;
+      padding: 15px 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
-
-    .search-card h3 {
-      font-size: 20px;
-      margin-bottom: 5px;
+    
+    .search-card-info h3 {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0 0 10px;
+      color: #fce5cd;
     }
-
+    
+    .search-card-info .search-highlight {
+      color: #ffcc99;
+      font-weight: bold;
+    }
+    
+    .search-card-info p {
+      font-size: 14px;
+      color: #ccc;
+      margin: 0;
+    }
+    
     .search-card-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: auto;
     }
-
+    
     .price {
       font-weight: bold;
-      color: #00ff99;
+      color: #2fff8d;
+      font-size: 16px;
     }
-
+    
     .price.old {
       text-decoration: line-through;
-      color: #888;
-      margin-right: 8px;
+      color: #ff9999;
+      margin-right: 10px;
     }
-
+    
+    .price.promo {
+      color: #a2ffb5;
+    }
+    
     .promo-badge {
-      background: #ff4444;
+      background-color: #ff5252;
       color: white;
       padding: 2px 6px;
-      font-size: 12px;
       border-radius: 4px;
-      margin-left: 8px;
+      font-size: 12px;
+      margin-left: 10px;
     }
-
+    
     .search-view-btn {
-      padding: 8px 15px;
-      background-color: #ffe0c4;
-      color: #121212;
+      padding: 8px 14px;
+      background: #ffe4c4;
+      color: #000;
       font-weight: bold;
       border-radius: 6px;
       text-decoration: none;
       transition: background 0.3s ease;
     }
-
+    
     .search-view-btn:hover {
-      background-color: #ffcc99;
+      background: #ffcc99;
     }
-
-    .search-highlight {
-      color: #ff9224;
-      font-weight: bold;
-    }
-
-    .no-results, .error-message {
-      font-size: 16px;
-      margin-top: 20px;
-    }
-
-    .error-message {
-      color: #ffc107;
-    }
-
+    
     @media (max-width: 768px) {
       .search-card {
         flex-direction: column;
+        max-height: unset;
       }
+    
+      .search-slider {
+        width: 100%;
+        height: 200px;
+      }
+    
+      .search-card-info {
+        padding: 10px;
+      }
+    }
 
-      .search-card-image {
-        max-width: 100%;
-      }
-
-      .search-card-footer {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
     }
   </style>
 </head>
