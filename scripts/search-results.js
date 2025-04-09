@@ -1,56 +1,32 @@
-async function waitForElement(selector, timeout = 2000) {
-  return new Promise((resolve, reject) => {
-    const start = Date.now();
-    const interval = setInterval(() => {
-      const el = document.querySelector(selector);
-      if (el) {
-        clearInterval(interval);
-        resolve(el);
-      } else if (Date.now() - start >= timeout) {
-        clearInterval(interval);
-        reject(`⏱️ Timeout: ${selector} не се зареди навреме`);
-      }
-    }, 50);
-  });
-}
-
 function highlightMatch(text, query) {
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const regex = new RegExp(escaped, "gi");
-  return text.replace(regex, (match) => `<span class="search-highlight">${match}</span>`);
-}
-
-function getMatchScore(text, query) {
-  if (!text) return 0;
-  const lowerText = text.toLowerCase();
-  const lowerQuery = query.toLowerCase();
-
-  if (lowerText === lowerQuery) return 100;             // Точно съвпадение
-  if (lowerText.startsWith(lowerQuery)) return 80;      // Започва с
-  if (lowerText.includes(lowerQuery)) return 50;        // Съдържа
-  return 0;
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(escaped, 'gi');
+  return text.replace(regex, match => `<mark class="search-highlight">${match}</mark>`);
 }
 
 function createProductCard(product, query) {
-  const name = highlightMatch(product.name, query);
+  const name = highlightMatch(product.name || "", query);
   const short = highlightMatch(product.shortDescription || "", query);
-  const price = parseFloat(product.price) || 0;
-  const promo = parseFloat(product.promo) || null;
+  const hasPromo = product.promo && product.promo < product.price;
 
-  const priceHTML = promo
-    ? `<span class="old-price">${price.toFixed(2)} лв</span> <span class="result-price">${promo.toFixed(2)} лв</span>`
-    : `<span class="result-price">${price.toFixed(2)} лв</span>`;
+  const price = hasPromo
+    ? `<span class="old-price">${product.price.toFixed(2)} лв</span> <span class="result-price">${product.promo.toFixed(2)} лв</span>`
+    : `<span class="result-price">${(product.price || 0).toFixed(2)} лв</span>`;
 
-  const promoBadge = promo ? `<span class="promo-badge">Промо</span>` : "";
+  const promoBadge = hasPromo ? `<span class="promo-badge">Промо</span>` : "";
+
+  const imageSrc = product.image?.startsWith("http") || product.image?.includes("uploads/")
+    ? product.image
+    : `uploads/${product.image}`;
 
   return `
     <div class="result-item">
-      <img class="result-image" src="${product.image || 'images/placeholder.png'}" alt="${product.name}">
+      <img class="result-image" src="${imageSrc}" alt="${product.name}">
       <div class="result-details">
         <div class="result-title">${name} ${promoBadge}</div>
         <div class="result-description">${short}</div>
-        <div>
-          ${priceHTML}
+        <div class="result-footer">
+          ${price}
           <a class="view-btn" href="product-template.html?id=${product.id}">Виж още</a>
         </div>
       </div>
@@ -68,42 +44,32 @@ async function initSearchResults() {
 
     const title = document.getElementById("search-term");
     if (title) {
-      title.innerHTML = `<span class="search-highlight">"${query}"</span>`;
+      title.textContent = query;
     }
 
     const res = await fetch("https://api.dp-design.art/products");
     if (!res.ok) throw new Error("Неуспешна заявка към API");
+
     const products = await res.json();
 
-    const scored = products
-      .map(p => {
-        const nameScore = getMatchScore(p.name, query);
-        const descScore = getMatchScore(p.shortDescription, query);
-        const score = Math.max(nameScore, descScore);
-        return { ...p, matchScore: score };
-      })
-      .filter(p => p.matchScore > 0)
-      .sort((a, b) => b.matchScore - a.matchScore);
+    const filtered = products
+      .map(p => ({
+        ...p,
+        matchIndex: (p.name || "").toLowerCase().indexOf(query.toLowerCase())
+      }))
+      .filter(p => p.matchIndex !== -1)
+      .sort((a, b) => a.matchIndex - b.matchIndex);
 
     const container = document.getElementById("results-container");
-    const noResults = document.getElementById("no-results");
-    const errorMessage = document.getElementById("error-message");
+    if (!container) return console.error("❌ Контейнерът за резултати не е намерен!");
 
-    if (!container) {
-      console.error("❌ Контейнерът за резултати не е намерен!");
+    if (filtered.length === 0) {
+      document.getElementById("no-results").style.display = "block";
       return;
     }
 
-    if (scored.length === 0) {
-      container.innerHTML = "";
-      noResults.style.display = "block";
-      return;
-    }
-
-    noResults.style.display = "none";
-    errorMessage.style.display = "none";
-    container.innerHTML = scored.map(p => createProductCard(p, query)).join("");
-    console.log(`✅ Намерени резултати: ${scored.length}`);
+    container.innerHTML = filtered.map(p => createProductCard(p, query)).join("");
+    console.log(`✅ Намерени резултати: ${filtered.length}`);
   } catch (err) {
     console.error("❌ Грешка при зареждане на резултатите:", err);
     const errorBox = document.getElementById("error-message");
@@ -117,8 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("✅ Компонентите са заредени – стартираме търсенето");
       initSearchResults();
     })
-    .catch((err) => {
+    .catch(err => {
       console.warn("⚠️ Header не беше намерен навреме:", err);
-      initSearchResults(); // Все пак пробваме
+      initSearchResults();
     });
 });
