@@ -1,91 +1,82 @@
 function highlightMatch(text, query) {
-  if (!text) return "";
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const regex = new RegExp(escaped, 'gi');
-  return text.replace(regex, match => `<span class="search-highlight">${match}</span>`);
+  const regex = new RegExp(`(${query})`, "gi");
+  return text.replace(regex, `<span class="search-highlight">$1</span>`);
 }
 
 function createProductCard(product, query) {
-  const name = highlightMatch(product.name, query);
-  const short = highlightMatch(product.shortDescription || "", query);
+  const name = highlightMatch(product.name || "", query);
+  const desc = highlightMatch(product.shortDescription || "", query);
+  const image = product.images?.[0] ? `https://api.dp-design.art/uploads/${product.images[0]}` : "images/placeholder.png";
 
-  const price = Number(product.price) || 0;
-  const promo = Number(product.promo_price) || null;
-
-  const priceHTML = promo
-    ? `<span class="price old">${price.toFixed(2)} лв</span> <span class="price">${promo.toFixed(2)} лв</span>`
-    : `<span class="price">${price.toFixed(2)} лв</span>`;
-
-  const badge = promo ? `<span class="promo-badge">Промо</span>` : "";
+  const promoBadge = product.promo ? `<span class="promo-badge">Промо</span>` : "";
+  const priceHTML = product.promo
+    ? `<span class="old-price">${Number(product.price || 0).toFixed(2)} лв</span> <span class="result-price">${Number(product.promo).toFixed(2)} лв</span>`
+    : `<span class="result-price">${Number(product.price || 0).toFixed(2)} лв</span>`;
 
   return `
-    <div class="search-card">
-      <div class="search-card-image">
-        <img src="https://dp-design.art/uploads/${product.images?.[0] || 'placeholder.png'}" alt="${product.name}">
-      </div>
-      <div class="search-card-info">
-        <h3>${name} ${badge}</h3>
-        <p>${short}</p>
-        <div class="search-card-footer">
+    <div class="result-item">
+      <img class="result-image" src="${image}" alt="${product.name}" />
+      <div class="result-details">
+        <div class="result-title">${name} ${promoBadge}</div>
+        <div class="result-description">${desc}</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
           ${priceHTML}
-          <a href="product-template.html?id=${product.id}" class="search-view-btn">Виж още</a>
+          <a class="view-btn" href="product-template.html?id=${product.id}">Виж още</a>
         </div>
       </div>
     </div>
   `;
 }
 
-function sortByRelevance(products, query) {
-  return products.sort((a, b) => {
-    const aMatch = (a.name || "").toLowerCase().indexOf(query.toLowerCase());
-    const bMatch = (b.name || "").toLowerCase().indexOf(query.toLowerCase());
-
-    if (aMatch === -1 && bMatch === -1) return 0;
-    if (aMatch === -1) return 1;
-    if (bMatch === -1) return -1;
-    return aMatch - bMatch;
-  });
-}
-
 async function initSearchResults() {
+  const params = new URLSearchParams(window.location.search);
+  const query = params.get("q")?.trim();
+  if (!query) return;
+
+  const termElement = document.getElementById("search-term");
+  if (termElement) termElement.innerHTML = highlightMatch(query, query);
+
+  const container = document.getElementById("results-container");
+  const errorBox = document.getElementById("error-message");
+  const emptyBox = document.getElementById("no-results");
+  if (!container) return console.error("❌ Контейнерът за резултати не е намерен!");
+
   try {
-    const params = new URLSearchParams(window.location.search);
-    const query = params.get("q")?.trim();
-    if (!query) return;
-
-    const title = document.getElementById("search-results-title");
-    const container = document.getElementById("search-results-container");
-    const noResults = document.getElementById("no-results");
-    const errorMsg = document.getElementById("error-message");
-
-    title.innerHTML = `"${highlightMatch(query, query)}"`;
-
     const res = await fetch("https://api.dp-design.art/products");
-    if (!res.ok) throw new Error("❌ Грешка при заявка към API");
+    if (!res.ok) throw new Error("Неуспешна заявка към API");
+    const allProducts = await res.json();
 
-    const products = await res.json();
+    const filtered = allProducts
+      .filter(p =>
+        (p.name && p.name.toLowerCase().includes(query.toLowerCase())) ||
+        (p.shortDescription && p.shortDescription.toLowerCase().includes(query.toLowerCase()))
+      )
+      .sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+        const exactMatchA = aName === query.toLowerCase();
+        const exactMatchB = bName === query.toLowerCase();
+        const startsWithA = aName.startsWith(query.toLowerCase());
+        const startsWithB = bName.startsWith(query.toLowerCase());
 
-    const filtered = products.filter(p =>
-      p.name?.toLowerCase().includes(query.toLowerCase()) ||
-      p.shortDescription?.toLowerCase().includes(query.toLowerCase())
-    );
+        if (exactMatchA && !exactMatchB) return -1;
+        if (!exactMatchA && exactMatchB) return 1;
+        if (startsWithA && !startsWithB) return -1;
+        if (!startsWithA && startsWithB) return 1;
+        return 0;
+      });
 
     if (filtered.length === 0) {
-      container.style.display = "none";
-      noResults.style.display = "block";
+      emptyBox.style.display = "block";
       return;
     }
 
-    const sorted = sortByRelevance(filtered, query);
-    container.innerHTML = sorted.map(p => createProductCard(p, query)).join("");
-
-    console.log(`✅ Намерени резултати: ${sorted.length}`);
+    container.innerHTML = filtered.map(p => createProductCard(p, query)).join("");
+    console.log(`✅ Намерени резултати: ${filtered.length}`);
   } catch (err) {
     console.error("❌ Грешка при зареждане на резултатите:", err);
-    document.getElementById("error-message").style.display = "block";
+    errorBox.style.display = "block";
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  initSearchResults();
-});
+document.addEventListener("DOMContentLoaded", initSearchResults);
