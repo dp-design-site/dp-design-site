@@ -170,6 +170,46 @@
       .search-card-info {
         padding: 10px;
       }
+
+      .slider {
+        position: relative;
+        overflow: hidden;
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .slider img {
+        height: 100%;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        display: none;
+        border-radius: 6px;
+      }
+      
+      .slider img.active {
+        display: block;
+      }
+      
+      .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-80%);
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        font-size: 22px;
+        padding: 5px 10px;
+        cursor: pointer;
+        z-index: 2;
+        color: #eee;
+        border-radius: 5px;
+      }
+      
+      .slider-btn.left { left: 5px; }
+      .slider-btn.right { right: 5px; }
+
     }
   </style>
 </head>
