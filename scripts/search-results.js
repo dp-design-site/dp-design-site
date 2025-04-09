@@ -84,10 +84,10 @@ async function initSearchResults() {
     const query = params.get("q")?.trim();
     if (!query) return;
 
-    await waitForElement("#results-container");
+    await waitForElement("#search-results-container");
     await waitForElement("#search-term");
 
-    const container = document.querySelector("#results-container");
+    const container = document.querySelector("#search-results-container");
     const termSpan = document.querySelector("#search-term");
 
     if (!container || !termSpan) {
@@ -116,7 +116,7 @@ async function initSearchResults() {
     console.log(`✅ Намерени резултати: ${sorted.length}`);
   } catch (err) {
     console.warn("⚠️ Грешка при зареждане на резултатите:", err);
-    const fallback = document.querySelector("#results-container");
+    const fallback = document.querySelector("#search-results-container");
     if (fallback) fallback.innerHTML = `<p class="error-message">⚠️ Проблем при зареждане на резултатите.</p>`;
   }
 }
