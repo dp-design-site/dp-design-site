@@ -12,20 +12,19 @@ async function loadProduct() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
-  // ⭐️ Добави рейтинг в product-details
-  const rating = document.createElement("div");
-  rating.appendChild(renderRating(product.rating || 0));
-  document.querySelector(".product-details").prepend(rating);
-
-
   if (!id) return;
 
   try {
     const res = await fetch("https://api.dp-design.art/products");
     const data = await res.json();
-    const product = data.find(p => p.id == id);
+    const product = data.find(p => p.id == id); // <-- тук вече е дефиниран
 
     if (!product) return;
+
+    // ⭐️ Добави рейтинг в product-details
+    const rating = document.createElement("div");
+    rating.appendChild(renderRating(product.rating || 0));
+    document.querySelector(".product-details").prepend(rating);
 
     document.getElementById("product-name").textContent = product.name;
     document.getElementById("product-description").textContent = product.description || "Без описание.";
@@ -44,6 +43,7 @@ async function loadProduct() {
     console.error("Грешка при зареждане на продукта:", err);
   }
 }
+
 
 function loadSlider(images) {
   const slider = document.getElementById("product-slider");
