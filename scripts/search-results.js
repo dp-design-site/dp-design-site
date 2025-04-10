@@ -47,6 +47,7 @@ function createProductCard(product, query) {
     image.src = `https://api.dp-design.art/uploads/${img}`;
     image.alt = product.name;
     image.className = i === 0 ? "active" : "";
+    image.addEventListener("click", () => openFullscreenSlider(product.images, i));
     slider.appendChild(image);
   });
 
