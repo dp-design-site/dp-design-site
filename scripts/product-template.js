@@ -1,4 +1,4 @@
-// product-template.js – пълна версия с "Моята оценка", редакция и изтриване + lazy load на рейтинги и премахнати звезди над заглавието
+// product-template.js – пълна версия с "Моята оценка", редакция и изтриване + lazy load на рейтинги и премахнати звезди над заглавието + drag/swipe
 
 let userEmail = localStorage.getItem("userEmail") || "";
 let visibleReviews = 10;
@@ -26,7 +26,6 @@ async function loadProduct() {
 
     if (!product) return;
 
-    // Премахване на .product-rating контейнера (ако има)
     const existingRating = document.querySelector(".product-rating");
     if (existingRating) existingRating.remove();
 
@@ -150,6 +149,19 @@ function loadSlider(images) {
     return;
   }
 
+  let startX = 0;
+  slider.addEventListener("mousedown", (e) => (startX = e.clientX));
+  slider.addEventListener("mouseup", (e) => {
+    if (e.clientX - startX > 50) navigateSlide(-1, slider, thumbs);
+    if (e.clientX - startX < -50) navigateSlide(1, slider, thumbs);
+  });
+  slider.addEventListener("touchstart", (e) => (startX = e.touches[0].clientX));
+  slider.addEventListener("touchend", (e) => {
+    const endX = e.changedTouches[0].clientX;
+    if (endX - startX > 50) navigateSlide(-1, slider, thumbs);
+    if (endX - startX < -50) navigateSlide(1, slider, thumbs);
+  });
+
   images.forEach((img, index) => {
     const fullUrl = `https://api.dp-design.art/uploads/${img}`;
     const image = document.createElement("img");
@@ -233,6 +245,19 @@ function openFullscreen(index, images) {
   const img = document.getElementById("fullscreen-image");
   img.src = `https://api.dp-design.art/uploads/${fullscreenImages[fullscreenIndex]}`;
   modal.style.display = "flex";
+
+  let startX = 0;
+  img.addEventListener("mousedown", (e) => (startX = e.clientX));
+  img.addEventListener("mouseup", (e) => {
+    if (e.clientX - startX > 50) navigateFullscreen(-1);
+    if (e.clientX - startX < -50) navigateFullscreen(1);
+  });
+  img.addEventListener("touchstart", (e) => (startX = e.touches[0].clientX));
+  img.addEventListener("touchend", (e) => {
+    const endX = e.changedTouches[0].clientX;
+    if (endX - startX > 50) navigateFullscreen(-1);
+    if (endX - startX < -50) navigateFullscreen(1);
+  });
 }
 
 function closeFullscreen() {
@@ -258,5 +283,3 @@ document.querySelector(".fullscreen-close").onclick = closeFullscreen;
 document.querySelector(".fullscreen-overlay").onclick = closeFullscreen;
 document.querySelector(".fullscreen-nav.left").onclick = () => navigateFullscreen(-1);
 document.querySelector(".fullscreen-nav.right").onclick = () => navigateFullscreen(1);
-
-setupRatingStars();
