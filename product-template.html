@@ -6,57 +6,54 @@
   <title>Продукт | DP Design</title>
   <link rel="stylesheet" href="styles/product-template.css" />
 </head>
-<body>
+<body onload="loadComponents()">
   <div id="header"></div>
 
-  <main class="product-page">
-    <section class="product-info">
-      <div id="product-slider" class="product-slider"></div>
-      <div class="product-details">
-        <h2 id="product-name"></h2>
-        <p id="product-description"></p>
-        <div class="price-line">
-          <span id="product-price" class="price"></span>
-          <span class="promo-badge" style="display: none">Промо</span>
-          <span class="old-price-container" style="display: none">
-            Стара цена: <s id="product-old-price"></s>
-          </span>
-        </div>
-        <div id="product-action-buttons" class="product-actions"></div>
-      </div>
-    </section>
-
-    <section class="product-thumbnails">
-      <div id="product-thumbnails"></div>
-    </section>
-
-    <section class="ratings-section">
-      <h3>Оценки и отзиви</h3>
-      <div id="average-stars" class="stars"></div>
-      <p><span id="average-score">0</span>/5 от <span id="total-votes">0</span> гласа</p>
-
-      <div id="reviews-container"></div>
-
-      <h4>Оцени продукта</h4>
-      <div id="rating-form" class="rating-form">
-        <div id="rating-stars" class="stars"></div>
-        <input type="email" id="rating-email" placeholder="Твоят имейл" required />
-        <textarea id="rating-comment" placeholder="Коментар (по желание)"></textarea>
-        <button id="submit-rating">Изпрати</button>
-      </div>
-    </section>
+  <main class="product-container">
+    <div class="product-image">
+      <span class="promo-badge" style="display: none;">ПРОМО</span>
+      <div class="slider" id="product-slider"></div>
+      <div class="thumbnails" id="product-thumbnails"></div>
+    </div>
+    <div class="product-details">
+      <h1 id="product-name">Име на продукта</h1>
+      <p id="product-description">Описание на продукта.</p>
+      <p><span class="price-label">Цена:</span> <span id="product-price">-- лв.</span></p>
+      <p class="old-price-container" style="display: none;"><span class="price-label">Стара цена:</span> <del id="product-old-price"></del></p>
+      <div id="product-action-buttons"></div>
+    </div>
   </main>
 
-  <!-- Фулскрийн галерия -->
-  <div id="fullscreen-modal" class="fullscreen-modal">
-    <span class="fullscreen-close">✖</span>
-    <img id="fullscreen-image" class="fullscreen-image" src="" alt="Голяма снимка" />
-    <div class="fullscreen-nav left">◀</div>
-    <div class="fullscreen-nav right">▶</div>
-    <div class="fullscreen-overlay"></div>
+  <section id="rating-section" class="rating-block">
+  <h3>Оценки и отзиви</h3>
+
+  <div id="rating-summary">
+    <div class="stars" id="average-stars"></div>
+    <p><span id="average-score">0</span> от <span id="total-votes">0</span> гласа</p>
   </div>
 
+  <div id="reviews-container"></div>
+
+  <div id="submit-rating">
+    <h4>Оцени продукта</h4>
+    <div class="stars" id="rating-input"></div>
+    <textarea id="comment-input" placeholder="Твоето мнение (по желание)"></textarea>
+    <input type="email" id="email-input" placeholder="Имейл (за защита от дублиране)" required />
+    <button id="submit-rating-btn">Изпрати</button>
+  </div>
+</section>
+
+
   <div id="footer"></div>
+
+  <div id="fullscreen-modal" class="fullscreen-modal" style="display: none;">
+  <div class="fullscreen-overlay"></div>
+  <button class="fullscreen-close">✖</button>
+  <img id="fullscreen-image" src="" alt="Изображение">
+  <button class="fullscreen-nav left">◀</button>
+  <button class="fullscreen-nav right">▶</button>
+</div>
+
 
   <script src="scripts/product-template.js"></script>
 </body>
