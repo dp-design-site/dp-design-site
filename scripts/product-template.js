@@ -8,6 +8,7 @@ async function loadComponents() {
   loadProduct();
   setupRatingStars();
 
+  
 }
 
 async function loadProduct() {
