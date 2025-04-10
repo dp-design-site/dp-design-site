@@ -141,21 +141,25 @@
       align-items: center;
     }
 
-    .price {
+    .price-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.2;
+    }
+    
+    .price.old {
+      font-size: 13px;
+      color: #ff9999;
+      text-decoration: line-through;
+    }
+    
+    .price.promo {
+      font-size: 18px;
       font-weight: bold;
       color: #2fff8d;
-      font-size: 16px;
     }
 
-    .price.old {
-      text-decoration: line-through;
-      color: #ff9999;
-      margin-right: 10px;
-    }
-
-    .price.promo {
-      color: #a2ffb5;
-    }
 
     .promo-badge {
       background-color: #ff5252;
