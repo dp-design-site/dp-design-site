@@ -56,6 +56,42 @@
   
   <div id="footer"></div>
 
+  <script>
+    // 💫 Добавяне на drag/swipe поддръжка
+    function addSwipeEvents(container, onSwipeLeft, onSwipeRight) {
+      let startX = 0;
+      container.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+      });
+      container.addEventListener("touchend", (e) => {
+        const endX = e.changedTouches[0].clientX;
+        if (startX - endX > 50) onSwipeLeft();
+        else if (endX - startX > 50) onSwipeRight();
+      });
+
+      let dragStartX = 0;
+      container.addEventListener("mousedown", (e) => {
+        dragStartX = e.clientX;
+      });
+      container.addEventListener("mouseup", (e) => {
+        const dragEndX = e.clientX;
+        if (dragStartX - dragEndX > 50) onSwipeLeft();
+        else if (dragEndX - dragStartX > 50) onSwipeRight();
+      });
+    }
+
+    window.addEventListener("load", () => {
+      const slider = document.getElementById("product-slider");
+      const thumbs = document.getElementById("product-thumbnails");
+      const modal = document.getElementById("fullscreen-modal");
+      const img = document.getElementById("fullscreen-image");
+
+      addSwipeEvents(slider, () => navigateSlide(1, slider, thumbs), () => navigateSlide(-1, slider, thumbs));
+      addSwipeEvents(modal, () => navigateFullscreen(1), () => navigateFullscreen(-1));
+    });
+  </script>
+
+
   <script src="scripts/product-template.js"></script>
 </body>
 </html>
