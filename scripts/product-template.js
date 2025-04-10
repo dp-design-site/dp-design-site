@@ -1,6 +1,7 @@
-// product-template.js – пълна версия с "Моята оценка", редакция и изтриване
+// product-template.js – пълна версия с "Моята оценка", редакция и изтриване + lazy load на рейтинги и премахнати звезди над заглавието
 
 let userEmail = localStorage.getItem("userEmail") || "";
+let visibleReviews = 10;
 
 async function loadComponents() {
   const header = await fetch("header.html").then((r) => r.text());
@@ -25,9 +26,9 @@ async function loadProduct() {
 
     if (!product) return;
 
-    const rating = document.createElement("div");
-    rating.appendChild(renderRating(product.rating || 0));
-    document.querySelector(".product-details").prepend(rating);
+    // Премахване на .product-rating контейнера (ако има)
+    const existingRating = document.querySelector(".product-rating");
+    if (existingRating) existingRating.remove();
 
     document.getElementById("product-name").textContent = product.name;
     document.getElementById("product-description").textContent = product.description || "Без описание.";
@@ -69,7 +70,9 @@ function loadRatings(productId) {
 
       const container = document.getElementById("reviews-container");
       container.innerHTML = "";
-      data.reviews.forEach((r) => {
+      const reviews = data.reviews;
+
+      reviews.slice(0, visibleReviews).forEach((r) => {
         const div = document.createElement("div");
         div.className = "review";
         div.innerHTML = `
@@ -96,6 +99,19 @@ function loadRatings(productId) {
         }
         container.appendChild(div);
       });
+
+      const btnMore = document.getElementById("show-more-btn") || document.createElement("button");
+      btnMore.id = "show-more-btn";
+      btnMore.textContent = visibleReviews >= reviews.length ? "Скрий всички" : "Покажи още";
+      btnMore.onclick = () => {
+        if (visibleReviews >= reviews.length) {
+          visibleReviews = 10;
+        } else {
+          visibleReviews += 10;
+        }
+        loadRatings(productId);
+      };
+      container.appendChild(btnMore);
     });
 }
 
@@ -120,6 +136,8 @@ function deleteRating(productId) {
     .then(() => loadRatings(productId))
     .catch(() => alert("Грешка при изтриване"));
 }
+
+// 🔁 Допълнителни функции – запазени от оригиналния файл
 
 function loadSlider(images) {
   const slider = document.getElementById("product-slider");
@@ -241,63 +259,4 @@ document.querySelector(".fullscreen-overlay").onclick = closeFullscreen;
 document.querySelector(".fullscreen-nav.left").onclick = () => navigateFullscreen(-1);
 document.querySelector(".fullscreen-nav.right").onclick = () => navigateFullscreen(1);
 
-// update setupRatingStars() – добавяме запис на имейл в localStorage
-function setupRatingStars() {
-  const container = document.getElementById("rating-input");
-  let selected = 0;
-
-  for (let i = 1; i <= 5; i++) {
-    const star = document.createElement("span");
-    star.textContent = "☆";
-    star.dataset.value = i;
-    star.addEventListener("mouseover", () => highlightStars(i));
-    star.addEventListener("mouseout", () => highlightStars(selected));
-    star.addEventListener("click", () => {
-      selected = i;
-      highlightStars(i);
-    });
-    container.appendChild(star);
-  }
-
-  function highlightStars(val) {
-    [...container.children].forEach((s, i) => {
-      s.textContent = i < val ? "★" : "☆";
-    });
-  }
-
-  document.getElementById("submit-rating-btn").addEventListener("click", () => {
-    const email = document.getElementById("email-input").value.trim();
-    const comment = document.getElementById("comment-input").value.trim();
-
-    if (!email || selected === 0) {
-      alert("Моля, въведи имейл и избери брой звезди.");
-      return;
-    }
-
-    localStorage.setItem("userEmail", email);
-    userEmail = email;
-
-    fetch("https://api.dp-design.art/api/ratings", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        product_id: window.currentProductId,
-        rating: selected,
-        comment,
-        customer_email: email
-      })
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then(() => {
-        alert("Благодарим за отзива!");
-        loadRatings(window.currentProductId);
-      })
-      .catch((err) => {
-        console.error("Error submitting rating:", err);
-        alert("Грешка при изпращане.");
-      });
-  });
-}
+setupRatingStars();
