@@ -1,3 +1,9 @@
+.short-desc {
+  font-size: 14px;
+  color: #aaa;
+  margin-top: 5px;
+}
+
 .fullscreen-view {
   position: fixed;
   top: 0;
