@@ -42,6 +42,14 @@ function createProductCard(product, query) {
   slider.setAttribute("onmousedown", "startDrag(event, this)");
   slider.setAttribute("ontouchstart", "startDrag(event, this)");
 
+  if (product.promo_price && product.promo_price !== product.price) {
+  const promoBadge = document.createElement("div");
+  promoBadge.className = "promo-badge-overlay";
+  promoBadge.textContent = "Промо";
+  slider.appendChild(promoBadge);
+}
+
+
   product.images.forEach((img, i) => {
     const image = document.createElement("img");
     image.src = `https://api.dp-design.art/uploads/${img}`;
