@@ -6,6 +6,8 @@ async function loadComponents() {
   document.getElementById("footer").innerHTML = footer;
 
   loadProduct();
+  setupRatingStars();
+
 }
 
 async function loadProduct() {
@@ -24,8 +26,94 @@ async function loadProduct() {
     // ⭐️ Добави рейтинг в product-details
     const rating = document.createElement("div");
     rating.appendChild(renderRating(product.rating || 0));
-    document.querySelector(".product-details").prepend(rating);
 
+     function loadRatings(productId) {
+  fetch(`/api/ratings/${productId}`)
+    .then(res => res.json())
+    .then(data => {
+      // ⭐ Показваме средната оценка
+      const avg = data.average || 0;
+      const count = data.count || 0;
+      document.getElementById("average-stars").innerHTML = renderRating(avg).innerHTML;
+      document.getElementById("average-score").textContent = avg.toFixed(1);
+      document.getElementById("total-votes").textContent = count;
+
+      // 💬 Показваме отзивите
+      const container = document.getElementById("reviews-container");
+      container.innerHTML = "";
+      data.reviews.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "review";
+        div.innerHTML = `
+          <div class="stars read-only">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
+          ${r.comment ? `<p>${r.comment}</p>` : ""}
+          <small>${new Date(r.created_at).toLocaleDateString()}</small>
+        `;
+        container.appendChild(div);
+      });
+    });
+}
+
+// ⭐ Интерактивна селекция на звезди
+function setupRatingStars() {
+  const container = document.getElementById("rating-input");
+  let selected = 0;
+
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement("span");
+    star.textContent = "☆";
+    star.dataset.value = i;
+
+    star.addEventListener("mouseover", () => highlightStars(i));
+    star.addEventListener("mouseout", () => highlightStars(selected));
+    star.addEventListener("click", () => {
+      selected = i;
+      highlightStars(selected);
+    });
+
+    container.appendChild(star);
+  }
+
+  function highlightStars(val) {
+    [...container.children].forEach((s, i) => {
+      s.textContent = i < val ? "★" : "☆";
+    });
+  }
+
+  // бутон за изпращане
+  document.getElementById("submit-rating-btn").addEventListener("click", () => {
+    const email = document.getElementById("email-input").value.trim();
+    const comment = document.getElementById("comment-input").value.trim();
+
+    if (!email || selected === 0) {
+      alert("Моля, въведи имейл и избери брой звезди.");
+      return;
+    }
+
+    fetch("/api/ratings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        product_id: window.currentProductId,
+        rating: selected,
+        comment,
+        customer_email: email
+      })
+    })
+    .then(res => res.json())
+    .then(() => {
+      alert("Благодарим за отзива!");
+      loadRatings(window.currentProductId);
+    })
+    .catch(err => {
+      console.error("Error submitting rating:", err);
+      alert("Грешка при изпращане.");
+    });
+  });
+}
+
+    
+    document.querySelector(".product-details").prepend(rating);
     document.getElementById("product-name").textContent = product.name;
     document.getElementById("product-description").textContent = product.description || "Без описание.";
     document.getElementById("product-price").textContent = `${Number(product.promo_price || product.price).toFixed(2)} лв.`;
@@ -43,6 +131,9 @@ async function loadProduct() {
     console.error("Грешка при зареждане на продукта:", err);
   }
 }
+
+window.currentProductId = product.id; // ще ни трябва в други функции
+loadRatings(product.id); // зареждаме всички оценки
 
 
 function loadSlider(images) {
