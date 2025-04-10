@@ -199,6 +199,17 @@ function loadSlider(images) {
 
   slider.appendChild(leftBtn);
   slider.appendChild(rightBtn);
+    initSlider(document.getElementById("product-slider"), {
+    autoplay: true,
+    interval: 4000,
+    loop: true,
+    swipe: true,
+    pauseOnHover: true,
+    showArrows: true,
+    showIndicators: true,
+    fullscreen: true
+  });
+
 }
 
 function navigateSlide(direction, slider, thumbs) {
