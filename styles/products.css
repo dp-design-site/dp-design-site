@@ -193,6 +193,21 @@ mark.search-highlight {
   margin-left: 8px;
 }
 
+  .promo-badge-overlay {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #ff5252;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    z-index: 5;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  }
+
+
 .view-btn {
   margin-top: 10px;
   background-color: transparent;
