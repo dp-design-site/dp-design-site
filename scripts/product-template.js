@@ -1,4 +1,6 @@
-// product-template.js – пълна версия с интегриран рейтинг
+// product-template.js – пълна версия с "Моята оценка", редакция и изтриване
+
+let userEmail = localStorage.getItem("userEmail") || "";
 
 async function loadComponents() {
   const header = await fetch("header.html").then((r) => r.text());
@@ -14,13 +16,12 @@ async function loadComponents() {
 async function loadProduct() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
-
   if (!id) return;
 
   try {
     const res = await fetch("https://api.dp-design.art/products");
     const data = await res.json();
-    const product = data.find(p => p.id == id);
+    const product = data.find((p) => p.id == id);
 
     if (!product) return;
 
@@ -43,16 +44,86 @@ async function loadProduct() {
 
     loadSlider(product.images || []);
     loadActions(product.category, product.id);
-
   } catch (err) {
     console.error("Грешка при зареждане на продукта:", err);
   }
 }
 
+function renderRating(rating) {
+  const container = document.createElement("div");
+  container.className = "product-rating";
+  const rounded = Math.round(rating);
+  container.innerHTML = "★".repeat(rounded) + "☆".repeat(5 - rounded);
+  return container;
+}
+
+function loadRatings(productId) {
+  fetch(`https://api.dp-design.art/api/ratings/${productId}`)
+    .then((res) => res.json())
+    .then((data) => {
+      const avg = data.average || 0;
+      const count = data.count || 0;
+      document.getElementById("average-stars").innerHTML = renderRating(avg).innerHTML;
+      document.getElementById("average-score").textContent = avg.toFixed(1);
+      document.getElementById("total-votes").textContent = count;
+
+      const container = document.getElementById("reviews-container");
+      container.innerHTML = "";
+      data.reviews.forEach((r) => {
+        const div = document.createElement("div");
+        div.className = "review";
+        div.innerHTML = `
+          <div class="stars read-only">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
+          ${r.comment ? `<p>${r.comment}</p>` : ""}
+          <small>${new Date(r.created_at).toLocaleDateString()}</small>
+        `;
+        if (r.customer_email === userEmail) {
+          const myLabel = document.createElement("span");
+          myLabel.textContent = "(Моята оценка)";
+          myLabel.style.marginLeft = "8px";
+          myLabel.style.color = "#ffcc00";
+          div.querySelector(".stars").appendChild(myLabel);
+
+          const btnEdit = document.createElement("button");
+          btnEdit.textContent = "✏️ Редактирай";
+          btnEdit.onclick = () => editRating(productId);
+          div.appendChild(btnEdit);
+
+          const btnDelete = document.createElement("button");
+          btnDelete.textContent = "🗑️ Изтрий";
+          btnDelete.onclick = () => deleteRating(productId);
+          div.appendChild(btnDelete);
+        }
+        container.appendChild(div);
+      });
+    });
+}
+
+function editRating(productId) {
+  const rating = prompt("Нова оценка (1-5):");
+  const comment = prompt("Нов коментар:");
+  if (!rating || !userEmail) return;
+  fetch(`https://api.dp-design.art/api/ratings/${productId}/${userEmail}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ rating: Number(rating), comment })
+  })
+    .then(() => loadRatings(productId))
+    .catch(() => alert("Грешка при редакция"));
+}
+
+function deleteRating(productId) {
+  if (!confirm("Сигурен ли си, че искаш да изтриеш оценката си?")) return;
+  fetch(`https://api.dp-design.art/api/ratings/${productId}/${userEmail}`, {
+    method: "DELETE"
+  })
+    .then(() => loadRatings(productId))
+    .catch(() => alert("Грешка при изтриване"));
+}
+
 function loadSlider(images) {
   const slider = document.getElementById("product-slider");
   const thumbs = document.getElementById("product-thumbnails");
-
   slider.innerHTML = "";
   thumbs.innerHTML = "";
 
@@ -63,7 +134,6 @@ function loadSlider(images) {
 
   images.forEach((img, index) => {
     const fullUrl = `https://api.dp-design.art/uploads/${img}`;
-
     const image = document.createElement("img");
     image.src = fullUrl;
     image.alt = `Снимка ${index + 1}`;
@@ -75,15 +145,12 @@ function loadSlider(images) {
     thumb.alt = `Миниатюра ${index + 1}`;
     if (index === 0) thumb.classList.add("selected");
 
-    image.onclick = () => {
-      openFullscreen(index, images);
-    };
+    image.onclick = () => openFullscreen(index, images);
 
     thumb.onclick = () => {
-      [...slider.children].forEach(img => img.classList.remove("active"));
+      [...slider.children].forEach((img) => img.classList.remove("active"));
       slider.children[index].classList.add("active");
-
-      [...thumbs.children].forEach(t => t.classList.remove("selected"));
+      [...thumbs.children].forEach((t) => t.classList.remove("selected"));
       thumb.classList.add("selected");
     };
 
@@ -107,7 +174,7 @@ function loadSlider(images) {
 function navigateSlide(direction, slider, thumbs) {
   const images = slider.querySelectorAll("img");
   const thumbsList = thumbs.querySelectorAll("img");
-  let index = [...images].findIndex(i => i.classList.contains("active"));
+  let index = [...images].findIndex((i) => i.classList.contains("active"));
 
   images[index].classList.remove("active");
   thumbsList[index].classList.remove("selected");
@@ -136,95 +203,6 @@ function loadActions(category, id) {
     btn.textContent = "🛒 Добави в количката";
     container.appendChild(btn);
   }
-}
-
-function renderRating(rating) {
-  const container = document.createElement("div");
-  container.className = "product-rating";
-  const rounded = Math.round(rating);
-  container.innerHTML = "★".repeat(rounded) + "☆".repeat(5 - rounded);
-  return container;
-}
-
-function loadRatings(productId) {
-  fetch(`https://api.dp-design.art/api/ratings/${productId}`)
-    .then(res => res.json())
-    .then(data => {
-      const avg = data.average || 0;
-      const count = data.count || 0;
-      document.getElementById("average-stars").innerHTML = renderRating(avg).innerHTML;
-      document.getElementById("average-score").textContent = avg.toFixed(1);
-      document.getElementById("total-votes").textContent = count;
-
-      const container = document.getElementById("reviews-container");
-      container.innerHTML = "";
-      data.reviews.forEach(r => {
-        const div = document.createElement("div");
-        div.className = "review";
-        div.innerHTML = `
-          <div class="stars read-only">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
-          ${r.comment ? `<p>${r.comment}</p>` : ""}
-          <small>${new Date(r.created_at).toLocaleDateString()}</small>
-        `;
-        container.appendChild(div);
-      });
-    });
-}
-
-function setupRatingStars() {
-  const container = document.getElementById("rating-input");
-  let selected = 0;
-
-  for (let i = 1; i <= 5; i++) {
-    const star = document.createElement("span");
-    star.textContent = "☆";
-    star.dataset.value = i;
-
-    star.addEventListener("mouseover", () => highlightStars(i));
-    star.addEventListener("mouseout", () => highlightStars(selected));
-    star.addEventListener("click", () => {
-      selected = i;
-      highlightStars(selected);
-    });
-
-    container.appendChild(star);
-  }
-
-  function highlightStars(val) {
-    [...container.children].forEach((s, i) => {
-      s.textContent = i < val ? "★" : "☆";
-    });
-  }
-
-  document.getElementById("submit-rating-btn").addEventListener("click", () => {
-    const email = document.getElementById("email-input").value.trim();
-    const comment = document.getElementById("comment-input").value.trim();
-
-    if (!email || selected === 0) {
-      alert("Моля, въведи имейл и избери брой звезди.");
-      return;
-    }
-
-    fetch('https://api.dp-design.art/api/ratings', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        product_id: window.currentProductId,
-        rating: selected,
-        comment,
-        customer_email: email
-      })
-    })
-      .then(res => res.json())
-      .then(() => {
-        alert("Благодарим за отзива!");
-        loadRatings(window.currentProductId);
-      })
-      .catch(err => {
-        console.error("Error submitting rating:", err);
-        alert("Грешка при изпращане.");
-      });
-  });
 }
 
 let fullscreenImages = [];
@@ -262,3 +240,64 @@ document.querySelector(".fullscreen-close").onclick = closeFullscreen;
 document.querySelector(".fullscreen-overlay").onclick = closeFullscreen;
 document.querySelector(".fullscreen-nav.left").onclick = () => navigateFullscreen(-1);
 document.querySelector(".fullscreen-nav.right").onclick = () => navigateFullscreen(1);
+
+// update setupRatingStars() – добавяме запис на имейл в localStorage
+function setupRatingStars() {
+  const container = document.getElementById("rating-input");
+  let selected = 0;
+
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement("span");
+    star.textContent = "☆";
+    star.dataset.value = i;
+    star.addEventListener("mouseover", () => highlightStars(i));
+    star.addEventListener("mouseout", () => highlightStars(selected));
+    star.addEventListener("click", () => {
+      selected = i;
+      highlightStars(i);
+    });
+    container.appendChild(star);
+  }
+
+  function highlightStars(val) {
+    [...container.children].forEach((s, i) => {
+      s.textContent = i < val ? "★" : "☆";
+    });
+  }
+
+  document.getElementById("submit-rating-btn").addEventListener("click", () => {
+    const email = document.getElementById("email-input").value.trim();
+    const comment = document.getElementById("comment-input").value.trim();
+
+    if (!email || selected === 0) {
+      alert("Моля, въведи имейл и избери брой звезди.");
+      return;
+    }
+
+    localStorage.setItem("userEmail", email);
+    userEmail = email;
+
+    fetch("https://api.dp-design.art/api/ratings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        product_id: window.currentProductId,
+        rating: selected,
+        comment,
+        customer_email: email
+      })
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(() => {
+        alert("Благодарим за отзива!");
+        loadRatings(window.currentProductId);
+      })
+      .catch((err) => {
+        console.error("Error submitting rating:", err);
+        alert("Грешка при изпращане.");
+      });
+  });
+}
