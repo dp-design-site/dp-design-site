@@ -48,14 +48,6 @@ function createProductCard(product, query) {
   promoBadge.textContent = "Промо";
   slider.appendChild(promoBadge);
 }
-
-  if (product.description) {
-  const shortDesc = document.createElement("p");
-  shortDesc.textContent = product.description.slice(0, 80) + "...";
-  shortDesc.className = "short-desc";
-  info.appendChild(shortDesc);
-}
-
   product.images.forEach((img, i) => {
     const image = document.createElement("img");
     image.src = `https://api.dp-design.art/uploads/${img}`;
@@ -88,8 +80,14 @@ function createProductCard(product, query) {
     nameLink.innerHTML = highlightMatch(product.name, query);
     nameLink.className = "product-title-link";
     name.appendChild(nameLink);
+    info.appendChild(name);
 
-  info.appendChild(name);
+  if (product.description) {
+    const shortDesc = document.createElement("p");
+    shortDesc.textContent = product.description.slice(0, 80) + "...";
+    shortDesc.className = "short-desc";
+    info.appendChild(shortDesc);
+}
 
   const footer = document.createElement("div");
   footer.className = "search-card-footer";
