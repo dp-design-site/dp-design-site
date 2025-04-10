@@ -192,3 +192,39 @@ async function initSearchResults() {
     document.getElementById("error-message").style.display = "block";
   }
 }
+
+// 🖼️ Отваряне на фулскрийн галерия
+function openFullscreenSlider(images, index = 0) {
+  const container = document.createElement("div");
+  container.className = "fullscreen-view";
+  container.innerHTML = `
+    <div class="overlay" onclick="this.parentElement.remove()"></div>
+    <img src="https://api.dp-design.art/uploads/${images[index]}" class="fullscreen-img">
+    <div class="fullscreen-controls">
+      <button class="nav-btn" onclick="changeFullscreenImage(-1)">◀</button>
+      <button class="nav-btn" onclick="changeFullscreenImage(1)">▶</button>
+    </div>
+    <button class="close-btn" onclick="this.parentElement.remove()">✖</button>
+  `;
+  document.body.appendChild(container);
+
+  // Запазваме текущия индекс и снимки
+  container.dataset.index = index;
+  container.dataset.images = JSON.stringify(images);
+}
+
+// ⬅➡ Превключване на снимките във фулскрийн
+function changeFullscreenImage(direction) {
+  const container = document.querySelector(".fullscreen-view");
+  if (!container) return;
+
+  const images = JSON.parse(container.dataset.images);
+  let index = parseInt(container.dataset.index);
+
+  index = (index + direction + images.length) % images.length;
+  container.dataset.index = index;
+
+  const img = container.querySelector(".fullscreen-img");
+  img.src = `https://api.dp-design.art/uploads/${images[index]}`;
+}
+
