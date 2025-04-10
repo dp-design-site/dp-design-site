@@ -6,6 +6,55 @@ body {
   padding: 0;
 }
 
+.rating-block {
+  background: #1c1c1c;
+  padding: 20px;
+  margin-top: 40px;
+  border-radius: 10px;
+}
+
+.stars {
+  font-size: 24px;
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+  color: gold;
+}
+
+.stars.read-only {
+  cursor: default;
+}
+
+#submit-rating textarea,
+#submit-rating input {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  background: #121212;
+  border: 1px solid #444;
+  color: #fce5cd;
+  border-radius: 4px;
+}
+
+#submit-rating button {
+  padding: 10px 20px;
+  background: #fce5cd;
+  color: #121212;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.review {
+  background: #2a2a2a;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  color: #fce5cd;
+}
+
+
 .fullscreen-modal {
   position: fixed;
   top: 0;
