@@ -49,6 +49,12 @@ function createProductCard(product, query) {
   slider.appendChild(promoBadge);
 }
 
+  if (product.description) {
+  const shortDesc = document.createElement("p");
+  shortDesc.textContent = product.description.slice(0, 80) + "...";
+  shortDesc.className = "short-desc";
+  info.appendChild(shortDesc);
+}
 
   product.images.forEach((img, i) => {
     const image = document.createElement("img");
@@ -77,7 +83,12 @@ function createProductCard(product, query) {
   info.className = "search-card-info";
 
   const name = document.createElement("h3");
-  name.innerHTML = highlightMatch(product.name, query);
+    const nameLink = document.createElement("a");
+    nameLink.href = `product-template.html?id=${product.id}`;
+    nameLink.innerHTML = highlightMatch(product.name, query);
+    nameLink.className = "product-title-link";
+    name.appendChild(nameLink);
+
   info.appendChild(name);
 
   const footer = document.createElement("div");
@@ -85,22 +96,22 @@ function createProductCard(product, query) {
 
   const priceWrapper = document.createElement("div");
   if (product.promo_price && product.promo_price !== product.price) {
-    const oldPrice = document.createElement("span");
+    const priceBox = document.createElement("div");
+    priceBox.className = "price-box";
+  
+    const oldPrice = document.createElement("div");
     oldPrice.className = "price old";
     oldPrice.textContent = `${Number(product.price).toFixed(2)} лв.`;
-
-    const newPrice = document.createElement("span");
+  
+    const newPrice = document.createElement("div");
     newPrice.className = "price promo";
     newPrice.textContent = `${Number(product.promo_price).toFixed(2)} лв.`;
-
-    priceWrapper.appendChild(oldPrice);
-    priceWrapper.appendChild(newPrice);
-  } else {
-    const price = document.createElement("span");
-    price.className = "price";
-    price.textContent = `${Number(product.price || 0).toFixed(2)} лв.`;
-    priceWrapper.appendChild(price);
+  
+    priceBox.appendChild(oldPrice);
+    priceBox.appendChild(newPrice);
+    priceWrapper.appendChild(priceBox);
   }
+
 
   const viewBtn = document.createElement("a");
   viewBtn.href = `product-template.html?id=${product.id}`;
