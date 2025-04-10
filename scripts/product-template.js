@@ -147,7 +147,7 @@ function renderRating(rating) {
 }
 
 function loadRatings(productId) {
-  fetch(`/api.dp-design.art/ratings/${productId}`)
+  fetch(`https://api.dp-design.art/api/ratings/${productId}`)
     .then(res => res.json())
     .then(data => {
       const avg = data.average || 0;
@@ -205,7 +205,7 @@ function setupRatingStars() {
       return;
     }
 
-    fetch("https://api.dp-design.art/ratings", {
+    fetch('https://api.dp-design.art/api/ratings', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
