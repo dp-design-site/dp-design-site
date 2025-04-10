@@ -88,7 +88,7 @@ function createProductCard(product, query) {
     shortDesc.className = "short-desc";
     info.appendChild(shortDesc);
 }
-
+  
   const footer = document.createElement("div");
   footer.className = "search-card-footer";
 
