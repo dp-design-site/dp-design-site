@@ -38,7 +38,7 @@ function createProductCard(product, query) {
   card.className = "search-card";
 
   const slider = document.createElement("div");
-  slider.className = "slider";
+  slider.className = "search-slider"; // 👈 тук се сменя класът от "slider" на "search-slider"
   slider.setAttribute("onmousedown", "startDrag(event, this)");
   slider.setAttribute("ontouchstart", "startDrag(event, this)");
 
@@ -109,6 +109,7 @@ function createProductCard(product, query) {
 
   return card;
 }
+
 
 // 🔁 Предишна снимка
 function prevSlide(slider) {
