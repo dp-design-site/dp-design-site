@@ -12,6 +12,12 @@ async function loadProduct() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
+  // ⭐️ Добави рейтинг в product-details
+  const rating = document.createElement("div");
+  rating.appendChild(renderRating(product.rating || 0));
+  document.querySelector(".product-details").prepend(rating);
+
+
   if (!id) return;
 
   try {
@@ -64,6 +70,10 @@ function loadSlider(images) {
     thumb.src = fullUrl;
     thumb.alt = `Миниатюра ${index + 1}`;
     if (index === 0) thumb.classList.add("selected");
+
+    image.onclick = () => {
+      openFullscreen(index, images);
+    };
 
     thumb.onclick = () => {
       [...slider.children].forEach(img => img.classList.remove("active"));
@@ -123,3 +133,51 @@ function loadActions(category, id) {
     container.appendChild(btn);
   }
 }
+
+// ⭐️ Зареждане на рейтинг
+function renderRating(rating) {
+  const container = document.createElement("div");
+  container.className = "product-rating";
+  const rounded = Math.round(rating);
+  container.innerHTML = "★".repeat(rounded) + "☆".repeat(5 - rounded);
+  return container;
+}
+
+// 🖼️ Фулскрийн логика
+let fullscreenImages = [];
+let fullscreenIndex = 0;
+
+function openFullscreen(index, images) {
+  fullscreenImages = images;
+  fullscreenIndex = index;
+  const modal = document.getElementById("fullscreen-modal");
+  const img = document.getElementById("fullscreen-image");
+  img.src = `https://api.dp-design.art/uploads/${fullscreenImages[fullscreenIndex]}`;
+  modal.style.display = "flex";
+}
+
+function closeFullscreen() {
+  document.getElementById("fullscreen-modal").style.display = "none";
+}
+
+function navigateFullscreen(dir) {
+  fullscreenIndex = (fullscreenIndex + dir + fullscreenImages.length) % fullscreenImages.length;
+  const img = document.getElementById("fullscreen-image");
+  img.src = `https://api.dp-design.art/uploads/${fullscreenImages[fullscreenIndex]}`;
+}
+
+// 👉 Добави и тези слушатели най-долу:
+document.addEventListener("keydown", (e) => {
+  const modal = document.getElementById("fullscreen-modal");
+  if (modal.style.display === "flex") {
+    if (e.key === "Escape") closeFullscreen();
+    if (e.key === "ArrowLeft") navigateFullscreen(-1);
+    if (e.key === "ArrowRight") navigateFullscreen(1);
+  }
+});
+
+document.querySelector(".fullscreen-close").onclick = closeFullscreen;
+document.querySelector(".fullscreen-overlay").onclick = closeFullscreen;
+document.querySelector(".fullscreen-nav.left").onclick = () => navigateFullscreen(-1);
+document.querySelector(".fullscreen-nav.right").onclick = () => navigateFullscreen(1);
+
