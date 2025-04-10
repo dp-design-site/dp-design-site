@@ -57,24 +57,29 @@
       transform: scale(1.01);
     }
 
-    .search-slider {
-      display: flex;
-      flex: 0 0 200px;
-      height: 180px;
-      overflow: hidden;
+        .search-slider {
       position: relative;
-      cursor: grab;
-      scroll-behavior: smooth;
+      overflow: hidden;
+      width: 220px;
+      height: 180px;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-
+    
     .search-slider img {
       height: 100%;
       width: auto;
-      flex-shrink: 0;
-      border-right: 1px solid #333;
-      user-select: none;
-      pointer-events: none;
+      object-fit: contain;
+      display: none;
+      border-radius: 6px;
     }
+    
+    .search-slider img.active {
+      display: block;
+    }
+
 
     .search-card-info {
       flex: 1;
