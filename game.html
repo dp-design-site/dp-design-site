@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Пукай Балоните!</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: skyblue;
+      font-family: Comic Sans MS, sans-serif;
+    }
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      font-weight: bold;
+      color: darkblue;
+    }
+    .balloon {
+      position: absolute;
+      width: 80px;
+      height: 100px;
+      border-radius: 50% 50% 50% 50%;
+      background: red;
+      cursor: pointer;
+      animation: floatUp 6s linear infinite;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(100vh); }
+      to { transform: translateY(-120px); }
+    }
+  </style>
+</head>
+<body>
+  <div id="score">Точки: 0</div>
+  <audio id="popSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+
+  <script>
+    let score = 0;
+    const scoreDisplay = document.getElementById('score');
+    const popSound = document.getElementById('popSound');
+    const colors = ["red", "yellow", "green", "purple", "orange", "pink"];
+
+    function createBalloon() {
+      const balloon = document.createElement('div');
+      balloon.classList.add('balloon');
+      balloon.style.left = Math.random() * (window.innerWidth - 100) + "px";
+      balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+      document.body.appendChild(balloon);
+
+      balloon.addEventListener('click', () => {
+        score++;
+        scoreDisplay.textContent = "Точки: " + score;
+        popSound.currentTime = 0;
+        popSound.play();
+        balloon.remove();
+      });
+
+      setTimeout(() => balloon.remove(), 6000);
+    }
+
+    setInterval(createBalloon, 1000);
+  </script>
+</body>
+</html>
