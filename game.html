@@ -1,67 +1,218 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <title>Пукай Балоните!</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Хвани животинката 🐾</title>
   <style>
+    :root { --bg:#8fd3ff; --text:#083c5a; }
+    * { box-sizing: border-box; }
+    html, body { height:100%; }
     body {
-      margin: 0;
-      overflow: hidden;
-      background: skyblue;
-      font-family: Comic Sans MS, sans-serif;
+      margin:0; overflow:hidden; background:var(--bg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      touch-action: manipulation; /* по-добро поведение на мобилни */
     }
-    #score {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 24px;
-      font-weight: bold;
-      color: darkblue;
+    #hud {
+      position: fixed; inset: 12px auto auto 12px;
+      z-index: 3; color: var(--text); font-weight: 700;
+      background: rgba(255,255,255,.6); padding: 8px 12px; border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+      user-select: none;
     }
-    .balloon {
-      position: absolute;
-      width: 80px;
-      height: 100px;
-      border-radius: 50% 50% 50% 50%;
-      background: red;
+    #score { font-size: 20px; }
+    #startOverlay {
+      position: fixed; inset: 0; z-index: 4; display: grid; place-items: center;
+      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
+      backdrop-filter: blur(3px);
+    }
+    #startCard {
+      background: white; padding: 22px 24px; border-radius: 16px; text-align: center;
+      width: min(90vw, 440px); box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      color:#123;
+    }
+    #startCard h1 { margin: 0 0 6px; font-size: 26px; }
+    #startCard p { margin: 0 0 16px; }
+    #startBtn {
+      font-size: 20px; padding: 12px 18px; border-radius: 12px; border: 0;
+      background: #16a34a; color: white; cursor: pointer; width: 100%;
+    }
+    #startBtn:active { transform: scale(.98); }
+
+    .animal {
+      position: absolute; width: clamp(72px, 8vw, 96px); height: clamp(72px, 8vw, 96px);
+      display: grid; place-items: center; border-radius: 50%;
+      background: rgba(255,255,255,.7); box-shadow: 0 6px 16px rgba(0,0,0,.2);
+      user-select: none; -webkit-user-drag: none;
+      touch-action: none; /* да хваща точно таповете */
+      animation: floatUp linear forwards;
       cursor: pointer;
-      animation: floatUp 6s linear infinite;
+      z-index: 2;
     }
+    .emoji {
+      font-size: clamp(42px, 6vw, 56px); line-height: 1;
+      transform: translateY(2px);
+    }
+
     @keyframes floatUp {
-      from { transform: translateY(100vh); }
-      to { transform: translateY(-120px); }
+      from { transform: translateY(105vh) rotate(0deg); opacity: .98; }
+      to   { transform: translateY(-120px) rotate(6deg); opacity: 1; }
+    }
+
+    .pop {
+      position: absolute; pointer-events: none; z-index: 5;
+      font-size: 28px; animation: popfade 700ms ease-out forwards;
+    }
+    @keyframes popfade {
+      0% { transform: translate(-50%,-50%) scale(.8); opacity: 1; }
+      100% { transform: translate(-50%,-120%) scale(1.3); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <div id="score">Точки: 0</div>
-  <audio id="popSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+  <div id="hud"><span id="score">Точки: 0</span></div>
+
+  <div id="startOverlay" role="dialog" aria-modal="true">
+    <div id="startCard">
+      <h1>Хвани животинката 🐶🐱</h1>
+      <p>Пукай животинки с клик/тап. Без таймер, само забавление.</p>
+      <button id="startBtn">Старт ▶️</button>
+    </div>
+  </div>
+
+  <!-- Малък „поп“ звук, ще се стартира след първия клик на Start -->
+  <audio id="popSound" preload="auto">
+    <source src="data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAA... (short)" type="audio/mpeg">
+  </audio>
 
   <script>
+    // ако data: е твърде дълга за някои браузъри, ще генерираме звук с WebAudio fallback
     let score = 0;
-    const scoreDisplay = document.getElementById('score');
-    const popSound = document.getElementById('popSound');
-    const colors = ["red", "yellow", "green", "purple", "orange", "pink"];
+    const scoreEl = document.getElementById('score');
+    const popEl = document.getElementById('popSound');
+    const startOverlay = document.getElementById('startOverlay');
+    const startBtn = document.getElementById('startBtn');
 
-    function createBalloon() {
-      const balloon = document.createElement('div');
-      balloon.classList.add('balloon');
-      balloon.style.left = Math.random() * (window.innerWidth - 100) + "px";
-      balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
-      document.body.appendChild(balloon);
+    // Емоджи „животинки“ – лесни за 4-5 годишни, големи и цветни
+    const ANIMALS = ["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"];
+    const COLORS = [
+      "rgba(255,255,255,.8)", "rgba(255,240,200,.85)",
+      "rgba(225,255,225,.85)", "rgba(225,240,255,.85)"
+    ];
 
-      balloon.addEventListener('click', () => {
-        score++;
-        scoreDisplay.textContent = "Точки: " + score;
-        popSound.currentTime = 0;
-        popSound.play();
-        balloon.remove();
-      });
+    let spawnTimer = null;
+    let audioCtx = null;
 
-      setTimeout(() => balloon.remove(), 6000);
+    function safePlayPop() {
+      // Първо опит с <audio>, ако не – WebAudio кратък „поп“
+      const tried = popEl.play?.();
+      if (tried && typeof tried.then === 'function') {
+        tried.catch(() => beep());
+      } else {
+        beep();
+      }
     }
 
-    setInterval(createBalloon, 1000);
+    function beep() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = "triangle";
+        o.frequency.value = 820; // кратък писук
+        g.gain.value = 0.00001;
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start();
+        // малък „поп“ – бърз attack/release
+        g.gain.exponentialRampToValueAtTime(0.2, audioCtx.currentTime + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.08);
+        o.stop(audioCtx.currentTime + 0.09);
+      } catch {}
+    }
+
+    function rand(min, max) { return Math.random() * (max - min) + min; }
+
+    function spawnAnimal() {
+      const d = document.createElement('div');
+      d.className = 'animal';
+      d.style.left = `${rand(0, Math.max(0, window.innerWidth - 100))}px`;
+      d.style.background = COLORS[Math.floor(Math.random()*COLORS.length)];
+      // Продължителност на издигането – малко разнообразие
+      const dur = rand(4.5, 7.5).toFixed(2);
+      d.style.animationDuration = `${dur}s`;
+
+      const span = document.createElement('span');
+      span.className = 'emoji';
+      span.textContent = ANIMALS[Math.floor(Math.random()*ANIMALS.length)];
+      d.appendChild(span);
+
+      // Надуване/смаляване за закачлив ефект при появяване
+      d.animate([{transform:"translateY(105vh) scale(.9)"},{transform:"translateY(105vh) scale(1)"}],
+                {duration:250, easing:"ease-out"});
+
+      // Унифицирано за клик/тап: pointerdown
+      d.addEventListener('pointerdown', (ev) => {
+        catchAnimal(ev, d);
+      }, { passive: true });
+
+      document.body.appendChild(d);
+
+      // Авто-премахване след анимацията (ако не е хванато)
+      const ttl = parseFloat(dur) * 1000 + 200;
+      setTimeout(() => d.remove(), ttl);
+    }
+
+    function catchAnimal(ev, elem) {
+      if (!elem.isConnected) return;
+      score++;
+      scoreEl.textContent = "Точки: " + score;
+      safePlayPop();
+
+      // малка „поп“ визуализация
+      const fx = document.createElement('div');
+      fx.className = 'pop';
+      fx.textContent = "+1";
+      fx.style.left = (ev.clientX || (elem.getBoundingClientRect().left + elem.offsetWidth/2)) + "px";
+      fx.style.top  = (ev.clientY || (elem.getBoundingClientRect().top + elem.offsetHeight/2)) + "px";
+      document.body.appendChild(fx);
+      setTimeout(() => fx.remove(), 800);
+
+      // премахни животинката
+      elem.remove();
+    }
+
+    function startGame() {
+      // отключване на аудио контекс (за iOS/Android политики)
+      try {
+        popEl.currentTime = 0;
+        popEl.play().catch(()=>{}); // best effort
+      } catch {}
+      if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch {}
+      }
+
+      startOverlay.style.display = 'none';
+      score = 0;
+      scoreEl.textContent = "Точки: 0";
+
+      // първи спаун веднага, после периодично
+      spawnAnimal();
+      if (spawnTimer) clearInterval(spawnTimer);
+      spawnTimer = setInterval(() => spawnAnimal(), 900);
+
+      // адаптация към resize (без да спира играта)
+      window.addEventListener('resize', () => {}, { passive: true });
+    }
+
+    startBtn.addEventListener('click', startGame, { passive: true });
+
+    // За всеки случай: позволи „клик“ по целия екран да хване животинка,
+    // ако тапът е върху емоджито (closest до .animal)
+    document.addEventListener('pointerdown', (ev) => {
+      const target = ev.target.closest?.('.animal');
+      if (target) catchAnimal(ev, target);
+    }, { passive: true });
   </script>
 </body>
 </html>
