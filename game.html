@@ -9,25 +9,25 @@
     [hidden]{display:none!important;}
     #hud{position:fixed;top:12px;left:12px;z-index:3;background:rgba(255,255,255,.6);padding:6px 10px;border-radius:12px;display:flex;gap:8px;align-items:center;}
     #hud span{font-weight:700;color:#083c5a;}
-    #soundBtn,#stopBtn,#homeBtn{border:0;padding:6px 10px;border-radius:8px;font-weight:700;cursor:pointer;}
-    #soundBtn{background:#0ea5e9;color:#fff;}
-    #stopBtn{background:#ef4444;color:#fff;}
-    #homeBtn{position:fixed;top:12px;right:12px;z-index:4;background:#16a34a;color:#fff;}
-    .overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:rgba(0,0,0,.3);backdrop-filter:blur(3px);}
-    .card{background:#fff;padding:20px;border-radius:16px;width:min(90vw,500px);max-height:90vh;overflow:auto;text-align:center;}
-    fieldset{margin:10px 0;padding:10px;border-radius:10px;}
-    .btn{margin-top:10px;padding:12px 16px;font-size:18px;border:0;border-radius:10px;background:#16a34a;color:#fff;cursor:pointer;}
-    .animal{position:absolute;width:80px;height:80px;display:grid;place-items:center;border-radius:50%;background:#fff8;animation:floatUp linear forwards;cursor:pointer;}
-    .animal.big{width:120px;height:120px;border:4px solid #f59e0b;}
-    .emoji{font-size:40px;}
-    .animal.big .emoji{font-size:60px;}
-    @keyframes floatUp{from{transform:translateY(105vh);}to{transform:translateY(-120px);}}
-    .boss{position:absolute;width:160px;height:160px;display:grid;place-items:center;border-radius:20px;background:#ffd369;border:5px solid #ef4444;box-shadow:0 6px 16px rgba(0,0,0,.4);}
-    .boss .emoji{font-size:100px;}
-    .boss .hp{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:80%;height:12px;background:#fecaca;border-radius:12px;overflow:hidden;}
-    .boss .bar{height:100%;width:100%;background:linear-gradient(90deg,#16a34a,#4ade80);}
-    .pop{position:absolute;font-size:28px;animation:popfade .7s forwards;pointer-events:none;}
-    @keyframes popfade{0%{transform:translate(-50%,-50%) scale(.8);opacity:1;}100%{transform:translate(-50%,-120%) scale(1.3);opacity:0;}}
+    #soundBtn,#stopBtn,#homeBtn{border:0;padding:6px 10px;border-radius:8px;font-weight:700;cursor:pointer}
+    #soundBtn{background:#0ea5e9;color:#fff}
+    #stopBtn{background:#ef4444;color:#fff}
+    #homeBtn{position:fixed;top:12px;right:12px;z-index:4;background:#16a34a;color:#fff}
+    .overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:rgba(0,0,0,.3);backdrop-filter:blur(3px)}
+    .card{background:#fff;padding:20px;border-radius:16px;width:min(90vw,500px);max-height:90vh;overflow:auto;text-align:center}
+    fieldset{margin:10px 0;padding:10px;border-radius:10px}
+    .btn{margin-top:10px;padding:12px 16px;font-size:18px;border:0;border-radius:10px;background:#16a34a;color:#fff;cursor:pointer}
+    .animal{position:absolute;width:80px;height:80px;display:grid;place-items:center;border-radius:50%;background:#fff8;animation:floatUp linear forwards;cursor:pointer}
+    .animal.big{width:120px;height:120px;border:4px solid #f59e0b}
+    .emoji{font-size:40px}
+    .animal.big .emoji{font-size:60px}
+    @keyframes floatUp{from{transform:translateY(105vh)}to{transform:translateY(-120px)}}
+    .boss{position:absolute;width:160px;height:160px;display:grid;place-items:center;border-radius:20px;background:#ffd369;border:5px solid #ef4444;box-shadow:0 6px 16px rgba(0,0,0,.4)}
+    .boss .emoji{font-size:100px}
+    .boss .hp{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:80%;height:12px;background:#fecaca;border-radius:12px;overflow:hidden}
+    .boss .bar{height:100%;width:100%;background:linear-gradient(90deg,#16a34a,#4ade80)}
+    .pop{position:absolute;font-size:28px;animation:popfade .7s forwards;pointer-events:none}
+    @keyframes popfade{0%{transform:translate(-50%,-50%) scale(.8);opacity:1}100%{transform:translate(-50%,-120%) scale(1.3);opacity:0}}
   </style>
 </head>
 <body>
@@ -81,44 +81,176 @@
   </div>
 
   <script>
+  // --- СЪСТОЯНИЕ ---
   let score=0,spawnTimer=null,bigTimer=null,timerUI=null,bossRAF=null;
   let audioCtx=null,soundOn=true,mode="timed",level="easy",curCfg=null,roundEnd=0;
   let bossActive=false,bossEl=null,bossHP=0,nextLevelAt=20;
   let theme="animals",THEME={small:[],big:[]};
 
+  // --- UI refs ---
   const scoreEl=document.getElementById("score"),timerEl=document.getElementById("timer");
   const startOverlay=document.getElementById("startOverlay"),finalOverlay=document.getElementById("finalOverlay");
   const soundBtn=document.getElementById("soundBtn"),stopBtn=document.getElementById("stopBtn"),homeBtn=document.getElementById("homeBtn");
   const bigAnimalChk=document.getElementById("bigAnimal"),bossToggle=document.getElementById("bossToggle");
   const finalScore=document.getElementById("finalScore"),bestScore=document.getElementById("bestScore");
 
+  // --- Теми ---
   const THEMES={
     animals:{small:["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"],big:["🦁","🐘","🦒","🐳","🦈"]},
     balloons:{small:["🎈","🎉","✨","⭐","💫","🌈"],big:["🎆","🎇","🎊"]},
     cars:{small:["🚗","🚙","🚕","🏎️","🚓","🚑","🚒"],big:["🛻","🚚","🚛"]}
   };
-  const BOSS=["🐲","🦖","🐉","🦍"];
-  const LEVELS={easy:{interval:1100,per:()=>1},medium:{interval:850,per:()=>Math.random()<0.6?2:1},hard:{interval:650,per:()=>Math.random()<0.5?2:3}};
+  const BOSS_EMOJIS=["🐲","🦖","🐉","🦍"];
+  const LEVELS={
+    easy:{interval:1100,per:()=>1},
+    medium:{interval:850, per:()=>Math.random()<0.6?2:1},
+    hard:{interval:650,  per:()=>Math.random()<0.5?2:3}
+  };
+
+  // --- Утилити ---
   function rand(a,b){return Math.random()*(b-a)+a;}
   function ensureAudio(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
-  function playPop(){if(!soundOn)return;ensureAudio();if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain(),now=audioCtx.currentTime;o.type="triangle";o.frequency.value=820;g.gain.setValueAtTime(.2,now);g.gain.exponentialRampToValueAtTime(.001,now+.1);o.connect(g).connect(audioCtx.destination);o.start(now);o.stop(now+.12);}
+  function playPop(mult=1){ if(!soundOn) return; ensureAudio(); if(!audioCtx) return;
+    const now=audioCtx.currentTime, o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type="triangle"; o.frequency.value=mult>1?520:820;
+    g.gain.setValueAtTime(.2,now); g.gain.exponentialRampToValueAtTime(.001,now+.1);
+    o.connect(g).connect(audioCtx.destination); o.start(now); o.stop(now+.12);
+  }
   function popFx(x,y,t){const d=document.createElement("div");d.className="pop";d.textContent=t;d.style.left=x+"px";d.style.top=y+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),700);}
-  function makeAnimal(big){const d=document.createElement("div");d.className=big?"animal big":"animal";d.style.left=rand(0,window.innerWidth-100)+"px";d.style.animationDuration=(big?6:rand(4,7))+"s";const e=document.createElement("span");e.className="emoji";e.textContent=big?THEME.big[Math.floor(Math.random()*THEME.big.length)]:THEME.small[Math.floor(Math.random()*THEME.small.length)];d.appendChild(e);d.onclick=ev=>catchAnimal(ev,d,big?5:1);document.body.appendChild(d);setTimeout(()=>d.remove(),8000);}
-  function catchAnimal(ev,el,pts){if(!el.isConnected)return;score+=pts;scoreEl.textContent="Точки: "+score;playPop();const r=el.getBoundingClientRect();popFx(ev.clientX||r.left,r.top,"+"+pts);el.remove();if(mode==="endless"&&!bossActive&&bossToggle.checked&&score>=nextLevelAt){spawnBoss();nextLevelAt+=20;}}
-  function tick(){if(!bossActive)for(let i=0;i<curCfg.per();i++)makeAnimal(false);}
-  function startBig(en){if(bigTimer)clearInterval(bigTimer);if(en)bigTimer=setInterval(()=>makeAnimal(true),10000);}
-  function clearAll(){document.querySelectorAll(".animal,.boss,.pop").forEach(n=>n.remove());bossActive=false;bossEl=null;cancelAnimationFrame(bossRAF);}
-  function spawnBoss(){bossActive=true;bossHP=6;bossEl=document.createElement("div");bossEl.className="boss";const em=document.createElement("div");em.className="emoji";em.textContent=BOSS[Math.floor(Math.random()*BOSS.length)];const hp=document.createElement("div");hp.className="hp";const bar=document.createElement("div");bar.className="bar";hp.appendChild(bar);bossEl.appendChild(em);bossEl.appendChild(hp);document.body.appendChild(bossEl);let x=100,y=window.innerHeight-200,vx=2;function loop(){x+=vx;if(x<0||x>window.innerWidth-160)vx*=-1;bossEl.style.transform=`translate(${x}px,${y}px)`;if(bossActive)bossRAF=requestAnimationFrame(loop);}loop();bossEl.onclick=()=>{bossHP--;navigator.vibrate?.(80);bar.style.width=(bossHP/6*100)+"%";if(bossHP<=0){score+=10;scoreEl.textContent="Точки: "+score;bossEl.remove();bossActive=false;}};}
-  function startGame(){theme=document.querySelector("input[name=theme]:checked").value;THEME=THEMES[theme];level=document.querySelector("input[name=level]:checked").value;mode=document.querySelector("input[name=mode]:checked").value;curCfg={...LEVELS[level]};score=0;scoreEl.textContent="Точки: 0";startOverlay.hidden=true;finalOverlay.hidden=true;stopBtn.hidden=(mode!=="endless");clearAll();tick();spawnTimer=setInterval(tick,curCfg.interval);startBig(bigAnimalChk.checked);if(mode==="timed"){roundEnd=performance.now()+30000;timerEl.hidden=false;timerUI=setInterval(()=>{let left=roundEnd-performance.now();timerEl.textContent="⏱ "+(left/1000).toFixed(1);if(bossToggle.checked&&left<6000&&!bossActive)spawnBoss();if(left<=0){endGame();showFinal();}},100);}else timerEl.hidden=true;}
-  function endGame(){clearInterval(spawnTimer);clearInterval(bigTimer);clearInterval(timerUI);clearAll();}
-  function showFinal(){finalScore.textContent="Точки: "+score;const key="best_"+mode+"_"+theme;let best=localStorage.getItem(key)||0;if(score>best){best=score;localStorage.setItem(key,score);}bestScore.textContent="Рекорд: "+best;finalOverlay.hidden=false;}
-  // бутони
+
+  // --- Фигурки ---
+  function makeAnimal(big){
+    const d=document.createElement("div"); d.className=big?"animal big":"animal";
+    d.style.left=rand(0,window.innerWidth-100)+"px";
+    d.style.animationDuration=(big?6:rand(4,7))+"s";
+    const e=document.createElement("span"); e.className="emoji";
+    e.textContent=big?THEME.big[Math.floor(Math.random()*THEME.big.length)]
+                    :THEME.small[Math.floor(Math.random()*THEME.small.length)];
+    d.appendChild(e);
+    d.onclick=ev=>catchAnimal(ev,d,big?5:1);
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),8000);
+  }
+
+  function catchAnimal(ev,el,pts){
+    if(!el.isConnected) return;
+    score+=pts; scoreEl.textContent="Точки: "+score; playPop(pts>1?1.3:1);
+    const r=el.getBoundingClientRect(); popFx(ev.clientX||r.left,r.top,"+"+pts);
+    el.remove();
+    // Endless: бос на всеки 20 т.
+    if(mode==="endless" && !bossActive && bossToggle.checked && score>=nextLevelAt){
+      spawnBoss(); nextLevelAt+=20;
+    }
+  }
+
+  function tick(){ if(!bossActive) for(let i=0;i<curCfg.per();i++) makeAnimal(false); }
+
+  function startBig(en){ if(bigTimer) clearInterval(bigTimer); if(en) bigTimer=setInterval(()=>makeAnimal(true),10000); }
+
+  function clearAll(){ document.querySelectorAll(".animal,.boss,.pop").forEach(n=>n.remove());
+    bossActive=false; bossEl=null; cancelAnimationFrame(bossRAF); bossRAF=null;
+  }
+
+  // --- БОС (с движение нагоре + синус по X, „👊“ при удар, +10 при победа) ---
+  function spawnBoss(){
+    if(bossActive) return;
+    bossActive=true; bossHP=6;
+    bossEl=document.createElement("div"); bossEl.className="boss";
+    const em=document.createElement("div"); em.className="emoji"; em.textContent=BOSS_EMOJIS[Math.floor(Math.random()*BOSS_EMOJIS.length)];
+    const hp=document.createElement("div"); hp.className="hp";
+    const bar=document.createElement("div"); bar.className="bar"; hp.appendChild(bar);
+    bossEl.appendChild(em); bossEl.appendChild(hp); document.body.appendChild(bossEl);
+
+    // стартова позиция под екрана
+    let x=rand(40, window.innerWidth-200), y=window.innerHeight+40;
+    let vx= rand(1.2,2.2) * (Math.random()<0.5?-1:1);
+    const vy=-2.2; let t=0;
+
+    function loop(){
+      t += 0.016;
+      x += vx + Math.sin(t*2.2)*1.5;
+      y += vy; // нагоре
+      if(x<10 || x>window.innerWidth-170){ vx*=-1; x=Math.max(10, Math.min(x, window.innerWidth-170)); }
+      bossEl.style.transform=`translate(${x}px,${y}px)`;
+      // ако излезе над екрана и още е жив – върни го долу (без soft-lock)
+      if(y<-200 && bossActive){ y=window.innerHeight-60; }
+      if(bossActive) bossRAF=requestAnimationFrame(loop);
+    }
+    bossRAF=requestAnimationFrame(loop);
+
+    bossEl.addEventListener("click", ev=>{
+      bossHP--;
+      navigator.vibrate?.(80);
+      playPop(1.6);
+      const r=bossEl.getBoundingClientRect();
+      popFx(ev.clientX || (r.left+r.width/2), ev.clientY || (r.top+r.height/2), "👊");
+      bar.style.width=(Math.max(0,bossHP)/6*100)+"%";
+      // лек „отскок“
+      bossEl.style.transform += " scale(0.92)";
+      setTimeout(()=> bossEl.style.transform = bossEl.style.transform.replace(" scale(0.92)",""),120);
+
+      if(bossHP<=0){
+        // победа
+        bossActive=false; cancelAnimationFrame(bossRAF); bossRAF=null;
+        const rr=bossEl.getBoundingClientRect();
+        score+=10; scoreEl.textContent="Точки: "+score;
+        popFx(rr.left+80, rr.top+40, "+10");
+        bossEl.remove(); bossEl=null;
+      }
+    }, {passive:true});
+  }
+
+  // --- Стартиране / край / резултати ---
+  function startGame(){
+    theme=document.querySelector("input[name=theme]:checked").value; THEME=THEMES[theme];
+    level=document.querySelector("input[name=level]:checked").value;
+    mode=document.querySelector("input[name=mode]:checked").value;
+    curCfg={...LEVELS[level]};
+    score=0; scoreEl.textContent="Точки: 0";
+    startOverlay.hidden=true; finalOverlay.hidden=true;
+    stopBtn.hidden=(mode!=="endless");
+    nextLevelAt=20; // за endless
+    clearAll(); tick();
+    if(spawnTimer) clearInterval(spawnTimer);
+    spawnTimer=setInterval(tick, curCfg.interval);
+    startBig(bigAnimalChk.checked);
+
+    if(mode==="timed"){
+      roundEnd=performance.now()+30000; timerEl.hidden=false;
+      if(timerUI) clearInterval(timerUI);
+      timerUI=setInterval(()=>{
+        const left=roundEnd-performance.now();
+        timerEl.textContent="⏱ "+(Math.max(0,left)/1000).toFixed(1);
+        if(bossToggle.checked && left<6000 && !bossActive) spawnBoss(); // бос малко преди края
+        if(left<=0){ endGame(); showFinal(); }
+      },100);
+    } else {
+      timerEl.hidden=true;
+    }
+  }
+
+  function endGame(){
+    clearInterval(spawnTimer); clearInterval(bigTimer); clearInterval(timerUI);
+    spawnTimer=bigTimer=timerUI=null;
+    clearAll();
+  }
+
+  function showFinal(){
+    finalScore.textContent="Точки: "+score;
+    const key="best_"+mode+"_"+theme;
+    let best=Number(localStorage.getItem(key)||0);
+    if(score>best){ best=score; localStorage.setItem(key, String(best)); }
+    bestScore.textContent="Рекорд: "+best;
+    finalOverlay.hidden=false;
+  }
+
+  // --- Бутони ---
   document.getElementById("startBtn").onclick=startGame;
-  document.getElementById("playAgain").onclick=()=>{finalOverlay.hidden=true;startGame();};
-  document.getElementById("backHome").onclick=()=>{finalOverlay.hidden=true;startOverlay.hidden=false;};
-  soundBtn.onclick=()=>{soundOn=!soundOn;soundBtn.textContent=soundOn?"🔊":"🔈";};
-  stopBtn.onclick=()=>{endGame();showFinal();};
-  homeBtn.onclick=()=>{endGame();startOverlay.hidden=false;finalOverlay.hidden=true;};
+  document.getElementById("playAgain").onclick=()=>{finalOverlay.hidden=true; startGame();};
+  document.getElementById("backHome").onclick=()=>{finalOverlay.hidden=true; startOverlay.hidden=false;};
+  soundBtn.onclick=()=>{soundOn=!soundOn; soundBtn.textContent=soundOn?"🔊":"🔈";};
+  document.getElementById("stopBtn").onclick=()=>{ endGame(); showFinal(); };
+  homeBtn.onclick=()=>{ endGame(); startOverlay.hidden=false; finalOverlay.hidden=true; };
   </script>
 </body>
 </html>
