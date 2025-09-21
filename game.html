@@ -2,11 +2,11 @@
 <html lang="bg">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Хвани животинката 🐾</title>
   <style>
     :root { --bg:#8fd3ff; --text:#083c5a; }
-    [hidden] { display: none !important; } /* важно: скрива финалния екран в началото */
+    [hidden] { display: none !important; }
     * { box-sizing: border-box; }
     html, body { height:100%; }
     body {
@@ -14,6 +14,8 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       touch-action: manipulation;
     }
+
+    /* HUD */
     #hud {
       position: fixed; inset: 12px auto auto 12px;
       z-index: 3; color: var(--text); font-weight: 700;
@@ -28,20 +30,36 @@
       background: #0ea5e9; color: #fff; font-weight: 700; font-size: 18px;
     }
 
+    /* Overlays: фиксове за iPhone / малки височини */
     #startOverlay, #finalOverlay {
-      position: fixed; inset: 0; z-index: 4; display: grid; place-items: center;
+      position: fixed; inset: 0;
+      z-index: 4;
+      display: grid; place-items: center;
       background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
       backdrop-filter: blur(3px);
-      animation: fadeIn 0.4s ease;
+      animation: fadeIn 0.25s ease;
+      padding:
+        calc(env(safe-area-inset-top,0px) + 12px)
+        12px
+        calc(env(safe-area-inset-bottom,0px) + 12px);
+      overflow: auto;                  /* важен скрол, ако е високо */
+      min-height: 100vh;
+    }
+    /* предпочитаме 100dvh, ако е налично */
+    @supports (height: 100dvh) {
+      #startOverlay, #finalOverlay { min-height: 100dvh; }
     }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
     .card {
       background: white; padding: 24px 26px; border-radius: 18px; text-align: center;
-      width: min(92vw, 560px); box-shadow: 0 12px 30px rgba(0,0,0,.25); color:#123;
-      animation: scaleIn 0.3s ease;
+      width: min(92vw, 560px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25); color:#123;
+      animation: scaleIn 0.2s ease;
+      max-height: min(88dvh, 640px);    /* предотвратява излизане извън екрана */
+      overflow: auto;                   /* позволи вътрешен скрол при нужда */
     }
-    @keyframes scaleIn { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+    @keyframes scaleIn { from{transform:scale(.98);opacity:.0} to{transform:scale(1);opacity:1} }
     .card h1 { margin: 0 0 8px; font-size: 26px; }
     .card p { margin: 0 0 14px; }
 
@@ -59,6 +77,15 @@
     .btn:active { transform: scale(.97); }
     .btn.secondary { background:#0ea5e9; }
 
+    /* По-компактен режим за ниски екрани */
+    @media (max-height: 620px), (max-width: 360px) {
+      .card { width: 94vw; padding: 16px; max-height: 92dvh; }
+      .btn { font-size: 18px; padding: 12px 14px; }
+      fieldset { padding: 10px 12px; margin-bottom: 12px; }
+      .card h1 { font-size: 22px; }
+    }
+
+    /* Животинки */
     .animal {
       position: absolute; width: clamp(72px, 8vw, 96px); height: clamp(72px, 8vw, 96px);
       display: grid; place-items: center; border-radius: 50%;
@@ -73,13 +100,13 @@
     .emoji { font-size: clamp(42px, 6vw, 56px); line-height: 1; transform: translateY(2px); }
     .animal.big .emoji { font-size: clamp(64px, 8vw, 84px); }
 
-    /* БОС */
+    /* Бос */
     .boss {
       position: absolute; z-index: 3; width: clamp(140px, 16vw, 180px); height: clamp(140px, 16vw, 180px);
       display: grid; place-items: center; border-radius: 24px;
       background: radial-gradient(ellipse at 50% 40%, #fff8d6, #ffd369);
       box-shadow: 0 12px 26px rgba(0,0,0,.35), inset 0 2px 8px rgba(0,0,0,.15);
-      border: 5px solid #ef4444; /* червена рамка */
+      border: 5px solid #ef4444;
       user-select: none; -webkit-user-drag: none; touch-action: none;
     }
     .boss .emoji { font-size: clamp(80px, 10vw, 110px); }
@@ -175,7 +202,7 @@
 
     const ANIMALS=["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"];
     const BIG_ANIMALS=["🦁","🐘","🦒","🐳","🦈","🦓"];
-    const BOSS_EMOJIS=["🐲","🦖","🐉","🦍"]; // за разкош :)
+    const BOSS_EMOJIS=["🐲","🦖","🐉","🦍"];
     const COLORS=["rgba(255,255,255,.85)","rgba(255,245,210,.9)","rgba(225,255,225,.9)","rgba(225,240,255,.9)"];
 
     const LEVELS={
@@ -221,51 +248,38 @@
     function popFx(x,y,text){const fx=document.createElement('div');fx.className='pop';fx.textContent=text;fx.style.left=x+"px";fx.style.top=y+"px";document.body.appendChild(fx);setTimeout(()=>fx.remove(),800);}
 
     // --- БОС ---
-    let bossActive=false, bossEl=null, bossHP=0, nextLevelAt=20, bossAnnounced=false;
+    let bossActive=false, bossEl=null, bossHP=0, nextLevelAt=20, bossAnnounced=false, bossRAF=null;
 
     function spawnBoss(stepIndex){
       if(bossActive) return;
       bossActive=true; bossAnnounced=false;
-      // HP расте с нивото (стъпка 0 => 5 удара)
-      bossHP = 5 + Math.min(stepIndex, 5); // кап 10
-      // Елемент
-      bossEl=document.createElement('div');
-      bossEl.className='boss';
+      bossHP = 5 + Math.min(stepIndex, 5); // HP скалира до 10
+      bossEl=document.createElement('div'); bossEl.className='boss';
       const em=document.createElement('div'); em.className='emoji'; em.textContent=BOSS_EMOJIS[Math.floor(Math.random()*BOSS_EMOJIS.length)];
       const hpWrap=document.createElement('div'); hpWrap.className='hp';
       const hpBar=document.createElement('div'); hpBar.className='bar'; hpWrap.appendChild(hpBar);
       bossEl.appendChild(em); bossEl.appendChild(hpWrap);
       document.body.appendChild(bossEl);
 
-      // Начална позиция
       let x=rand(40, window.innerWidth-200), y=window.innerHeight+40;
-      let vx= rand(1.2, 2.2) * (Math.random()<0.5?-1:1); // хоризонтален компонент
-      const vy= -2.2; // нагоре
-      let t=0;
+      let vx= rand(1.2, 2.2) * (Math.random()<0.5?-1:1);
+      const vy= -2.2; let t=0;
 
       function update(){
         t += 0.016;
-        // синусоидално хор. движение + отскачане
         x += vx + Math.sin(t*2.2)*1.5;
         y += vy;
         if (x<10 || x>window.innerWidth-170) { vx*=-1; x=Math.max(10, Math.min(x, window.innerWidth-170)); }
         bossEl.style.transform=`translate(${x}px, ${y}px)`;
-
-        // Авто-премахване ако излезе нагоре (рядко при HP>0)
-        if (y < -200 && bossActive) {
-          // избягваме soft lock: връщаме го долу
-          y = window.innerHeight - 60;
-        }
+        if (y < -200 && bossActive) y = window.innerHeight - 60;
         if (bossActive) bossRAF = requestAnimationFrame(update);
       }
       bossRAF = requestAnimationFrame(update);
 
       bossEl.addEventListener('pointerdown', (ev)=>{
-        bossHP--;
-        playPop(1.6);
+        bossHP--; playPop(1.6);
         const r=bossEl.getBoundingClientRect();
         popFx(ev.clientX || (r.left+r.width/2), ev.clientY || (r.top+r.height/2), "👊");
-        // HP бар
         const pct=Math.max(0, bossHP)/ (5 + Math.min(stepIndex,5));
         hpBar.style.width=(pct*100)+"%";
         if (bossHP<=0) defeatBoss();
@@ -274,48 +288,36 @@
 
     function defeatBoss(){
       if(!bossActive) return;
-      bossActive=false;
-      cancelAnimationFrame(bossRAF); bossRAF=null;
-      // Бонус точки и вдигане на ниво
+      bossActive=false; cancelAnimationFrame(bossRAF); bossRAF=null;
       score += 5; scoreEl.textContent="Точки: "+score;
-      popFx((bossEl.getBoundingClientRect().left+80), (bossEl.getBoundingClientRect().top+40), "+5");
+      const r=bossEl.getBoundingClientRect(); popFx(r.left+80, r.top+40, "+5");
       bossEl.remove(); bossEl=null;
-
-      // Повиши трудността (вместо автоматично по точки)
       levelUp();
     }
 
-    // --- ТРУДНОСТ / БЕЗКРАЕН РЕЖИМ ---
+    // --- ТРУДНОСТ / БЕЗКРАЕН ---
     function selectedLevelCfg(){return {...LEVELS[levelKey]};}
-
     function levelUp(){
       const base=LEVELS[levelKey];
-      // увеличаваме скоростта и честотата умерено
       const newCfg={
         interval: Math.max((curCfg?.interval||base.interval) - 80, 420),
         speedMin: Math.max((curCfg?.speedMin||base.speedMin) - 0.25, 2.6),
         speedMax: Math.max((curCfg?.speedMax||base.speedMax) - 0.25, base.speedMin),
         perTick: base.perTick
       };
-      curCfg = newCfg;
-      if (spawnTimer){ clearInterval(spawnTimer); spawnTimer=setInterval(()=>tick(curCfg), curCfg.interval); }
-      curInterval = newCfg.interval;
-      nextLevelAt += 20; // следващ праг
+      curCfg=newCfg;
+      if (spawnTimer){ clearInterval(spawnTimer); spawnTimer=setInterval(()=>tick(newCfg), newCfg.interval); }
+      curInterval=newCfg.interval;
+      nextLevelAt += 20;
     }
-
     function maybeAnnounceBoss(){
-      // извиква се при всяко взимане на точки в endless
       if (!bossToggle.checked) return;
-      // когато наближим прага за level-up: на 5 точки преди него
       if (!bossActive && score >= (nextLevelAt - 5) && score < nextLevelAt && !bossAnnounced) {
         bossAnnounced = true;
-        // пусни бос след кратко „предупреждение“
         setTimeout(()=> spawnBoss(Math.floor((nextLevelAt-20)/20)), 600);
       }
     }
-
     function maybeAdjustDifficulty(){
-      // ако няма бос – поддържаме динамичната част, за да не е твърде лесно в началото
       if (bossActive) return;
       const steps=Math.floor(score/20);
       const base=LEVELS[levelKey];
@@ -332,23 +334,19 @@
         curInterval=newCfg.interval;
         spawnTimer=setInterval(()=>tick(newCfg),newCfg.interval);
       }
-      // следи за бос
       maybeAnnounceBoss();
     }
 
     function tick(cfg){
-      // ако има бос – намали нормалния спаун (само 0 или 1)
       const n = bossActive ? (Math.random()<0.25?1:0) : cfg.perTick();
       for (let i=0;i<n;i++) makeAnimal(false, cfg);
     }
-
     function startBigLoop(en){
       if(bigTimer){clearInterval(bigTimer);bigTimer=null;}
       if(!en) return;
       setTimeout(()=>makeAnimal(true,curCfg||selectedLevelCfg()),rand(6000,12000));
       bigTimer=setInterval(()=>makeAnimal(true,curCfg||selectedLevelCfg()),10000);
     }
-
     function clearAnimals(){
       document.querySelectorAll('.animal, .boss, .pop').forEach(n=>n.remove());
       bossActive=false; bossEl=null; cancelAnimationFrame(bossRAF); bossRAF=null;
@@ -396,8 +394,7 @@
       const t=ev.target.closest?.('.animal, .boss');
       if(!t) return;
       if (t.classList.contains('boss')) {
-        // кликовете по боса се обработват вътре в spawnBoss()
-        // (тук не правим нищо допълнително)
+        // босът си обработва кликовете вътре
       } else {
         catchAnimal(ev, t, t.classList.contains('big')?5:1);
       }
@@ -431,9 +428,6 @@
     document.getElementById('startBtn').onclick=startGame;
     document.getElementById('playAgain').onclick=()=>{finalOverlay.hidden=true;startGame();};
     document.getElementById('backToStart').onclick=()=>{finalOverlay.hidden=true;startOverlay.hidden=false;};
-
-    // делегирано „тапване“ върху емоджи в животинката
-    function docPointer(ev){ const target=ev.target.closest?.('.animal, .boss'); if(target && !target.classList.contains('boss')) catchAnimal(ev, target, target.classList.contains('big')?5:1); }
   </script>
 </body>
 </html>
