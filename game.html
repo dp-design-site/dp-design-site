@@ -21,36 +21,37 @@
       user-select: none; display: flex; gap: 12px; align-items: center;
     }
     #score { font-size: 20px; }
+    #timer { font-size: 18px; opacity: .9; }
     #soundBtn {
       border: 0; padding: 6px 10px; border-radius: 10px; cursor: pointer;
       background: #0ea5e9; color: #fff; font-weight: 700;
     }
 
-    #startOverlay {
+    #startOverlay, #finalOverlay {
       position: fixed; inset: 0; z-index: 4; display: grid; place-items: center;
       background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
       backdrop-filter: blur(3px);
     }
-    #startCard {
+    .card {
       background: white; padding: 22px 24px; border-radius: 16px; text-align: center;
-      width: min(92vw, 520px); box-shadow: 0 12px 30px rgba(0,0,0,.25); color:#123;
+      width: min(92vw, 560px); box-shadow: 0 12px 30px rgba(0,0,0,.25); color:#123;
     }
-    #startCard h1 { margin: 0 0 8px; font-size: 26px; }
-    #startCard p { margin: 0 0 14px; }
+    .card h1 { margin: 0 0 8px; font-size: 26px; }
+    .card p { margin: 0 0 14px; }
+
     fieldset {
       border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px 14px; text-align: left;
       margin-bottom: 14px;
     }
     fieldset legend { padding: 0 6px; font-weight: 700; }
-    .level {
-      display: grid; grid-template-columns: 1.2em 1fr; align-items: start;
-      gap: 10px; margin: 8px 0;
-    }
-    #startBtn {
+    .row { display:grid; grid-template-columns: 1.2em 1fr; gap:10px; align-items:start; margin:8px 0; }
+
+    .btn {
       font-size: 20px; padding: 12px 18px; border-radius: 12px; border: 0;
       background: #16a34a; color: white; cursor: pointer; width: 100%;
     }
-    #startBtn:active { transform: scale(.98); }
+    .btn:active { transform: scale(.98); }
+    .btn.secondary { background:#0ea5e9; }
 
     .animal {
       position: absolute; width: clamp(72px, 8vw, 96px); height: clamp(72px, 8vw, 96px);
@@ -59,7 +60,13 @@
       user-select: none; -webkit-user-drag: none; touch-action: none;
       animation: floatUp linear forwards; cursor: pointer; z-index: 2;
     }
+    .animal.big {
+      width: clamp(110px, 12vw, 140px); height: clamp(110px, 12vw, 140px);
+      border: 4px solid #f59e0b; /* златен ринг */
+      background: rgba(255,250,210,.95);
+    }
     .emoji { font-size: clamp(42px, 6vw, 56px); line-height: 1; transform: translateY(2px); }
+    .animal.big .emoji { font-size: clamp(64px, 8vw, 84px); }
 
     @keyframes floatUp {
       from { transform: translateY(105vh) rotate(0deg); opacity: .98; }
@@ -79,34 +86,53 @@
 <body>
   <div id="hud">
     <span id="score">Точки: 0</span>
+    <span id="timer" hidden>⏱ 30.0s</span>
     <button id="soundBtn" aria-pressed="true" title="Включи/изключи звук">🔊 Звук: Вкл.</button>
   </div>
 
+  <!-- Стартов екран -->
   <div id="startOverlay" role="dialog" aria-modal="true">
-    <div id="startCard">
+    <div class="card">
       <h1>Хвани животинката 🐶🐱</h1>
-      <p>Клик/тап за да „хванеш“ животинката. Избери трудност и натисни Старт.</p>
+      <p>Избери настройки и натисни „Старт“.</p>
 
       <fieldset>
         <legend>Трудност</legend>
-
-        <label class="level">
-          <input type="radio" name="level" value="easy" checked />
-          <div><strong>Лесно</strong> — бавни животинки, по една на стъпка.</div>
-        </label>
-
-        <label class="level">
-          <input type="radio" name="level" value="medium" />
-          <div><strong>Средно</strong> — по-бързи, понякога по две наведнъж.</div>
-        </label>
-
-        <label class="level">
-          <input type="radio" name="level" value="hard" />
-          <div><strong>Трудно</strong> — бързи, често две-три наведнъж.</div>
-        </label>
+        <label class="row"><input type="radio" name="level" value="easy" checked>
+          <div><strong>Лесно</strong> — бавни животинки, по една на стъпка.</div></label>
+        <label class="row"><input type="radio" name="level" value="medium">
+          <div><strong>Средно</strong> — по-бързи, понякога по две наведнъж.</div></label>
+        <label class="row"><input type="radio" name="level" value="hard">
+          <div><strong>Трудно</strong> — бързи, често две-три наведнъж.</div></label>
       </fieldset>
 
-      <button id="startBtn">Старт ▶️</button>
+      <fieldset>
+        <legend>Режим</legend>
+        <label class="row"><input type="radio" name="mode" value="timed" checked>
+          <div><strong>30 секунди</strong> — играеш 30s, после финален екран.</div></label>
+        <label class="row"><input type="radio" name="mode" value="endless">
+          <div><strong>Безкраен</strong> — трудността расте на всеки 20 точки.</div></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Допълнително</legend>
+        <label class="row"><input type="checkbox" id="bigAnimal">
+          <div><strong>Голямо животно</strong> — на ~10s се появява +5 т.</div></label>
+      </fieldset>
+
+      <button id="startBtn" class="btn">Старт ▶️</button>
+    </div>
+  </div>
+
+  <!-- Финален екран (за 30s режим) -->
+  <div id="finalOverlay" hidden role="dialog" aria-modal="true">
+    <div class="card">
+      <h1>Край на рунда 🎉</h1>
+      <p id="finalScore">Точки: 0</p>
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button id="playAgain" class="btn secondary">Играй пак</button>
+        <button id="backToStart" class="btn">Към началото</button>
+      </div>
     </div>
   </div>
 
@@ -114,173 +140,293 @@
     // ------- СЪСТОЯНИЕ -------
     let score = 0;
     let spawnTimer = null;
+    let bigTimer = null;
     let audioCtx = null;
     let soundOn = true;
+    let mode = 'timed'; // 'timed' | 'endless'
+    let levelKey = 'easy';
+    let roundEndTs = 0;
+    let timerUIInterval = null;
 
     const scoreEl = document.getElementById('score');
+    const timerEl = document.getElementById('timer');
     const startOverlay = document.getElementById('startOverlay');
+    const finalOverlay = document.getElementById('finalOverlay');
     const startBtn = document.getElementById('startBtn');
     const soundBtn = document.getElementById('soundBtn');
+    const playAgainBtn = document.getElementById('playAgain');
+    const backToStartBtn = document.getElementById('backToStart');
+    const bigAnimalChk = document.getElementById('bigAnimal');
 
     const ANIMALS = ["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"];
+    const BIG_ANIMALS = ["🦁","🐘","🦒","🐳","🦈","🦓"];
     const COLORS = [
-      "rgba(255,255,255,.85)",
-      "rgba(255,245,210,.9)",
-      "rgba(225,255,225,.9)",
-      "rgba(225,240,255,.9)"
+      "rgba(255,255,255,.85)","rgba(255,245,210,.9)",
+      "rgba(225,255,225,.9)","rgba(225,240,255,.9)"
     ];
 
-    // Параметри по трудност
+    // Параметри по трудност (базови)
     const LEVELS = {
       easy:   { interval: 1100, speedMin: 5.5, speedMax: 8.0, perTick: () => 1 },
-      medium: { interval: 850,  speedMin: 4.5, speedMax: 7.0, perTick: () => (Math.random() < 0.6 ? 2 : 1) },
-      hard:   { interval: 650,  speedMin: 3.5, speedMax: 5.5, perTick: () => (Math.random() < 0.5 ? 2 : 3) }
+      medium: { interval: 850,  speedMin: 4.5, speedMax: 7.0, perTick: () => (Math.random()<0.6?2:1) },
+      hard:   { interval: 650,  speedMin: 3.5, speedMax: 5.5, perTick: () => (Math.random()<0.5?2:3) }
     };
 
-    function getSelectedLevelKey() {
-      const sel = document.querySelector('input[name="level"]:checked');
-      return sel ? sel.value : 'easy';
+    function getSelected(name) {
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : null;
     }
 
-    // ------- ЗВУК (WebAudio, надежден след потребителски жест) -------
+    // ------- ЗВУК (WebAudio) -------
     function ensureAudio() {
       if (!audioCtx) {
         try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
         catch { audioCtx = null; }
       }
     }
-
-    function playPop() {
+    function playPop(mult = 1) {
       if (!soundOn) return;
       ensureAudio();
       if (!audioCtx) return;
 
-      // Кратък „поп“: висок triangle + щипка noise за по-игрив ефект
       const now = audioCtx.currentTime;
 
-      // Тонов компонент
+      // Тон
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(820, now);
+      osc.frequency.setValueAtTime(mult > 1 ? 620 : 820, now);
       gain.gain.setValueAtTime(0.00001, now);
-      gain.gain.exponentialRampToValueAtTime(0.25, now + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.09);
+      gain.gain.exponentialRampToValueAtTime(0.25 * Math.min(mult,1.6), now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.11);
       osc.connect(gain).connect(audioCtx.destination);
       osc.start(now);
-      osc.stop(now + 0.1);
+      osc.stop(now + 0.12);
 
-      // Лек noise „пук“
+      // Noise щипка
       const bufferSize = 256;
       const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const data = noiseBuffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random()*2-1)*(1 - i/bufferSize);
       const noise = audioCtx.createBufferSource();
       noise.buffer = noiseBuffer;
       const nGain = audioCtx.createGain();
       nGain.gain.setValueAtTime(0.00001, now);
-      nGain.gain.exponentialRampToValueAtTime(0.15, now + 0.005);
-      nGain.gain.exponentialRampToValueAtTime(0.00001, now + 0.07);
+      nGain.gain.exponentialRampToValueAtTime(0.18 * Math.min(mult,1.6), now + 0.005);
+      nGain.gain.exponentialRampToValueAtTime(0.00001, now + 0.08);
       noise.connect(nGain).connect(audioCtx.destination);
       noise.start(now);
-      noise.stop(now + 0.08);
+      noise.stop(now + 0.09);
     }
 
     soundBtn.addEventListener('click', () => {
       soundOn = !soundOn;
       soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
       soundBtn.textContent = soundOn ? '🔊 Звук: Вкл.' : '🔈 Звук: Изкл.';
-      // Разреши контекста при първо пипане
       ensureAudio();
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-      // Демонстрация
       if (soundOn) playPop();
     }, { passive: true });
 
     // ------- ИГРА -------
     function rand(min, max) { return Math.random() * (max - min) + min; }
 
-    function spawnAnimal(levelCfg) {
+    function makeAnimal(isBig, cfg) {
       const d = document.createElement('div');
-      d.className = 'animal';
-      d.style.left = `${rand(0, Math.max(0, window.innerWidth - 100))}px`;
-      d.style.background = COLORS[Math.floor(Math.random()*COLORS.length)];
+      d.className = isBig ? 'animal big' : 'animal';
+      d.style.left = `${rand(0, Math.max(0, window.innerWidth - (isBig?140:100)))}px`;
+      d.style.background = COLORS[Math.floor(Math.random() * COLORS.length)];
 
-      const dur = rand(levelCfg.speedMin, levelCfg.speedMax).toFixed(2);
+      const dur = rand(cfg.speedMin, cfg.speedMax).toFixed(2);
       d.style.animationDuration = `${dur}s`;
 
       const span = document.createElement('span');
       span.className = 'emoji';
-      span.textContent = ANIMALS[Math.floor(Math.random()*ANIMALS.length)];
+      span.textContent = isBig
+        ? BIG_ANIMALS[Math.floor(Math.random()*BIG_ANIMALS.length)]
+        : ANIMALS[Math.floor(Math.random()*ANIMALS.length)];
       d.appendChild(span);
 
-      // леко „надуване“ при появяване долу
       d.animate(
         [{transform:"translateY(105vh) scale(.9)"},{transform:"translateY(105vh) scale(1)"}],
         {duration:250, easing:"ease-out"}
       );
 
       d.addEventListener('pointerdown', (ev) => {
-        catchAnimal(ev, d);
+        catchAnimal(ev, d, isBig ? 5 : 1);
       }, { passive: true });
 
       document.body.appendChild(d);
 
-      // авто-премахване след анимацията
       const ttl = parseFloat(dur) * 1000 + 220;
       setTimeout(() => d.remove(), ttl);
     }
 
-    function catchAnimal(ev, elem) {
-      if (!elem.isConnected) return;
-      score++;
-      scoreEl.textContent = "Точки: " + score;
-      playPop();
-
-      // pop визуализация
+    function popFx(x, y, text) {
       const fx = document.createElement('div');
       fx.className = 'pop';
-      fx.textContent = "+1";
-      fx.style.left = (ev.clientX || (elem.getBoundingClientRect().left + elem.offsetWidth/2)) + "px";
-      fx.style.top  = (ev.clientY || (elem.getBoundingClientRect().top + elem.offsetHeight/2)) + "px";
+      fx.textContent = text;
+      fx.style.left = x + "px";
+      fx.style.top  = y + "px";
       document.body.appendChild(fx);
       setTimeout(() => fx.remove(), 800);
+    }
+
+    function catchAnimal(ev, elem, points) {
+      if (!elem.isConnected) return;
+      score += points;
+      scoreEl.textContent = "Точки: " + score;
+      playPop(points > 1 ? 1.4 : 1);
+
+      const rect = elem.getBoundingClientRect();
+      const x = ev.clientX || (rect.left + rect.width/2);
+      const y = ev.clientY || (rect.top + rect.height/2);
+      popFx(x, y, (points>1?`+${points}`:"+1"));
 
       elem.remove();
+
+      // В безкраен режим – динамично повишаване на трудността
+      if (mode === 'endless') maybeAdjustDifficulty();
+    }
+
+    function selectedLevelCfg() {
+      return {...LEVELS[levelKey]}; // копие
+    }
+
+    // Динамичен ъпскейл на трудността в безкраен режим
+    let curInterval = null;
+    let curCfg = null;
+
+    function maybeAdjustDifficulty() {
+      const steps = Math.floor(score / 20); // на всеки 20 т.
+      const base = LEVELS[levelKey];
+      const minInterval = 420; // долна граница
+      const speedBoost = Math.min(steps * 0.3, 1.6);
+      const newCfg = {
+        interval: Math.max(base.interval - steps * 80, minInterval),
+        speedMin: Math.max(base.speedMin - speedBoost, 2.6),
+        speedMax: Math.max(base.speedMax - speedBoost, base.speedMin), // не под минималното
+        perTick: base.perTick // оставяме вероятностите от базовото ниво
+      };
+      curCfg = newCfg;
+
+      // ако интервалът се е променил осезаемо – рестартирай spawn таймера
+      if (curInterval !== newCfg.interval && spawnTimer) {
+        clearInterval(spawnTimer);
+        curInterval = newCfg.interval;
+        spawnTimer = setInterval(() => tick(newCfg), newCfg.interval);
+      }
+    }
+
+    function tick(cfg) {
+      const n = cfg.perTick();
+      for (let i = 0; i < n; i++) makeAnimal(false, cfg);
+    }
+
+    function startBigAnimalLoop(enabled) {
+      if (bigTimer) { clearInterval(bigTimer); bigTimer = null; }
+      if (!enabled) return;
+      // първи „бос“ след 6–12 сек, после ~10 сек
+      const spawnBoss = () => makeAnimal(true, curCfg || selectedLevelCfg());
+      setTimeout(spawnBoss, rand(6000, 12000));
+      bigTimer = setInterval(spawnBoss, 10000);
+    }
+
+    function clearAllAnimals() {
+      document.querySelectorAll('.animal').forEach(n => n.remove());
     }
 
     function startGame() {
+      // прочит на настройките
+      levelKey = getSelected('level') || 'easy';
+      mode = getSelected('mode') || 'timed';
+      const bigEnabled = bigAnimalChk.checked;
+
       ensureAudio();
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 
+      // UI
       startOverlay.style.display = 'none';
+      finalOverlay.hidden = true;
+      timerEl.hidden = (mode !== 'timed');
       score = 0;
       scoreEl.textContent = "Точки: 0";
 
-      const levelKey = getSelectedLevelKey();
-      const levelCfg = LEVELS[levelKey];
+      // начална конфигурация
+      curCfg = selectedLevelCfg();
+      curInterval = curCfg.interval;
 
-      // първи спаун веднага, после периодично
-      tick(levelCfg);
+      // spawn loop
+      tick(curCfg);
       if (spawnTimer) clearInterval(spawnTimer);
-      spawnTimer = setInterval(() => tick(levelCfg), levelCfg.interval);
+      spawnTimer = setInterval(() => tick(curCfg), curCfg.interval);
 
-      // безопасно делегиране — ако кликът е върху емоджи
-      document.addEventListener('pointerdown', (ev) => {
-        const target = ev.target.closest?.('.animal');
-        if (target) catchAnimal(ev, target);
-      }, { passive: true });
+      // big animal опция
+      startBigAnimalLoop(bigEnabled);
+
+      // режим
+      if (mode === 'timed') {
+        startTimedRound(30); // 30 секунди
+      } else {
+        // безкраен – нулирай евентуален таимер от предишна игра
+        if (timerUIInterval) { clearInterval(timerUIInterval); timerUIInterval = null; }
+      }
+
+      // делегиране за клик по емоджи
+      document.addEventListener('pointerdown', docPointer, { passive: true });
     }
 
-    function tick(levelCfg) {
-      const n = levelCfg.perTick();
-      for (let i = 0; i < n; i++) spawnAnimal(levelCfg);
+    function docPointer(ev) {
+      const target = ev.target.closest?.('.animal');
+      if (target) catchAnimal(ev, target, target.classList.contains('big') ? 5 : 1);
     }
 
+    function endGame() {
+      // стоп таймери / почистване
+      if (spawnTimer) { clearInterval(spawnTimer); spawnTimer = null; }
+      if (bigTimer) { clearInterval(bigTimer); bigTimer = null; }
+      if (timerUIInterval) { clearInterval(timerUIInterval); timerUIInterval = null; }
+      document.removeEventListener('pointerdown', docPointer);
+      clearAllAnimals();
+    }
+
+    function startTimedRound(seconds) {
+      const startTs = performance.now();
+      roundEndTs = startTs + seconds * 1000;
+
+      // UI таймер през 100 ms
+      const fmt = (msLeft) => (msLeft/1000).toFixed(1) + "s";
+      timerEl.textContent = "⏱ " + fmt(seconds*1000);
+      timerUIInterval = setInterval(() => {
+        const now = performance.now();
+        const left = Math.max(0, roundEndTs - now);
+        timerEl.textContent = "⏱ " + fmt(left);
+        if (left <= 0) {
+          clearInterval(timerUIInterval);
+          timerUIInterval = null;
+          // край на рунда
+          endGame();
+          // финален екран
+          document.getElementById('finalScore').textContent = "Точки: " + score;
+          finalOverlay.hidden = false;
+        }
+      }, 100);
+    }
+
+    // Контроли
     startBtn.addEventListener('click', startGame, { passive: true });
+    playAgainBtn.addEventListener('click', () => {
+      finalOverlay.hidden = true;
+      // стартираме със същите настройки (прочитаме от формата)
+      startGame();
+    }, { passive: true });
+    backToStartBtn.addEventListener('click', () => {
+      finalOverlay.hidden = true;
+      startOverlay.style.display = 'grid'; // връщаме към избора
+    }, { passive: true });
 
-    // (незадължително) – ако искаш да върнеш избора на ниво без рефреш:
-    // document.addEventListener('keydown', (e) => { if (e.key === 'Escape') location.reload(); });
+    // За безопасност ако сменяш размера на прозореца
+    window.addEventListener('resize', () => {}, { passive: true });
   </script>
 </body>
 </html>
