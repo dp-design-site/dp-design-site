@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Хвани животинката 🐾</title>
+  <title>Хвани фигурката 🎮</title>
   <style>
     body{margin:0;overflow:hidden;height:100vh;background:#8fd3ff;font-family:sans-serif;touch-action:manipulation;}
     [hidden]{display:none!important;}
@@ -42,7 +42,13 @@
   <!-- старт -->
   <div id="startOverlay" class="overlay">
     <div class="card">
-      <h2>Хвани животинката 🐶🐱</h2>
+      <h2>Хвани фигурката 🎮</h2>
+      <fieldset>
+        <legend>Тема</legend>
+        <label><input type="radio" name="theme" value="animals" checked> Животни</label><br>
+        <label><input type="radio" name="theme" value="balloons"> Балони</label><br>
+        <label><input type="radio" name="theme" value="cars"> Коли</label>
+      </fieldset>
       <fieldset>
         <legend>Трудност</legend>
         <label><input type="radio" name="level" value="easy" checked> Лесно</label><br>
@@ -56,7 +62,7 @@
       </fieldset>
       <fieldset>
         <legend>Опции</legend>
-        <label><input type="checkbox" id="bigAnimal"> Голямо животно</label><br>
+        <label><input type="checkbox" id="bigAnimal"> Голямо</label><br>
         <label><input type="checkbox" id="bossToggle" checked> Бос</label>
       </fieldset>
       <button id="startBtn" class="btn">Старт ▶️</button>
@@ -78,28 +84,34 @@
   let score=0,spawnTimer=null,bigTimer=null,timerUI=null,bossRAF=null;
   let audioCtx=null,soundOn=true,mode="timed",level="easy",curCfg=null,roundEnd=0;
   let bossActive=false,bossEl=null,bossHP=0,nextLevelAt=20;
+  let theme="animals",THEME={small:[],big:[]};
+
   const scoreEl=document.getElementById("score"),timerEl=document.getElementById("timer");
   const startOverlay=document.getElementById("startOverlay"),finalOverlay=document.getElementById("finalOverlay");
   const soundBtn=document.getElementById("soundBtn"),stopBtn=document.getElementById("stopBtn"),homeBtn=document.getElementById("homeBtn");
   const bigAnimalChk=document.getElementById("bigAnimal"),bossToggle=document.getElementById("bossToggle");
   const finalScore=document.getElementById("finalScore"),bestScore=document.getElementById("bestScore");
-  const ANIMALS=["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"];
-  const BIG=["🦁","🐘","🦒","🐳","🦈"];
+
+  const THEMES={
+    animals:{small:["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"],big:["🦁","🐘","🦒","🐳","🦈"]},
+    balloons:{small:["🎈","🎉","✨","⭐","💫","🌈"],big:["🎆","🎇","🎊"]},
+    cars:{small:["🚗","🚙","🚕","🏎️","🚓","🚑","🚒"],big:["🛻","🚚","🚛"]}
+  };
   const BOSS=["🐲","🦖","🐉","🦍"];
   const LEVELS={easy:{interval:1100,per:()=>1},medium:{interval:850,per:()=>Math.random()<0.6?2:1},hard:{interval:650,per:()=>Math.random()<0.5?2:3}};
   function rand(a,b){return Math.random()*(b-a)+a;}
   function ensureAudio(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
   function playPop(){if(!soundOn)return;ensureAudio();if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain(),now=audioCtx.currentTime;o.type="triangle";o.frequency.value=820;g.gain.setValueAtTime(.2,now);g.gain.exponentialRampToValueAtTime(.001,now+.1);o.connect(g).connect(audioCtx.destination);o.start(now);o.stop(now+.12);}
   function popFx(x,y,t){const d=document.createElement("div");d.className="pop";d.textContent=t;d.style.left=x+"px";d.style.top=y+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),700);}
-  function makeAnimal(big){const d=document.createElement("div");d.className=big?"animal big":"animal";d.style.left=rand(0,window.innerWidth-100)+"px";d.style.animationDuration=(big?6:rand(4,7))+"s";const e=document.createElement("span");e.className="emoji";e.textContent=big?BIG[Math.floor(Math.random()*BIG.length)]:ANIMALS[Math.floor(Math.random()*ANIMALS.length)];d.appendChild(e);d.onclick=ev=>catchAnimal(ev,d,big?5:1);document.body.appendChild(d);setTimeout(()=>d.remove(),8000);}
-  function catchAnimal(ev,el,pts){if(!el.isConnected)return;score+=pts;scoreEl.textContent="Точки: "+score;playPop();const r=el.getBoundingClientRect();popFx(ev.clientX||r.left,r.top,"+"+pts);el.remove();}
+  function makeAnimal(big){const d=document.createElement("div");d.className=big?"animal big":"animal";d.style.left=rand(0,window.innerWidth-100)+"px";d.style.animationDuration=(big?6:rand(4,7))+"s";const e=document.createElement("span");e.className="emoji";e.textContent=big?THEME.big[Math.floor(Math.random()*THEME.big.length)]:THEME.small[Math.floor(Math.random()*THEME.small.length)];d.appendChild(e);d.onclick=ev=>catchAnimal(ev,d,big?5:1);document.body.appendChild(d);setTimeout(()=>d.remove(),8000);}
+  function catchAnimal(ev,el,pts){if(!el.isConnected)return;score+=pts;scoreEl.textContent="Точки: "+score;playPop();const r=el.getBoundingClientRect();popFx(ev.clientX||r.left,r.top,"+"+pts);el.remove();if(mode==="endless"&&!bossActive&&bossToggle.checked&&score>=nextLevelAt){spawnBoss();nextLevelAt+=20;}}
   function tick(){if(!bossActive)for(let i=0;i<curCfg.per();i++)makeAnimal(false);}
   function startBig(en){if(bigTimer)clearInterval(bigTimer);if(en)bigTimer=setInterval(()=>makeAnimal(true),10000);}
   function clearAll(){document.querySelectorAll(".animal,.boss,.pop").forEach(n=>n.remove());bossActive=false;bossEl=null;cancelAnimationFrame(bossRAF);}
   function spawnBoss(){bossActive=true;bossHP=6;bossEl=document.createElement("div");bossEl.className="boss";const em=document.createElement("div");em.className="emoji";em.textContent=BOSS[Math.floor(Math.random()*BOSS.length)];const hp=document.createElement("div");hp.className="hp";const bar=document.createElement("div");bar.className="bar";hp.appendChild(bar);bossEl.appendChild(em);bossEl.appendChild(hp);document.body.appendChild(bossEl);let x=100,y=window.innerHeight-200,vx=2;function loop(){x+=vx;if(x<0||x>window.innerWidth-160)vx*=-1;bossEl.style.transform=`translate(${x}px,${y}px)`;if(bossActive)bossRAF=requestAnimationFrame(loop);}loop();bossEl.onclick=()=>{bossHP--;navigator.vibrate?.(80);bar.style.width=(bossHP/6*100)+"%";if(bossHP<=0){score+=10;scoreEl.textContent="Точки: "+score;bossEl.remove();bossActive=false;}};}
-  function startGame(){level=document.querySelector("input[name=level]:checked").value;mode=document.querySelector("input[name=mode]:checked").value;curCfg={...LEVELS[level]};score=0;scoreEl.textContent="Точки: 0";startOverlay.hidden=true;finalOverlay.hidden=true;stopBtn.hidden=(mode!=="endless");clearAll();tick();spawnTimer=setInterval(tick,curCfg.interval);startBig(bigAnimalChk.checked);if(mode==="timed"){roundEnd=performance.now()+30000;timerEl.hidden=false;timerUI=setInterval(()=>{let left=roundEnd-performance.now();timerEl.textContent="⏱ "+(left/1000).toFixed(1);if(bossToggle.checked&&left<6000&&!bossActive)spawnBoss();if(left<=0){endGame();showFinal();}},100);}else timerEl.hidden=true;}
+  function startGame(){theme=document.querySelector("input[name=theme]:checked").value;THEME=THEMES[theme];level=document.querySelector("input[name=level]:checked").value;mode=document.querySelector("input[name=mode]:checked").value;curCfg={...LEVELS[level]};score=0;scoreEl.textContent="Точки: 0";startOverlay.hidden=true;finalOverlay.hidden=true;stopBtn.hidden=(mode!=="endless");clearAll();tick();spawnTimer=setInterval(tick,curCfg.interval);startBig(bigAnimalChk.checked);if(mode==="timed"){roundEnd=performance.now()+30000;timerEl.hidden=false;timerUI=setInterval(()=>{let left=roundEnd-performance.now();timerEl.textContent="⏱ "+(left/1000).toFixed(1);if(bossToggle.checked&&left<6000&&!bossActive)spawnBoss();if(left<=0){endGame();showFinal();}},100);}else timerEl.hidden=true;}
   function endGame(){clearInterval(spawnTimer);clearInterval(bigTimer);clearInterval(timerUI);clearAll();}
-  function showFinal(){finalScore.textContent="Точки: "+score;const key="best_"+mode;let best=localStorage.getItem(key)||0;if(score>best){best=score;localStorage.setItem(key,score);}bestScore.textContent="Рекорд: "+best;finalOverlay.hidden=false;}
+  function showFinal(){finalScore.textContent="Точки: "+score;const key="best_"+mode+"_"+theme;let best=localStorage.getItem(key)||0;if(score>best){best=score;localStorage.setItem(key,score);}bestScore.textContent="Рекорд: "+best;finalOverlay.hidden=false;}
   // бутони
   document.getElementById("startBtn").onclick=startGame;
   document.getElementById("playAgain").onclick=()=>{finalOverlay.hidden=true;startGame();};
