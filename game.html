@@ -6,426 +6,117 @@
   <title>Хвани животинката 🐾</title>
   <style>
     :root { --bg:#8fd3ff; --text:#083c5a; }
-    [hidden] { display: none !important; }
-    * { box-sizing: border-box; }
-    html, body { height:100%; }
-    body {
-      margin:0; overflow:hidden; background:var(--bg);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      touch-action: manipulation;
-    }
-
-    /* HUD */
-    #hud {
-      position: fixed; inset: 12px auto auto 12px;
-      z-index: 3; color: var(--text); font-weight: 700;
-      background: rgba(255,255,255,.6); padding: 8px 12px; border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,.15);
-      user-select: none; display: flex; gap: 12px; align-items: center;
-    }
-    #score { font-size: 20px; }
-    #timer { font-size: 18px; opacity: .9; }
-    #soundBtn {
-      border: 0; padding: 10px 14px; border-radius: 12px; cursor: pointer;
-      background: #0ea5e9; color: #fff; font-weight: 700; font-size: 18px;
-    }
-
-    /* Overlays: фиксове за iPhone / малки височини */
-    #startOverlay, #finalOverlay {
-      position: fixed; inset: 0;
-      z-index: 4;
-      display: grid; place-items: center;
-      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
-      backdrop-filter: blur(3px);
-      animation: fadeIn 0.25s ease;
-      padding:
-        calc(env(safe-area-inset-top,0px) + 12px)
-        12px
-        calc(env(safe-area-inset-bottom,0px) + 12px);
-      overflow: auto;
-      min-height: 100vh;
-    }
-    @supports (height: 100dvh) {
-      #startOverlay, #finalOverlay { min-height: 100dvh; }
-    }
-    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-
-    .card {
-      background: white; padding: 24px 26px; border-radius: 18px; text-align: center;
-      width: min(92vw, 560px);
-      box-shadow: 0 12px 30px rgba(0,0,0,.25); color:#123;
-      animation: scaleIn 0.2s ease;
-      max-height: min(88dvh, 640px);
-      overflow: auto;
-    }
-    @keyframes scaleIn { from{transform:scale(.98);opacity:.0} to{transform:scale(1);opacity:1} }
-    .card h1 { margin: 0 0 8px; font-size: 26px; }
-    .card p { margin: 0 0 14px; }
-
-    fieldset {
-      border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px 14px; text-align: left;
-      margin-bottom: 14px;
-    }
-    fieldset legend { padding: 0 6px; font-weight: 700; }
-    .row { display:grid; grid-template-columns: 1.2em 1fr; gap:10px; align-items:start; margin:8px 0; }
-
-    .btn {
-      font-size: 22px; padding: 16px 20px; border-radius: 14px; border: 0;
-      background: #16a34a; color: white; cursor: pointer; width: 100%;
-    }
-    .btn:active { transform: scale(.97); }
-    .btn.secondary { background:#0ea5e9; }
-
-    @media (max-height: 620px), (max-width: 360px) {
-      .card { width: 94vw; padding: 16px; max-height: 92dvh; }
-      .btn { font-size: 18px; padding: 12px 14px; }
-      fieldset { padding: 10px 12px; margin-bottom: 12px; }
-      .card h1 { font-size: 22px; }
-    }
-
-    /* Животинки */
-    .animal {
-      position: absolute; width: clamp(72px, 8vw, 96px); height: clamp(72px, 8vw, 96px);
-      display: grid; place-items: center; border-radius: 50%;
-      background: rgba(255,255,255,.7); box-shadow: 0 6px 16px rgba(0,0,0,.2);
-      user-select: none; -webkit-user-drag: none; touch-action: none;
-      animation: floatUp linear forwards; cursor: pointer; z-index: 2;
-    }
-    .animal.big {
-      width: clamp(110px, 12vw, 140px); height: clamp(110px, 12vw, 140px);
-      border: 4px solid #f59e0b; background: rgba(255,250,210,.95);
-    }
-    .emoji { font-size: clamp(42px, 6vw, 56px); line-height: 1; transform: translateY(2px); }
-    .animal.big .emoji { font-size: clamp(64px, 8vw, 84px); }
-
-    /* Бос */
-    .boss {
-      position: absolute; z-index: 3; width: clamp(140px, 16vw, 180px); height: clamp(140px, 16vw, 180px);
-      display: grid; place-items: center; border-radius: 24px;
-      background: radial-gradient(ellipse at 50% 40%, #fff8d6, #ffd369);
-      box-shadow: 0 12px 26px rgba(0,0,0,.35), inset 0 2px 8px rgba(0,0,0,.15);
-      border: 5px solid #ef4444;
-      user-select: none; -webkit-user-drag: none; touch-action: none;
-    }
-    .boss .emoji { font-size: clamp(80px, 10vw, 110px); }
-    .boss .hp {
-      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-      width: 80%; height: 12px; background: #fecaca; border-radius: 12px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
-    }
-    .boss .hp .bar { height: 100%; width: 100%; background: linear-gradient(90deg, #16a34a, #4ade80); }
-
-    @keyframes floatUp {
-      from { transform: translateY(105vh) rotate(0deg); opacity: .98; }
-      to   { transform: translateY(-120px) rotate(6deg); opacity: 1; }
-    }
-
-    .pop {
-      position: absolute; pointer-events: none; z-index: 5;
-      font-size: 32px; animation: popfade 700ms ease-out forwards;
-    }
-    @keyframes popfade {
-      0% { transform: translate(-50%,-50%) scale(.8); opacity: 1; }
-      100% { transform: translate(-50%,-120%) scale(1.3); opacity: 0; }
-    }
+    [hidden] { display:none!important; }
+    *{box-sizing:border-box;}
+    body{margin:0;overflow:hidden;height:100vh;background:var(--bg);font-family:sans-serif;touch-action:manipulation;}
+    #hud{position:fixed;top:12px;left:12px;z-index:3;background:rgba(255,255,255,.6);padding:8px 12px;border-radius:12px;display:flex;gap:12px;align-items:center;}
+    #score{font-size:18px;font-weight:700;color:var(--text);}
+    #timer{font-size:18px;color:var(--text);}
+    #stopBtn,#soundBtn{border:0;padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer;}
+    #soundBtn{background:#0ea5e9;color:#fff;}
+    #stopBtn{background:#ef4444;color:#fff;}
+    .overlay{position:fixed;inset:0;z-index:4;display:grid;place-items:center;background:rgba(0,0,0,.3);backdrop-filter:blur(3px);}
+    .card{background:#fff;padding:20px;border-radius:16px;width:min(90vw,500px);max-height:90vh;overflow:auto;text-align:center;}
+    fieldset{margin:10px 0;padding:10px;border-radius:10px;}
+    .btn{margin-top:10px;padding:12px 16px;font-size:20px;border:0;border-radius:10px;background:#16a34a;color:#fff;cursor:pointer;}
+    .animal{position:absolute;width:80px;height:80px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.7);animation:floatUp linear forwards;cursor:pointer;}
+    .animal.big{width:120px;height:120px;border:4px solid #f59e0b;}
+    .emoji{font-size:40px;}
+    .animal.big .emoji{font-size:60px;}
+    @keyframes floatUp{from{transform:translateY(105vh);}to{transform:translateY(-120px);}}
+    .boss{position:absolute;width:160px;height:160px;display:grid;place-items:center;border-radius:20px;background:#ffd369;border:5px solid #ef4444;box-shadow:0 6px 16px rgba(0,0,0,.4);}
+    .boss .emoji{font-size:100px;}
+    .boss .hp{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:80%;height:12px;background:#fecaca;border-radius:12px;overflow:hidden;}
+    .boss .bar{height:100%;width:100%;background:linear-gradient(90deg,#16a34a,#4ade80);}
+    .pop{position:absolute;font-size:28px;animation:popfade .7s forwards;pointer-events:none;}
+    @keyframes popfade{0%{transform:translate(-50%,-50%) scale(.8);opacity:1;}100%{transform:translate(-50%,-120%) scale(1.3);opacity:0;}}
   </style>
 </head>
 <body>
   <div id="hud">
     <span id="score">Точки: 0</span>
-    <span id="timer" hidden>⏱ 30.0s</span>
-    <button id="soundBtn" aria-pressed="true" title="Включи/изключи звук">🔊 Звук: Вкл.</button>
+    <span id="timer" hidden>⏱</span>
+    <button id="soundBtn">🔊</button>
+    <button id="stopBtn" hidden>🛑 Стоп</button>
   </div>
 
-  <!-- Стартов екран -->
-  <div id="startOverlay" role="dialog" aria-modal="true">
+  <!-- стартов екран -->
+  <div id="startOverlay" class="overlay">
     <div class="card">
-      <h1>Хвани животинката 🐶🐱</h1>
-      <p>Избери настройки и натисни „Старт“.</p>
-
+      <h2>Хвани животинката 🐶🐱</h2>
       <fieldset>
         <legend>Трудност</legend>
-        <label class="row"><input type="radio" name="level" value="easy" checked>
-          <div><strong>Лесно</strong> — бавни животинки, по една на стъпка.</div></label>
-        <label class="row"><input type="radio" name="level" value="medium">
-          <div><strong>Средно</strong> — по-бързи, понякога по две наведнъж.</div></label>
-        <label class="row"><input type="radio" name="level" value="hard">
-          <div><strong>Трудно</strong> — бързи, често две-три наведнъж.</div></label>
+        <label><input type="radio" name="level" value="easy" checked> Лесно</label><br>
+        <label><input type="radio" name="level" value="medium"> Средно</label><br>
+        <label><input type="radio" name="level" value="hard"> Трудно</label>
       </fieldset>
-
       <fieldset>
         <legend>Режим</legend>
-        <label class="row"><input type="radio" name="mode" value="timed" checked>
-          <div><strong>30 секунди</strong> — играеш 30s, после финален екран.</div></label>
-        <label class="row"><input type="radio" name="mode" value="endless">
-          <div><strong>Безкраен</strong> — трудността расте на всеки 20 точки.</div></label>
+        <label><input type="radio" name="mode" value="timed" checked> 30 секунди</label><br>
+        <label><input type="radio" name="mode" value="endless"> Безкраен</label>
       </fieldset>
-
       <fieldset>
-        <legend>Допълнително</legend>
-        <label class="row"><input type="checkbox" id="bigAnimal">
-          <div><strong>Голямо животно</strong> — на ~10s се появява +5 т.</div></label>
-        <label class="row"><input type="checkbox" id="bossToggle" checked>
-          <div><strong>Бос преди смяна на ниво</strong> — изисква няколко попадения.</div></label>
+        <legend>Опции</legend>
+        <label><input type="checkbox" id="bigAnimal"> Голямо животно</label><br>
+        <label><input type="checkbox" id="bossToggle" checked> Бос</label>
       </fieldset>
-
       <button id="startBtn" class="btn">Старт ▶️</button>
     </div>
   </div>
 
-  <!-- Финален екран -->
-  <div id="finalOverlay" hidden role="dialog" aria-modal="true">
+  <!-- финал -->
+  <div id="finalOverlay" class="overlay" hidden>
     <div class="card">
-      <h1>Край на рунда 🎉</h1>
-      <p id="finalScore">Точки: 0</p>
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button id="playAgain" class="btn secondary">Играй пак</button>
-        <button id="backToStart" class="btn">Към началото</button>
-      </div>
+      <h2>Край 🎉</h2>
+      <p id="finalScore"></p>
+      <p id="bestScore"></p>
+      <button id="playAgain" class="btn">Играй пак</button>
     </div>
   </div>
 
   <script>
-    // --- СЪСТОЯНИЕ ---
-    let score = 0, spawnTimer=null, bigTimer=null, timerUIInterval=null, bossRAF=null;
-    let audioCtx=null, soundOn=true, mode='timed', levelKey='easy';
-    let curCfg=null, curInterval=null, roundEndTs=0;
+  let score=0,spawnTimer=null,bigTimer=null,timerUI=null,bossRAF=null;
+  let audioCtx=null,soundOn=true,mode="timed",level="easy",curCfg=null,roundEnd=0;
+  let bossActive=false,bossEl=null,bossHP=0,nextLevelAt=20;
 
-    const scoreEl=document.getElementById('score');
-    const timerEl=document.getElementById('timer');
-    const startOverlay=document.getElementById('startOverlay');
-    const finalOverlay=document.getElementById('finalOverlay');
-    const soundBtn=document.getElementById('soundBtn');
-    const bigAnimalChk=document.getElementById('bigAnimal');
-    const bossToggle=document.getElementById('bossToggle');
+  const scoreEl=document.getElementById("score"),timerEl=document.getElementById("timer");
+  const startOverlay=document.getElementById("startOverlay"),finalOverlay=document.getElementById("finalOverlay");
+  const soundBtn=document.getElementById("soundBtn"),stopBtn=document.getElementById("stopBtn");
+  const bigAnimalChk=document.getElementById("bigAnimal"),bossToggle=document.getElementById("bossToggle");
+  const finalScore=document.getElementById("finalScore"),bestScore=document.getElementById("bestScore");
 
-    const ANIMALS=["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"];
-    const BIG_ANIMALS=["🦁","🐘","🦒","🐳","🦈","🦓"];
-    const BOSS_EMOJIS=["🐲","🦖","🐉","🦍"];
-    const COLORS=["rgba(255,255,255,.85)","rgba(255,245,210,.9)","rgba(225,255,225,.9)","rgba(225,240,255,.9)"];
+  const ANIMALS=["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"];
+  const BIG_ANIMALS=["🦁","🐘","🦒","🐳","🦈"];
+  const BOSS=["🐲","🦖","🐉","🦍"];
 
-    const LEVELS={
-      easy:{interval:1100,speedMin:5.5,speedMax:8.0,perTick:()=>1},
-      medium:{interval:850,speedMin:4.5,speedMax:7.0,perTick:()=>Math.random()<0.6?2:1},
-      hard:{interval:650,speedMin:3.5,speedMax:5.5,perTick:()=>Math.random()<0.5?2:3}
-    };
+  const LEVELS={
+    easy:{interval:1100,speedMin:5.5,speedMax:8,per:()=>1},
+    medium:{interval:850,speedMin:4.5,speedMax:7,per:()=>Math.random()<0.6?2:1},
+    hard:{interval:650,speedMin:3.5,speedMax:5.5,per:()=>Math.random()<0.5?2:3}
+  };
 
-    function getSelected(name){const el=document.querySelector(`input[name="${name}"]:checked`);return el?el.value:null;}
-    function rand(min,max){return Math.random()*(max-min)+min;}
+  function rand(a,b){return Math.random()*(b-a)+a;}
+  function ensureAudio(){if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
+  function playPop(mult=1){if(!soundOn)return;ensureAudio();if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain(),now=audioCtx.currentTime;o.type="triangle";o.frequency.value=mult>1?520:820;g.gain.setValueAtTime(.2,now);g.gain.exponentialRampToValueAtTime(.001,now+.1);o.connect(g).connect(audioCtx.destination);o.start(now);o.stop(now+.12);}
+  soundBtn.onclick=()=>{soundOn=!soundOn;soundBtn.textContent=soundOn?"🔊":"🔈";};
 
-    // --- ЗВУК ---
-    function ensureAudio(){if(!audioCtx){try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();}catch{audioCtx=null;}}}
-    function playPop(mult=1){if(!soundOn)return;ensureAudio();if(!audioCtx)return;const now=audioCtx.currentTime;
-      const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
-      osc.type='triangle';osc.frequency.setValueAtTime(mult>1?520:820,now);
-      gain.gain.setValueAtTime(0.00001,now);
-      gain.gain.exponentialRampToValueAtTime(0.25*Math.min(mult,1.8),now+0.01);
-      gain.gain.exponentialRampToValueAtTime(0.00001,now+0.11);
-      osc.connect(gain).connect(audioCtx.destination);osc.start(now);osc.stop(now+0.12);
-      const buf=audioCtx.createBuffer(1,256,audioCtx.sampleRate),data=buf.getChannelData(0);
-      for(let i=0;i<256;i++)data[i]=(Math.random()*2-1)*(1-i/256);
-      const noise=audioCtx.createBufferSource();noise.buffer=buf;
-      const nGain=audioCtx.createGain();nGain.gain.setValueAtTime(0.00001,now);
-      nGain.gain.exponentialRampToValueAtTime(0.18*Math.min(mult,1.8),now+0.005);
-      nGain.gain.exponentialRampToValueAtTime(0.00001,now+0.08);
-      noise.connect(nGain).connect(audioCtx.destination);noise.start(now);noise.stop(now+0.09);
-    }
-    soundBtn.onclick=()=>{soundOn=!soundOn;soundBtn.textContent=soundOn?'🔊 Звук: Вкл.':'🔈 Звук: Изкл.';ensureAudio();if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();if(soundOn)playPop();};
-
-    // --- ЖИВОТНИ ---
-    function makeAnimal(isBig,cfg){
-      const d=document.createElement('div');d.className=isBig?'animal big':'animal';
-      d.style.left=`${rand(0,Math.max(0,window.innerWidth-(isBig?140:100)))}px`;
-      d.style.background=COLORS[Math.floor(Math.random()*COLORS.length)];
-      const dur=rand(cfg.speedMin,cfg.speedMax).toFixed(2);d.style.animationDuration=`${dur}s`;
-      const span=document.createElement('span');span.className='emoji';
-      span.textContent=isBig?BIG_ANIMALS[Math.floor(Math.random()*BIG_ANIMALS.length)]:ANIMALS[Math.floor(Math.random()*ANIMALS.length)];
-      d.appendChild(span);
-      d.addEventListener('pointerdown',ev=>catchAnimal(ev,d,isBig?5:1),{passive:true});
-      document.body.appendChild(d);setTimeout(()=>d.remove(),parseFloat(dur)*1000+220);
-    }
-    function popFx(x,y,text){const fx=document.createElement('div');fx.className='pop';fx.textContent=text;fx.style.left=x+"px";fx.style.top=y+"px";document.body.appendChild(fx);setTimeout(()=>fx.remove(),800);}
-
-    // --- БОС ---
-    let bossActive=false, bossEl=null, bossHP=0, nextLevelAt=20, bossAnnounced=false;
-
-    function spawnBoss(stepIndex){
-      if(bossActive) return;
-      bossActive=true; bossAnnounced=false;
-      bossHP = 5 + Math.min(stepIndex, 5); // HP скалира до 10
-      bossEl=document.createElement('div'); bossEl.className='boss';
-      const em=document.createElement('div'); em.className='emoji'; em.textContent=BOSS_EMOJIS[Math.floor(Math.random()*BOSS_EMOJIS.length)];
-      const hpWrap=document.createElement('div'); hpWrap.className='hp';
-      const hpBar=document.createElement('div'); hpBar.className='bar'; hpWrap.appendChild(hpBar);
-      bossEl.appendChild(em); bossEl.appendChild(hpWrap);
-      document.body.appendChild(bossEl);
-
-      let x=rand(40, window.innerWidth-200), y=window.innerHeight+40;
-      let vx= rand(1.2, 2.2) * (Math.random()<0.5?-1:1);
-      const vy= -2.2; let t=0;
-
-      function update(){
-        t += 0.016;
-        x += vx + Math.sin(t*2.2)*1.5;
-        y += vy;
-        if (x<10 || x>window.innerWidth-170) { vx*=-1; x=Math.max(10, Math.min(x, window.innerWidth-170)); }
-        bossEl.style.transform=`translate(${x}px, ${y}px)`;
-        if (y < -200 && bossActive) y = window.innerHeight - 60;
-        if (bossActive) bossRAF = requestAnimationFrame(update);
-      }
-      bossRAF = requestAnimationFrame(update);
-
-      bossEl.addEventListener('pointerdown', (ev)=>{
-        bossHP--; playPop(1.6);
-        const r=bossEl.getBoundingClientRect();
-        popFx(ev.clientX || (r.left+r.width/2), ev.clientY || (r.top+r.height/2), "👊");
-        const pct=Math.max(0, bossHP)/ (5 + Math.min(stepIndex,5));
-        hpBar.style.width=(pct*100)+"%";
-        if (bossHP<=0) defeatBoss();
-      }, {passive:true});
-    }
-
-    function defeatBoss(){
-      if(!bossActive) return;
-      bossActive=false; cancelAnimationFrame(bossRAF); bossRAF=null;
-      score += 5; scoreEl.textContent="Точки: "+score;
-      const r=bossEl.getBoundingClientRect(); popFx(r.left+80, r.top+40, "+5");
-      bossEl.remove(); bossEl=null;
-      levelUp();
-    }
-
-    // --- ТРУДНОСТ / БЕЗКРАЕН ---
-    function selectedLevelCfg(){return {...LEVELS[levelKey]};}
-    function levelUp(){
-      const base=LEVELS[levelKey];
-      const newCfg={
-        interval: Math.max((curCfg?.interval||base.interval) - 80, 420),
-        speedMin: Math.max((curCfg?.speedMin||base.speedMin) - 0.25, 2.6),
-        speedMax: Math.max((curCfg?.speedMax||base.speedMax) - 0.25, base.speedMin),
-        perTick: base.perTick
-      };
-      curCfg=newCfg;
-      if (spawnTimer){ clearInterval(spawnTimer); spawnTimer=setInterval(()=>tick(newCfg), newCfg.interval); }
-      curInterval=newCfg.interval;
-      nextLevelAt += 20;
-    }
-    function maybeAnnounceBoss(){
-      if (!bossToggle.checked) return;
-      if (!bossActive && score >= (nextLevelAt - 5) && score < nextLevelAt && !bossAnnounced) {
-        bossAnnounced = true;
-        setTimeout(()=> spawnBoss(Math.floor((nextLevelAt-20)/20)), 600);
-      }
-    }
-    function maybeAdjustDifficulty(){
-      if (bossActive) return;
-      const steps=Math.floor(score/20);
-      const base=LEVELS[levelKey];
-      const minInt=420, speedBoost=Math.min(steps*0.2,1.2);
-      const newCfg={
-        interval: Math.max(base.interval - steps*50, minInt),
-        speedMin: Math.max(base.speedMin - speedBoost, 2.8),
-        speedMax: Math.max(base.speedMax - speedBoost, base.speedMin),
-        perTick: base.perTick
-      };
-      curCfg=newCfg;
-      if(curInterval!==newCfg.interval&&spawnTimer){
-        clearInterval(spawnTimer);
-        curInterval=newCfg.interval;
-        spawnTimer=setInterval(()=>tick(newCfg),newCfg.interval);
-      }
-      maybeAnnounceBoss();
-    }
-
-    function tick(cfg){
-      const n = bossActive ? (Math.random()<0.25?1:0) : cfg.perTick();
-      for (let i=0;i<n;i++) makeAnimal(false, cfg);
-    }
-    function startBigLoop(en){
-      if(bigTimer){clearInterval(bigTimer);bigTimer=null;}
-      if(!en) return;
-      setTimeout(()=>makeAnimal(true,curCfg||selectedLevelCfg()),rand(6000,12000));
-      bigTimer=setInterval(()=>makeAnimal(true,curCfg||selectedLevelCfg()),10000);
-    }
-    function clearAnimals(){
-      document.querySelectorAll('.animal, .boss, .pop').forEach(n=>n.remove());
-      bossActive=false; bossEl=null; cancelAnimationFrame(bossRAF); bossRAF=null;
-    }
-
-    // --- СХВАЩАНЕ ---
-    function catchAnimal(ev,elem,pts){
-      if(!elem.isConnected) return;
-      score += pts; scoreEl.textContent="Точки: "+score;
-      playPop(pts>1?1.4:1);
-      const r=elem.getBoundingClientRect();
-      const x=ev.clientX||(r.left+r.width/2), y=ev.clientY||(r.top+r.height/2);
-      popFx(x,y,pts>1?`+${pts}`:"+1");
-      elem.remove();
-      if(mode==='endless') maybeAdjustDifficulty();
-    }
-
-    // --- Старт / Край ---
-    function startGame(){
-      levelKey=getSelected('level')||'easy';
-      mode=getSelected('mode')||'timed';
-      const bigEn=bigAnimalChk.checked;
-
-      ensureAudio(); if(audioCtx&&audioCtx.state==='suspended') audioCtx.resume();
-
-      startOverlay.hidden=true; finalOverlay.hidden=true;
-      timerEl.hidden=(mode!=='timed');
-      score=0; scoreEl.textContent="Точки: 0";
-      nextLevelAt=20; bossActive=false; bossEl=null; bossAnnounced=false;
-
-      curCfg=selectedLevelCfg(); curInterval=curCfg.interval;
-      tick(curCfg);
-      if(spawnTimer) clearInterval(spawnTimer);
-      spawnTimer=setInterval(()=>tick(curCfg),curCfg.interval);
-
-      startBigLoop(bigEn);
-
-      if(mode==='timed'){ startTimedRound(30); }
-      else { if(timerUIInterval){ clearInterval(timerUIInterval); timerUIInterval=null; } }
-
-      document.addEventListener('pointerdown', docPointer, {passive:true});
-    }
-
-    function docPointer(ev){
-      const t=ev.target.closest?.('.animal, .boss');
-      if(!t) return;
-      if (t.classList.contains('boss')) {
-        // босът обработва кликовете си вътре (за HP)
-      } else {
-        catchAnimal(ev, t, t.classList.contains('big')?5:1);
-      }
-    }
-
-    function endGame(){
-      if(spawnTimer){ clearInterval(spawnTimer); spawnTimer=null; }
-      if(bigTimer){ clearInterval(bigTimer); bigTimer=null; }
-      if(timerUIInterval){ clearInterval(timerUIInterval); timerUIInterval=null; }
-      cancelAnimationFrame(bossRAF); bossRAF=null;
-      document.removeEventListener('pointerdown', docPointer);
-      clearAnimals();
-    }
-
-    function startTimedRound(sec){
-      const startTs=performance.now(); roundEndTs=startTs+sec*1000;
-      const fmt=ms=>(ms/1000).toFixed(1)+"s"; timerEl.textContent="⏱ "+fmt(sec*1000);
-      timerUIInterval=setInterval(()=>{
-        const now=performance.now(); const left=Math.max(0, roundEndTs-now);
-        timerEl.textContent="⏱ "+fmt(left);
-        if (left<=0){
-          clearInterval(timerUIInterval); timerUIInterval=null;
-          endGame();
-          document.getElementById('finalScore').textContent="Точки: "+score;
-          finalOverlay.hidden=false;
-        }
-      },100);
-    }
-
-    // --- Бутони ---
-    document.getElementById('startBtn').onclick=startGame;
-    document.getElementById('playAgain').onclick=()=>{finalOverlay.hidden=true;startGame();};
-    document.getElementById('backToStart').onclick=()=>{finalOverlay.hidden=true;startOverlay.hidden=false;};
+  function popFx(x,y,t){const d=document.createElement("div");d.className="pop";d.textContent=t;d.style.left=x+"px";d.style.top=y+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),700);}
+  function makeAnimal(big,cfg){const d=document.createElement("div");d.className=big?"animal big":"animal";d.style.left=rand(0,window.innerWidth-100)+"px";d.style.animationDuration=rand(cfg.speedMin,cfg.speedMax)+"s";const e=document.createElement("span");e.className="emoji";e.textContent=big?BIG_ANIMALS[Math.floor(Math.random()*BIG_ANIMALS.length)]:ANIMALS[Math.floor(Math.random()*ANIMALS.length)];d.appendChild(e);d.onclick=ev=>catchAnimal(ev,d,big?5:1);document.body.appendChild(d);setTimeout(()=>d.remove(),8000);}
+  function catchAnimal(ev,el,pts){if(!el.isConnected)return;score+=pts;scoreEl.textContent="Точки: "+score;playPop(pts>1?1.4:1);const r=el.getBoundingClientRect();popFx(ev.clientX||r.left,r.top,pts>1?`+${pts}`:"+1");el.remove();if(mode==="endless") adjust();}
+  function tick(){if(bossActive)return;for(let i=0;i<curCfg.per();i++)makeAnimal(false,curCfg);}
+  function adjust(){const steps=Math.floor(score/20),base=LEVELS[level];curCfg={...base,interval:Math.max(base.interval-steps*80,400)};clearInterval(spawnTimer);spawnTimer=setInterval(tick,curCfg.interval);if(bossToggle.checked&&score>=nextLevelAt){spawnBoss();nextLevelAt+=20;}}
+  function startBig(en){if(bigTimer)clearInterval(bigTimer);if(!en)return;bigTimer=setInterval(()=>makeAnimal(true,curCfg),10000);}
+  function clearAll(){document.querySelectorAll(".animal,.boss,.pop").forEach(n=>n.remove());bossActive=false;bossEl=null;cancelAnimationFrame(bossRAF);}
+  // бос
+  function spawnBoss(){if(bossActive)return;bossActive=true;bossHP=6;bossEl=document.createElement("div");bossEl.className="boss";const em=document.createElement("div");em.className="emoji";em.textContent=BOSS[Math.floor(Math.random()*BOSS.length)];const hp=document.createElement("div");hp.className="hp";const bar=document.createElement("div");bar.className="bar";hp.appendChild(bar);bossEl.appendChild(em);bossEl.appendChild(hp);document.body.appendChild(bossEl);let x=100,y=window.innerHeight-200,vx=2;function loop(){x+=vx;if(x<0||x>window.innerWidth-160)vx*=-1;bossEl.style.transform=`translate(${x}px,${y}px)`;if(bossActive)bossRAF=requestAnimationFrame(loop);}loop();bossEl.onclick=()=>{bossHP--;navigator.vibrate?.(80);bossEl.style.transform+=" scale(0.9)";setTimeout(()=>bossEl.style.transform= bossEl.style.transform.replace(" scale(0.9)",""),150);bar.style.width=(bossHP/6*100)+"%";if(bossHP<=0){score+=10;scoreEl.textContent="Точки: "+score;bossEl.remove();bossActive=false;}};}
+  // start
+  function startGame(){level=document.querySelector("input[name=level]:checked").value;mode=document.querySelector("input[name=mode]:checked").value;curCfg={...LEVELS[level]};score=0;scoreEl.textContent="Точки: 0";startOverlay.hidden=true;finalOverlay.hidden=true;stopBtn.hidden=(mode!=="endless");clearAll();tick();spawnTimer=setInterval(tick,curCfg.interval);startBig(bigAnimalChk.checked);if(mode==="timed"){roundEnd=performance.now()+30000;timerEl.hidden=false;timerUI=setInterval(()=>{let left=roundEnd-performance.now();timerEl.textContent="⏱ "+(left/1000).toFixed(1);if(bossToggle.checked&&left<6000&&!bossActive)spawnBoss();if(left<=0){endGame();showFinal();}},100);}else timerEl.hidden=true;}
+  function endGame(){clearInterval(spawnTimer);clearInterval(bigTimer);clearInterval(timerUI);clearAll();}
+  function showFinal(){finalScore.textContent="Точки: "+score;const key="best_"+mode;let best=localStorage.getItem(key)||0;if(score>best){best=score;localStorage.setItem(key,score);}bestScore.textContent="Рекорд: "+best;finalOverlay.hidden=false;}
+  // бутони
+  document.getElementById("startBtn").onclick=startGame;
+  document.getElementById("playAgain").onclick=()=>{finalOverlay.hidden=true;startGame();};
+  stopBtn.onclick=()=>{endGame();showFinal();};
   </script>
 </body>
 </html>
