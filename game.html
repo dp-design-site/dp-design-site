@@ -1,63 +1,45 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Хвани фигурката 🎮</title>
-<style>
-  body{margin:0;overflow:hidden;background:#8fd3ff;font-family:Arial,Helvetica,sans-serif;touch-action:manipulation;}
-  [hidden]{display:none!important;}
-
-  /* HUD */
-  #hud{position:fixed;top:8px;left:8px;z-index:3;background:rgba(255,255,255,.7);padding:6px 10px;border-radius:12px;display:flex;gap:8px;align-items:center}
-  #hud span{font-weight:700;color:#083c5a}
-  #soundBtn,#stopBtn,#homeBtn{border:0;padding:6px 10px;border-radius:8px;font-weight:700;cursor:pointer}
-  #soundBtn{background:#0ea5e9;color:#fff}
-  #stopBtn{background:#ef4444;color:#fff}
-  #homeBtn{position:fixed;top:8px;right:8px;z-index:4;background:#16a34a;color:#fff}
-
-  /* Оверлеи (без blur – за старите WebView) */
-  .overlay{position:fixed;left:0;top:0;right:0;bottom:0;z-index:5;display:grid;place-items:center;background:rgba(0,0,0,.35);padding:10px;overflow:auto;min-height:100vh}
-  @supports (height:100dvh){.overlay{min-height:100dvh}}
-  .card{background:#fff;padding:18px;border-radius:16px;width:min(92vw,520px);max-height:92vh;overflow:auto;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.25)}
-  fieldset{margin:10px 0;padding:10px;border-radius:10px;border:1px solid #e5e7eb;text-align:left}
-  legend{padding:0 6px;font-weight:700}
-  .btn{margin-top:10px;padding:12px 16px;font-size:18px;border:0;border-radius:10px;background:#16a34a;color:#fff;cursor:pointer}
-
-  /* Фигурки – центровка чрез flex; движение с transition (пиксели) */
-  .animal{
-    position:absolute;width:80px;height:80px;border-radius:50%;
-    background:#ffffffcc;box-shadow:0 6px 16px rgba(0,0,0,.2);cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    transform:translate(0,0);transition:transform linear; /* duration по JS */
-  }
-  .animal.big{width:120px;height:120px;border:4px solid #f59e0b}
-  .emoji{display:block;font-size:40px;line-height:1}
-  .animal.big .emoji{font-size:60px}
-
-  /* Бос */
-  .boss{position:absolute;width:160px;height:160px;display:flex;align-items:center;justify-content:center;border-radius:20px;background:#ffd369;border:5px solid #ef4444;box-shadow:0 6px 16px rgba(0,0,0,.4)}
-  .boss .emoji{font-size:100px;line-height:1}
-  .boss .hp{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:80%;height:12px;background:#fecaca;border-radius:12px;overflow:hidden}
-  .boss .bar{height:100%;width:100%;background:linear-gradient(90deg,#16a34a,#4ade80)}
-
-  /* Поп ефект */
-  .pop{position:absolute;font-size:28px;pointer-events:none;animation:popfade .7s ease-out forwards}
-  @keyframes popfade{0%{transform:translate(-50%,-50%) scale(.8);opacity:1}100%{transform:translate(-50%,-120%) scale(1.3);opacity:0}}
-
-  @media (max-height:600px){ .card{padding:14px;max-height:95vh} .btn{padding:10px 12px;font-size:16px} }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Хвани фигурката 🎮</title>
+  <style>
+    body{margin:0;overflow:hidden;height:100vh;background:#8fd3ff;font-family:sans-serif;touch-action:manipulation;}
+    [hidden]{display:none!important;}
+    #hud{position:fixed;top:12px;left:12px;z-index:3;background:rgba(255,255,255,.6);padding:6px 10px;border-radius:12px;display:flex;gap:8px;align-items:center;}
+    #hud span{font-weight:700;color:#083c5a;}
+    #soundBtn,#stopBtn,#homeBtn{border:0;padding:6px 10px;border-radius:8px;font-weight:700;cursor:pointer}
+    #soundBtn{background:#0ea5e9;color:#fff}
+    #stopBtn{background:#ef4444;color:#fff}
+    #homeBtn{position:fixed;top:12px;right:12px;z-index:4;background:#16a34a;color:#fff}
+    .overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:rgba(0,0,0,.3);backdrop-filter:blur(3px)}
+    .card{background:#fff;padding:20px;border-radius:16px;width:min(90vw,500px);max-height:90vh;overflow:auto;text-align:center}
+    fieldset{margin:10px 0;padding:10px;border-radius:10px}
+    .btn{margin-top:10px;padding:12px 16px;font-size:18px;border:0;border-radius:10px;background:#16a34a;color:#fff;cursor:pointer}
+    .animal{position:absolute;width:80px;height:80px;display:grid;place-items:center;border-radius:50%;background:#fff8;animation:floatUp linear forwards;cursor:pointer}
+    .animal.big{width:120px;height:120px;border:4px solid #f59e0b}
+    .emoji{font-size:40px}
+    .animal.big .emoji{font-size:60px}
+    @keyframes floatUp{from{transform:translateY(105vh)}to{transform:translateY(-120px)}}
+    .boss{position:absolute;width:160px;height:160px;display:grid;place-items:center;border-radius:20px;background:#ffd369;border:5px solid #ef4444;box-shadow:0 6px 16px rgba(0,0,0,.4)}
+    .boss .emoji{font-size:100px}
+    .boss .hp{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:80%;height:12px;background:#fecaca;border-radius:12px;overflow:hidden}
+    .boss .bar{height:100%;width:100%;background:linear-gradient(90deg,#16a34a,#4ade80)}
+    .pop{position:absolute;font-size:28px;animation:popfade .7s forwards;pointer-events:none}
+    @keyframes popfade{0%{transform:translate(-50%,-50%) scale(.8);opacity:1}100%{transform:translate(-50%,-120%) scale(1.3);opacity:0}}
+  </style>
 </head>
 <body>
   <div id="hud">
     <span id="score">Точки: 0</span>
     <span id="timer" hidden>⏱</span>
-    <button id="soundBtn" title="Звук">🔊</button>
-    <button id="stopBtn" hidden title="Стоп">🛑</button>
+    <button id="soundBtn">🔊</button>
+    <button id="stopBtn" hidden>🛑</button>
   </div>
-  <button id="homeBtn" title="Начало">🏠</button>
+  <button id="homeBtn">🏠</button>
 
-  <!-- Старт -->
+  <!-- старт -->
   <div id="startOverlay" class="overlay">
     <div class="card">
       <h2>Хвани фигурката 🎮</h2>
@@ -87,7 +69,7 @@
     </div>
   </div>
 
-  <!-- Финал -->
+  <!-- финал -->
   <div id="finalOverlay" class="overlay" hidden>
     <div class="card">
       <h2>Край 🎉</h2>
@@ -98,224 +80,177 @@
     </div>
   </div>
 
-<script>
-/* ===== СЪСТОЯНИЕ (ES5) ===== */
-var score=0, spawnTimer=null, bigTimer=null, timerUI=null, bossRAF=null;
-var audioCtx=null, soundOn=true, mode="timed", level="easy", curCfg=null, roundEnd=0;
-var bossActive=false, bossEl=null, bossHP=0, nextLevelAt=20;
-var theme="animals", THEME={small:[], big:[]}, SAFE_MODE=false;
+  <script>
+  // --- СЪСТОЯНИЕ ---
+  let score=0,spawnTimer=null,bigTimer=null,timerUI=null,bossRAF=null;
+  let audioCtx=null,soundOn=true,mode="timed",level="easy",curCfg=null,roundEnd=0;
+  let bossActive=false,bossEl=null,bossHP=0,nextLevelAt=20;
+  let theme="animals",THEME={small:[],big:[]};
 
-/* ===== UI refs ===== */
-var scoreEl=document.getElementById("score"),
-    timerEl=document.getElementById("timer"),
-    startOverlay=document.getElementById("startOverlay"),
-    finalOverlay=document.getElementById("finalOverlay"),
-    soundBtn=document.getElementById("soundBtn"),
-    stopBtn=document.getElementById("stopBtn"),
-    homeBtn=document.getElementById("homeBtn"),
-    bigAnimalChk=document.getElementById("bigAnimal"),
-    bossToggle=document.getElementById("bossToggle"),
-    finalScore=document.getElementById("finalScore"),
-    bestScore=document.getElementById("bestScore");
+  // --- UI refs ---
+  const scoreEl=document.getElementById("score"),timerEl=document.getElementById("timer");
+  const startOverlay=document.getElementById("startOverlay"),finalOverlay=document.getElementById("finalOverlay");
+  const soundBtn=document.getElementById("soundBtn"),stopBtn=document.getElementById("stopBtn"),homeBtn=document.getElementById("homeBtn");
+  const bigAnimalChk=document.getElementById("bigAnimal"),bossToggle=document.getElementById("bossToggle");
+  const finalScore=document.getElementById("finalScore"),bestScore=document.getElementById("bestScore");
 
-/* ===== Данни ===== */
-var THEMES_MAIN={
-  animals:{small:["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"],big:["🦁","🐘","🦒","🐳","🦈"]},
-  balloons:{small:["🎈","🎉","✨","⭐","💫","🌈"],big:["🎆","🎇","🎊"]},
-  cars:{small:["🚗","🚙","🚕","🏎️","🚓","🚑","🚒"],big:["🛻","🚚","🚛"]}
-};
-/* „Безопасни“ емоджита (Unicode 6.1), налични на Android 4.x */
-var THEMES_SAFE={
-  animals:{small:["🐶","🐱","🐭","🐹","🐰","🐻","🐨","🐷","🐵","🐸","🐔","🐙","🐟"],big:["🐯","🐘","🐬","🐳","🐮"]},
-  balloons:{small:["🎈","⭐","✨"],big:["🎆","🎇","🎊"]},
-  cars:{small:["🚗","🚙","🚕","🚓","🚑","🚒"],big:["🚚","🚛"]}
-};
-/* Бос емоджи – основни и безопасни */
-var BOSS_MAIN=["🐲","🦖","🐉","🦍"], BOSS_SAFE=["🐲","🐉","💣","😡"];
-var LEVELS={easy:{interval:1100,per:function(){return 1;}},medium:{interval:850,per:function(){return Math.random()<0.6?2:1;}},hard:{interval:650,per:function(){return Math.random()<0.5?2:3;}}};
+  // --- Теми ---
+  const THEMES={
+    animals:{small:["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"],big:["🦁","🐘","🦒","🐳","🦈"]},
+    balloons:{small:["🎈","🎉","✨","⭐","💫","🌈"],big:["🎆","🎇","🎊"]},
+    cars:{small:["🚗","🚙","🚕","🏎️","🚓","🚑","🚒"],big:["🛻","🚚","🚛"]}
+  };
+  const BOSS_EMOJIS=["🐲","🦖","🐉","🦍"];
+  const LEVELS={
+    easy:{interval:1100,per:()=>1},
+    medium:{interval:850, per:()=>Math.random()<0.6?2:1},
+    hard:{interval:650,  per:()=>Math.random()<0.5?2:3}
+  };
 
-/* ===== Детект за „safe mode“ (Android <=4 / много стар Chrome) ===== */
-(function(){
-  var ua=(navigator.userAgent||"").toLowerCase();
-  if(/android 4\./.test(ua) || /chrome\/[0-3]\d\./.test(ua)) SAFE_MODE=true;
-})();
-
-/* ===== Утилити ===== */
-function vh() { // стабилен viewport height
-  return Math.max(document.documentElement.clientHeight, window.innerHeight||0);
-}
-function rand(a,b){return Math.random()*(b-a)+a;}
-function ensureAudio(){
-  try{
-    if(!audioCtx && (window.AudioContext||window.webkitAudioContext)){
-      audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    }
-  }catch(e){ audioCtx=null; }
-}
-function playPop(mult){
-  if(!soundOn) return;
-  ensureAudio(); if(!audioCtx) return;
-  var now=audioCtx.currentTime, o=audioCtx.createOscillator(), g=audioCtx.createGain();
-  o.type="triangle"; o.frequency.value=(mult&&mult>1)?520:820;
-  g.gain.setValueAtTime(0.2,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.1);
-  o.connect(g).connect(audioCtx.destination); o.start(now); o.stop(now+0.12);
-}
-function popFx(x,y,t){
-  var d=document.createElement("div"); d.className="pop"; d.textContent=t; d.style.left=x+"px"; d.style.top=y+"px";
-  document.body.appendChild(d); setTimeout(function(){d.remove();},700);
-}
-
-/* ===== Помощник: изкачване отдолу с transition (двустъпково, стабилно) ===== */
-function riseFromBottom(node, durationSec){
-  var H = vh();
-  var x = parseFloat(node.style.left)||0;
-  /* 1) поставяме начален transform БЕЗ transition */
-  node.style.transition = "none";
-  node.style.transform = "translate("+x+"px,"+(H+30)+"px)";
-  /* 2) след 2 кадъра включваме transition и задаваме крайна позиция */
-  requestAnimationFrame(function(){
-    requestAnimationFrame(function(){
-      node.style.transition = "transform "+durationSec+"s linear";
-      node.style.transform = "translate("+x+"px,-120px)";
-    });
-  });
-}
-
-/* ===== Фигурки ===== */
-function addTapHandlers(el, handler){
-  el.addEventListener("click", handler, false);
-  el.addEventListener("touchstart", function(e){ handler(e); }, false);
-}
-
-function makeAnimal(isBig){
-  var d=document.createElement("div");
-  d.className=isBig?"animal big":"animal";
-  d.style.left = Math.max(0, rand(0, window.innerWidth - (isBig?120:80))) + "px";
-  var e=document.createElement("span"); e.className="emoji";
-  var pool = isBig ? THEME.big : THEME.small;
-  e.textContent = pool[Math.floor(Math.random()*pool.length)];
-  d.appendChild(e);
-  addTapHandlers(d, function(ev){ catchAnimal(ev,d,isBig?5:1); });
-  document.body.appendChild(d);
-
-  var dur = isBig ? 6 : rand(4,7);
-  riseFromBottom(d, dur);
-  setTimeout(function(){ if(d.parentNode) d.parentNode.removeChild(d); }, (dur*1000)+1000);
-}
-
-function catchAnimal(ev,el,pts){
-  if(!el || !el.parentNode) return;
-  score+=pts; scoreEl.textContent="Точки: "+score; playPop(pts>1?1.3:1);
-  var r=el.getBoundingClientRect(); popFx((ev.touches?ev.touches[0].clientX:ev.clientX)||r.left, r.top, "+"+pts);
-  el.parentNode.removeChild(el);
-  if(mode==="endless" && bossToggle.checked && !bossActive && score>=nextLevelAt){ spawnBoss(); nextLevelAt+=20; }
-}
-
-function tick(){ if(!bossActive) for(var i=0;i<curCfg.per();i++) makeAnimal(false); }
-function startBig(enabled){ if(bigTimer) clearInterval(bigTimer); if(enabled){ bigTimer=setInterval(function(){ makeAnimal(true); },10000); } }
-function clearAll(){
-  var nodes=document.querySelectorAll(".animal,.boss,.pop");
-  for(var i=0;i<nodes.length;i++) nodes[i].remove();
-  bossActive=false; bossEl=null; if(bossRAF) cancelAnimationFrame(bossRAF); bossRAF=null;
-}
-
-/* ===== Бос ===== */
-function spawnBoss(){
-  if(bossActive) return;
-  bossActive=true; bossHP=6;
-
-  bossEl=document.createElement("div"); bossEl.className="boss";
-  var em=document.createElement("div"); em.className="emoji";
-  var BOSS_POOL = SAFE_MODE ? BOSS_SAFE : BOSS_MAIN;
-  em.textContent=BOSS_POOL[Math.floor(Math.random()*BOSS_POOL.length)];
-  var hp=document.createElement("div"); hp.className="hp";
-  var bar=document.createElement("div"); bar.className="bar"; hp.appendChild(bar);
-  bossEl.appendChild(em); bossEl.appendChild(hp); document.body.appendChild(bossEl);
-
-  var x=rand(40, window.innerWidth-200), y=vh()+40, vx=(Math.random()<0.5?-1:1)*rand(1.2,2.2), vy=-2.2, t=0;
-  function loop(){
-    t+=0.016; x+=vx + Math.sin(t*2.2)*1.5; y+=vy;
-    if(x<10 || x>window.innerWidth-170){ vx*=-1; x=Math.max(10, Math.min(x, window.innerWidth-170)); }
-    bossEl.style.transform="translate("+x+"px,"+y+"px)";
-    if(y<-200 && bossActive){ y=vh()-60; }
-    if(bossActive) bossRAF=requestAnimationFrame(loop);
+  // --- Утилити ---
+  function rand(a,b){return Math.random()*(b-a)+a;}
+  function ensureAudio(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
+  function playPop(mult=1){ if(!soundOn) return; ensureAudio(); if(!audioCtx) return;
+    const now=audioCtx.currentTime, o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type="triangle"; o.frequency.value=mult>1?520:820;
+    g.gain.setValueAtTime(.2,now); g.gain.exponentialRampToValueAtTime(.001,now+.1);
+    o.connect(g).connect(audioCtx.destination); o.start(now); o.stop(now+.12);
   }
-  bossRAF=requestAnimationFrame(loop);
+  function popFx(x,y,t){const d=document.createElement("div");d.className="pop";d.textContent=t;d.style.left=x+"px";d.style.top=y+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),700);}
 
-  addTapHandlers(bossEl, function(ev){
-    bossHP--;
-    if(navigator.vibrate) try{ navigator.vibrate(60); }catch(e){}
-    playPop(1.6);
-    var touch = ev.touches ? ev.touches[0] : ev;
-    popFx(touch.clientX||0, touch.clientY||0, "👊");
-    bar.style.width=(Math.max(0,bossHP)/6*100)+"%";
-    bossEl.style.transform += " scale(0.92)";
-    setTimeout(function(){ bossEl.style.transform=bossEl.style.transform.replace(" scale(0.92)",""); },120);
+  // --- Фигурки ---
+  function makeAnimal(big){
+    const d=document.createElement("div"); d.className=big?"animal big":"animal";
+    d.style.left=rand(0,window.innerWidth-100)+"px";
+    d.style.animationDuration=(big?6:rand(4,7))+"s";
+    const e=document.createElement("span"); e.className="emoji";
+    e.textContent=big?THEME.big[Math.floor(Math.random()*THEME.big.length)]
+                    :THEME.small[Math.floor(Math.random()*THEME.small.length)];
+    d.appendChild(e);
+    d.onclick=ev=>catchAnimal(ev,d,big?5:1);
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),8000);
+  }
 
-    if(bossHP<=0){
-      bossActive=false; if(bossRAF) cancelAnimationFrame(bossRAF); bossRAF=null;
-      var rr=bossEl.getBoundingClientRect();
-      score+=10; scoreEl.textContent="Точки: "+score; popFx(rr.left+80, rr.top+40, "+10");
-      bossEl.remove(); bossEl=null;
+  function catchAnimal(ev,el,pts){
+    if(!el.isConnected) return;
+    score+=pts; scoreEl.textContent="Точки: "+score; playPop(pts>1?1.3:1);
+    const r=el.getBoundingClientRect(); popFx(ev.clientX||r.left,r.top,"+"+pts);
+    el.remove();
+    // Endless: бос на всеки 20 т.
+    if(mode==="endless" && !bossActive && bossToggle.checked && score>=nextLevelAt){
+      spawnBoss(); nextLevelAt+=20;
     }
-  });
-}
+  }
 
-/* ===== Старт / Край / Резултати ===== */
-function startGame(){
-  var th=document.querySelector("input[name=theme]:checked"); theme=th?th.value:"animals";
-  THEME = SAFE_MODE ? THEMES_SAFE[theme] : THEMES_MAIN[theme];
+  function tick(){ if(!bossActive) for(let i=0;i<curCfg.per();i++) makeAnimal(false); }
 
-  var lv=document.querySelector("input[name=level]:checked"); level=lv?lv.value:"easy";
-  var md=document.querySelector("input[name=mode]:checked"); mode=md?md.value:"timed";
+  function startBig(en){ if(bigTimer) clearInterval(bigTimer); if(en) bigTimer=setInterval(()=>makeAnimal(true),10000); }
 
-  curCfg={ interval: LEVELS[level].interval, per: LEVELS[level].per };
-  score=0; scoreEl.textContent="Точки: 0";
-  startOverlay.hidden=true; finalOverlay.hidden=true;
-  stopBtn.hidden=(mode!=="endless");
-  nextLevelAt=20;
-  clearAll(); tick();
-  if(spawnTimer) clearInterval(spawnTimer);
-  spawnTimer=setInterval(tick, curCfg.interval);
-  startBig(!!bigAnimalChk.checked);
+  function clearAll(){ document.querySelectorAll(".animal,.boss,.pop").forEach(n=>n.remove());
+    bossActive=false; bossEl=null; cancelAnimationFrame(bossRAF); bossRAF=null;
+  }
 
-  ensureAudio(); if(audioCtx && audioCtx.state==="suspended"){ try{ audioCtx.resume(); }catch(e){} }
+  // --- БОС (с движение нагоре + синус по X, „👊“ при удар, +10 при победа) ---
+  function spawnBoss(){
+    if(bossActive) return;
+    bossActive=true; bossHP=6;
+    bossEl=document.createElement("div"); bossEl.className="boss";
+    const em=document.createElement("div"); em.className="emoji"; em.textContent=BOSS_EMOJIS[Math.floor(Math.random()*BOSS_EMOJIS.length)];
+    const hp=document.createElement("div"); hp.className="hp";
+    const bar=document.createElement("div"); bar.className="bar"; hp.appendChild(bar);
+    bossEl.appendChild(em); bossEl.appendChild(hp); document.body.appendChild(bossEl);
 
-  if(mode==="timed"){
-    roundEnd=Date.now()+30000; timerEl.hidden=false;
-    if(timerUI) clearInterval(timerUI);
-    timerUI=setInterval(function(){
-      var left=roundEnd-Date.now();
-      timerEl.textContent="⏱ "+Math.max(0,(left/1000)).toFixed(1);
-      if(bossToggle.checked && left<6000 && !bossActive){ spawnBoss(); }
-      if(left<=0){ endGame(); showFinal(); }
-    },100);
-  }else{ timerEl.hidden=true; }
-}
+    // стартова позиция под екрана
+    let x=rand(40, window.innerWidth-200), y=window.innerHeight+40;
+    let vx= rand(1.2,2.2) * (Math.random()<0.5?-1:1);
+    const vy=-2.2; let t=0;
 
-function endGame(){
-  if(spawnTimer) clearInterval(spawnTimer);
-  if(bigTimer) clearInterval(bigTimer);
-  if(timerUI) clearInterval(timerUI);
-  spawnTimer=bigTimer=timerUI=null;
-  clearAll();
-}
+    function loop(){
+      t += 0.016;
+      x += vx + Math.sin(t*2.2)*1.5;
+      y += vy; // нагоре
+      if(x<10 || x>window.innerWidth-170){ vx*=-1; x=Math.max(10, Math.min(x, window.innerWidth-170)); }
+      bossEl.style.transform=`translate(${x}px,${y}px)`;
+      // ако излезе над екрана и още е жив – върни го долу (без soft-lock)
+      if(y<-200 && bossActive){ y=window.innerHeight-60; }
+      if(bossActive) bossRAF=requestAnimationFrame(loop);
+    }
+    bossRAF=requestAnimationFrame(loop);
 
-function showFinal(){
-  finalScore.textContent="Точки: "+score;
-  var key="best_"+mode+"_"+theme, best=Number(localStorage.getItem(key)||0);
-  if(score>best){ best=score; try{ localStorage.setItem(key,String(best)); }catch(e){} }
-  bestScore.textContent="Рекорд: "+best;
-  finalOverlay.hidden=false;
-}
+    bossEl.addEventListener("click", ev=>{
+      bossHP--;
+      navigator.vibrate?.(80);
+      playPop(1.6);
+      const r=bossEl.getBoundingClientRect();
+      popFx(ev.clientX || (r.left+r.width/2), ev.clientY || (r.top+r.height/2), "👊");
+      bar.style.width=(Math.max(0,bossHP)/6*100)+"%";
+      // лек „отскок“
+      bossEl.style.transform += " scale(0.92)";
+      setTimeout(()=> bossEl.style.transform = bossEl.style.transform.replace(" scale(0.92)",""),120);
 
-/* ===== Бутони ===== */
-document.getElementById("startBtn").onclick=startGame;
-document.getElementById("playAgain").onclick=function(){ finalOverlay.hidden=true; startGame(); };
-document.getElementById("backHome").onclick=function(){ finalOverlay.hidden=true; startOverlay.hidden=false; };
-soundBtn.onclick=function(){ soundOn=!soundOn; soundBtn.textContent=soundOn?"🔊":"🔈"; };
-stopBtn.onclick=function(){ endGame(); showFinal(); };
-homeBtn.onclick=function(){ endGame(); startOverlay.hidden=false; finalOverlay.hidden=true; };
-</script>
+      if(bossHP<=0){
+        // победа
+        bossActive=false; cancelAnimationFrame(bossRAF); bossRAF=null;
+        const rr=bossEl.getBoundingClientRect();
+        score+=10; scoreEl.textContent="Точки: "+score;
+        popFx(rr.left+80, rr.top+40, "+10");
+        bossEl.remove(); bossEl=null;
+      }
+    }, {passive:true});
+  }
+
+  // --- Стартиране / край / резултати ---
+  function startGame(){
+    theme=document.querySelector("input[name=theme]:checked").value; THEME=THEMES[theme];
+    level=document.querySelector("input[name=level]:checked").value;
+    mode=document.querySelector("input[name=mode]:checked").value;
+    curCfg={...LEVELS[level]};
+    score=0; scoreEl.textContent="Точки: 0";
+    startOverlay.hidden=true; finalOverlay.hidden=true;
+    stopBtn.hidden=(mode!=="endless");
+    nextLevelAt=20; // за endless
+    clearAll(); tick();
+    if(spawnTimer) clearInterval(spawnTimer);
+    spawnTimer=setInterval(tick, curCfg.interval);
+    startBig(bigAnimalChk.checked);
+
+    if(mode==="timed"){
+      roundEnd=performance.now()+30000; timerEl.hidden=false;
+      if(timerUI) clearInterval(timerUI);
+      timerUI=setInterval(()=>{
+        const left=roundEnd-performance.now();
+        timerEl.textContent="⏱ "+(Math.max(0,left)/1000).toFixed(1);
+        if(bossToggle.checked && left<6000 && !bossActive) spawnBoss(); // бос малко преди края
+        if(left<=0){ endGame(); showFinal(); }
+      },100);
+    } else {
+      timerEl.hidden=true;
+    }
+  }
+
+  function endGame(){
+    clearInterval(spawnTimer); clearInterval(bigTimer); clearInterval(timerUI);
+    spawnTimer=bigTimer=timerUI=null;
+    clearAll();
+  }
+
+  function showFinal(){
+    finalScore.textContent="Точки: "+score;
+    const key="best_"+mode+"_"+theme;
+    let best=Number(localStorage.getItem(key)||0);
+    if(score>best){ best=score; localStorage.setItem(key, String(best)); }
+    bestScore.textContent="Рекорд: "+best;
+    finalOverlay.hidden=false;
+  }
+
+  // --- Бутони ---
+  document.getElementById("startBtn").onclick=startGame;
+  document.getElementById("playAgain").onclick=()=>{finalOverlay.hidden=true; startGame();};
+  document.getElementById("backHome").onclick=()=>{finalOverlay.hidden=true; startOverlay.hidden=false;};
+  soundBtn.onclick=()=>{soundOn=!soundOn; soundBtn.textContent=soundOn?"🔊":"🔈";};
+  document.getElementById("stopBtn").onclick=()=>{ endGame(); showFinal(); };
+  homeBtn.onclick=()=>{ endGame(); startOverlay.hidden=false; finalOverlay.hidden=true; };
+  </script>
 </body>
 </html>
