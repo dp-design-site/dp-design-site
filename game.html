@@ -42,10 +42,9 @@
         calc(env(safe-area-inset-top,0px) + 12px)
         12px
         calc(env(safe-area-inset-bottom,0px) + 12px);
-      overflow: auto;                  /* важен скрол, ако е високо */
+      overflow: auto;
       min-height: 100vh;
     }
-    /* предпочитаме 100dvh, ако е налично */
     @supports (height: 100dvh) {
       #startOverlay, #finalOverlay { min-height: 100dvh; }
     }
@@ -56,8 +55,8 @@
       width: min(92vw, 560px);
       box-shadow: 0 12px 30px rgba(0,0,0,.25); color:#123;
       animation: scaleIn 0.2s ease;
-      max-height: min(88dvh, 640px);    /* предотвратява излизане извън екрана */
-      overflow: auto;                   /* позволи вътрешен скрол при нужда */
+      max-height: min(88dvh, 640px);
+      overflow: auto;
     }
     @keyframes scaleIn { from{transform:scale(.98);opacity:.0} to{transform:scale(1);opacity:1} }
     .card h1 { margin: 0 0 8px; font-size: 26px; }
@@ -77,7 +76,6 @@
     .btn:active { transform: scale(.97); }
     .btn.secondary { background:#0ea5e9; }
 
-    /* По-компактен режим за ниски екрани */
     @media (max-height: 620px), (max-width: 360px) {
       .card { width: 94vw; padding: 16px; max-height: 92dvh; }
       .btn { font-size: 18px; padding: 12px 14px; }
@@ -248,7 +246,7 @@
     function popFx(x,y,text){const fx=document.createElement('div');fx.className='pop';fx.textContent=text;fx.style.left=x+"px";fx.style.top=y+"px";document.body.appendChild(fx);setTimeout(()=>fx.remove(),800);}
 
     // --- БОС ---
-    let bossActive=false, bossEl=null, bossHP=0, nextLevelAt=20, bossAnnounced=false, bossRAF=null;
+    let bossActive=false, bossEl=null, bossHP=0, nextLevelAt=20, bossAnnounced=false;
 
     function spawnBoss(stepIndex){
       if(bossActive) return;
@@ -394,7 +392,7 @@
       const t=ev.target.closest?.('.animal, .boss');
       if(!t) return;
       if (t.classList.contains('boss')) {
-        // босът си обработва кликовете вътре
+        // босът обработва кликовете си вътре (за HP)
       } else {
         catchAnimal(ev, t, t.classList.contains('big')?5:1);
       }
