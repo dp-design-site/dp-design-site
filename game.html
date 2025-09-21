@@ -5,21 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Хвани животинката 🐾</title>
   <style>
-    :root { --bg:#8fd3ff; --text:#083c5a; }
-    [hidden] { display:none!important; }
-    *{box-sizing:border-box;}
-    body{margin:0;overflow:hidden;height:100vh;background:var(--bg);font-family:sans-serif;touch-action:manipulation;}
-    #hud{position:fixed;top:12px;left:12px;z-index:3;background:rgba(255,255,255,.6);padding:8px 12px;border-radius:12px;display:flex;gap:12px;align-items:center;}
-    #score{font-size:18px;font-weight:700;color:var(--text);}
-    #timer{font-size:18px;color:var(--text);}
-    #stopBtn,#soundBtn{border:0;padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer;}
+    body{margin:0;overflow:hidden;height:100vh;background:#8fd3ff;font-family:sans-serif;touch-action:manipulation;}
+    [hidden]{display:none!important;}
+    #hud{position:fixed;top:12px;left:12px;z-index:3;background:rgba(255,255,255,.6);padding:6px 10px;border-radius:12px;display:flex;gap:8px;align-items:center;}
+    #hud span{font-weight:700;color:#083c5a;}
+    #soundBtn,#stopBtn,#homeBtn{border:0;padding:6px 10px;border-radius:8px;font-weight:700;cursor:pointer;}
     #soundBtn{background:#0ea5e9;color:#fff;}
     #stopBtn{background:#ef4444;color:#fff;}
-    .overlay{position:fixed;inset:0;z-index:4;display:grid;place-items:center;background:rgba(0,0,0,.3);backdrop-filter:blur(3px);}
+    #homeBtn{position:fixed;top:12px;right:12px;z-index:4;background:#16a34a;color:#fff;}
+    .overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:rgba(0,0,0,.3);backdrop-filter:blur(3px);}
     .card{background:#fff;padding:20px;border-radius:16px;width:min(90vw,500px);max-height:90vh;overflow:auto;text-align:center;}
     fieldset{margin:10px 0;padding:10px;border-radius:10px;}
-    .btn{margin-top:10px;padding:12px 16px;font-size:20px;border:0;border-radius:10px;background:#16a34a;color:#fff;cursor:pointer;}
-    .animal{position:absolute;width:80px;height:80px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.7);animation:floatUp linear forwards;cursor:pointer;}
+    .btn{margin-top:10px;padding:12px 16px;font-size:18px;border:0;border-radius:10px;background:#16a34a;color:#fff;cursor:pointer;}
+    .animal{position:absolute;width:80px;height:80px;display:grid;place-items:center;border-radius:50%;background:#fff8;animation:floatUp linear forwards;cursor:pointer;}
     .animal.big{width:120px;height:120px;border:4px solid #f59e0b;}
     .emoji{font-size:40px;}
     .animal.big .emoji{font-size:60px;}
@@ -37,10 +35,11 @@
     <span id="score">Точки: 0</span>
     <span id="timer" hidden>⏱</span>
     <button id="soundBtn">🔊</button>
-    <button id="stopBtn" hidden>🛑 Стоп</button>
+    <button id="stopBtn" hidden>🛑</button>
   </div>
+  <button id="homeBtn">🏠</button>
 
-  <!-- стартов екран -->
+  <!-- старт -->
   <div id="startOverlay" class="overlay">
     <div class="card">
       <h2>Хвани животинката 🐶🐱</h2>
@@ -71,6 +70,7 @@
       <p id="finalScore"></p>
       <p id="bestScore"></p>
       <button id="playAgain" class="btn">Играй пак</button>
+      <button id="backHome" class="btn">Начало</button>
     </div>
   </div>
 
@@ -78,45 +78,35 @@
   let score=0,spawnTimer=null,bigTimer=null,timerUI=null,bossRAF=null;
   let audioCtx=null,soundOn=true,mode="timed",level="easy",curCfg=null,roundEnd=0;
   let bossActive=false,bossEl=null,bossHP=0,nextLevelAt=20;
-
   const scoreEl=document.getElementById("score"),timerEl=document.getElementById("timer");
   const startOverlay=document.getElementById("startOverlay"),finalOverlay=document.getElementById("finalOverlay");
-  const soundBtn=document.getElementById("soundBtn"),stopBtn=document.getElementById("stopBtn");
+  const soundBtn=document.getElementById("soundBtn"),stopBtn=document.getElementById("stopBtn"),homeBtn=document.getElementById("homeBtn");
   const bigAnimalChk=document.getElementById("bigAnimal"),bossToggle=document.getElementById("bossToggle");
   const finalScore=document.getElementById("finalScore"),bestScore=document.getElementById("bestScore");
-
   const ANIMALS=["🐶","🐱","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐵","🐸","🐥","🦄"];
-  const BIG_ANIMALS=["🦁","🐘","🦒","🐳","🦈"];
+  const BIG=["🦁","🐘","🦒","🐳","🦈"];
   const BOSS=["🐲","🦖","🐉","🦍"];
-
-  const LEVELS={
-    easy:{interval:1100,speedMin:5.5,speedMax:8,per:()=>1},
-    medium:{interval:850,speedMin:4.5,speedMax:7,per:()=>Math.random()<0.6?2:1},
-    hard:{interval:650,speedMin:3.5,speedMax:5.5,per:()=>Math.random()<0.5?2:3}
-  };
-
+  const LEVELS={easy:{interval:1100,per:()=>1},medium:{interval:850,per:()=>Math.random()<0.6?2:1},hard:{interval:650,per:()=>Math.random()<0.5?2:3}};
   function rand(a,b){return Math.random()*(b-a)+a;}
-  function ensureAudio(){if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
-  function playPop(mult=1){if(!soundOn)return;ensureAudio();if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain(),now=audioCtx.currentTime;o.type="triangle";o.frequency.value=mult>1?520:820;g.gain.setValueAtTime(.2,now);g.gain.exponentialRampToValueAtTime(.001,now+.1);o.connect(g).connect(audioCtx.destination);o.start(now);o.stop(now+.12);}
-  soundBtn.onclick=()=>{soundOn=!soundOn;soundBtn.textContent=soundOn?"🔊":"🔈";};
-
+  function ensureAudio(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
+  function playPop(){if(!soundOn)return;ensureAudio();if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain(),now=audioCtx.currentTime;o.type="triangle";o.frequency.value=820;g.gain.setValueAtTime(.2,now);g.gain.exponentialRampToValueAtTime(.001,now+.1);o.connect(g).connect(audioCtx.destination);o.start(now);o.stop(now+.12);}
   function popFx(x,y,t){const d=document.createElement("div");d.className="pop";d.textContent=t;d.style.left=x+"px";d.style.top=y+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),700);}
-  function makeAnimal(big,cfg){const d=document.createElement("div");d.className=big?"animal big":"animal";d.style.left=rand(0,window.innerWidth-100)+"px";d.style.animationDuration=rand(cfg.speedMin,cfg.speedMax)+"s";const e=document.createElement("span");e.className="emoji";e.textContent=big?BIG_ANIMALS[Math.floor(Math.random()*BIG_ANIMALS.length)]:ANIMALS[Math.floor(Math.random()*ANIMALS.length)];d.appendChild(e);d.onclick=ev=>catchAnimal(ev,d,big?5:1);document.body.appendChild(d);setTimeout(()=>d.remove(),8000);}
-  function catchAnimal(ev,el,pts){if(!el.isConnected)return;score+=pts;scoreEl.textContent="Точки: "+score;playPop(pts>1?1.4:1);const r=el.getBoundingClientRect();popFx(ev.clientX||r.left,r.top,pts>1?`+${pts}`:"+1");el.remove();if(mode==="endless") adjust();}
-  function tick(){if(bossActive)return;for(let i=0;i<curCfg.per();i++)makeAnimal(false,curCfg);}
-  function adjust(){const steps=Math.floor(score/20),base=LEVELS[level];curCfg={...base,interval:Math.max(base.interval-steps*80,400)};clearInterval(spawnTimer);spawnTimer=setInterval(tick,curCfg.interval);if(bossToggle.checked&&score>=nextLevelAt){spawnBoss();nextLevelAt+=20;}}
-  function startBig(en){if(bigTimer)clearInterval(bigTimer);if(!en)return;bigTimer=setInterval(()=>makeAnimal(true,curCfg),10000);}
+  function makeAnimal(big){const d=document.createElement("div");d.className=big?"animal big":"animal";d.style.left=rand(0,window.innerWidth-100)+"px";d.style.animationDuration=(big?6:rand(4,7))+"s";const e=document.createElement("span");e.className="emoji";e.textContent=big?BIG[Math.floor(Math.random()*BIG.length)]:ANIMALS[Math.floor(Math.random()*ANIMALS.length)];d.appendChild(e);d.onclick=ev=>catchAnimal(ev,d,big?5:1);document.body.appendChild(d);setTimeout(()=>d.remove(),8000);}
+  function catchAnimal(ev,el,pts){if(!el.isConnected)return;score+=pts;scoreEl.textContent="Точки: "+score;playPop();const r=el.getBoundingClientRect();popFx(ev.clientX||r.left,r.top,"+"+pts);el.remove();}
+  function tick(){if(!bossActive)for(let i=0;i<curCfg.per();i++)makeAnimal(false);}
+  function startBig(en){if(bigTimer)clearInterval(bigTimer);if(en)bigTimer=setInterval(()=>makeAnimal(true),10000);}
   function clearAll(){document.querySelectorAll(".animal,.boss,.pop").forEach(n=>n.remove());bossActive=false;bossEl=null;cancelAnimationFrame(bossRAF);}
-  // бос
-  function spawnBoss(){if(bossActive)return;bossActive=true;bossHP=6;bossEl=document.createElement("div");bossEl.className="boss";const em=document.createElement("div");em.className="emoji";em.textContent=BOSS[Math.floor(Math.random()*BOSS.length)];const hp=document.createElement("div");hp.className="hp";const bar=document.createElement("div");bar.className="bar";hp.appendChild(bar);bossEl.appendChild(em);bossEl.appendChild(hp);document.body.appendChild(bossEl);let x=100,y=window.innerHeight-200,vx=2;function loop(){x+=vx;if(x<0||x>window.innerWidth-160)vx*=-1;bossEl.style.transform=`translate(${x}px,${y}px)`;if(bossActive)bossRAF=requestAnimationFrame(loop);}loop();bossEl.onclick=()=>{bossHP--;navigator.vibrate?.(80);bossEl.style.transform+=" scale(0.9)";setTimeout(()=>bossEl.style.transform= bossEl.style.transform.replace(" scale(0.9)",""),150);bar.style.width=(bossHP/6*100)+"%";if(bossHP<=0){score+=10;scoreEl.textContent="Точки: "+score;bossEl.remove();bossActive=false;}};}
-  // start
+  function spawnBoss(){bossActive=true;bossHP=6;bossEl=document.createElement("div");bossEl.className="boss";const em=document.createElement("div");em.className="emoji";em.textContent=BOSS[Math.floor(Math.random()*BOSS.length)];const hp=document.createElement("div");hp.className="hp";const bar=document.createElement("div");bar.className="bar";hp.appendChild(bar);bossEl.appendChild(em);bossEl.appendChild(hp);document.body.appendChild(bossEl);let x=100,y=window.innerHeight-200,vx=2;function loop(){x+=vx;if(x<0||x>window.innerWidth-160)vx*=-1;bossEl.style.transform=`translate(${x}px,${y}px)`;if(bossActive)bossRAF=requestAnimationFrame(loop);}loop();bossEl.onclick=()=>{bossHP--;navigator.vibrate?.(80);bar.style.width=(bossHP/6*100)+"%";if(bossHP<=0){score+=10;scoreEl.textContent="Точки: "+score;bossEl.remove();bossActive=false;}};}
   function startGame(){level=document.querySelector("input[name=level]:checked").value;mode=document.querySelector("input[name=mode]:checked").value;curCfg={...LEVELS[level]};score=0;scoreEl.textContent="Точки: 0";startOverlay.hidden=true;finalOverlay.hidden=true;stopBtn.hidden=(mode!=="endless");clearAll();tick();spawnTimer=setInterval(tick,curCfg.interval);startBig(bigAnimalChk.checked);if(mode==="timed"){roundEnd=performance.now()+30000;timerEl.hidden=false;timerUI=setInterval(()=>{let left=roundEnd-performance.now();timerEl.textContent="⏱ "+(left/1000).toFixed(1);if(bossToggle.checked&&left<6000&&!bossActive)spawnBoss();if(left<=0){endGame();showFinal();}},100);}else timerEl.hidden=true;}
   function endGame(){clearInterval(spawnTimer);clearInterval(bigTimer);clearInterval(timerUI);clearAll();}
   function showFinal(){finalScore.textContent="Точки: "+score;const key="best_"+mode;let best=localStorage.getItem(key)||0;if(score>best){best=score;localStorage.setItem(key,score);}bestScore.textContent="Рекорд: "+best;finalOverlay.hidden=false;}
   // бутони
   document.getElementById("startBtn").onclick=startGame;
   document.getElementById("playAgain").onclick=()=>{finalOverlay.hidden=true;startGame();};
+  document.getElementById("backHome").onclick=()=>{finalOverlay.hidden=true;startOverlay.hidden=false;};
+  soundBtn.onclick=()=>{soundOn=!soundOn;soundBtn.textContent=soundOn?"🔊":"🔈";};
   stopBtn.onclick=()=>{endGame();showFinal();};
+  homeBtn.onclick=()=>{endGame();startOverlay.hidden=false;finalOverlay.hidden=true;};
   </script>
 </body>
 </html>
